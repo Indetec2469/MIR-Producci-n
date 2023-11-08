@@ -1,0 +1,361 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Catalogos.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model ConfiguracionAreaViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Configuración de Áreas" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado General de Áreas</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .Text("Nuevo")
+                        .OnClick("nuevoRegistro")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARvwListadoConfiguracionArea>()
+                    .ID("dxGridListado")
+                    .DataSource(m => m.Array().Data(Model.ListConfiguracionArea).Key("ConfiguracionAreaId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+
+                        c.AddFor(m => m.Codigo).Width(150).Alignment(HorizontalAlignment.Center).Caption("Código");
+                        c.AddFor(m => m.Area).Caption("Área");
+                        c.AddFor(m => m.UnidadesAdministrativas).Width(200);
+                        c.AddFor(m => m.Proyectos).Width(150);
+                        c.AddFor(m => m.Almacenes).Width(150);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEditar")
+                                    .Hint("Editar")
+                                    .Icon("edit")
+                                    .OnClick("editaRegistro");
+
+                                b.Add()
+                                    .Name("btnEliminar")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("validaEliminar");
+                            });
+
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+        <div class="form-layout-footer pd-t-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        @(Html.DevExtreme()
+                            .Button()
+                            .ID("dxButtonDeshacer")
+                            .Text("Deshacer")
+                            .OnClick("function() { modalConfirmaDeshacerCambios.modal('show'); }")
+                            .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        )
+                        @(Html.DevExtreme()
+                            .Button()
+                            .ID("dxButtonGuardaCambios")
+                            .Text("Guardar")
+                            .OnClick("guardaCambios")
+                            .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template Detalles -->
+@using (Html.DevExtreme().NamedTemplate("TreeListTemplate"))
+{
+    @(Html.DevExtreme().TreeList()
+        .ID("dxGridDetalles")
+        .Height(250)
+        .DataSource(m => m.Array().Data(Model.ListDependenciasProyectos).Key("idPd"))
+        .RootValue(0)
+        .KeyExpr("idPd")
+        .ParentIdExpr("PadreId")
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .NoDataText("Sin registros")
+        .AutoExpandAll(true)
+        .Selection(s => s.Mode(SelectionMode.Multiple).Recursive(true))
+        .SearchPanel(
+            sp => sp.Placeholder("Buscar...")
+                    .SearchVisibleColumnsOnly(true)
+                    .HighlightSearchText(false)
+                    .Visible(true)
+                    .Width(200)
+        )
+        .Columns(c =>
+        {
+            c.Add().DataField("Nombre").AllowSorting(false).Caption("Todas (Unidades Administrativas / Proyectos)");
+        })
+        .Paging(paging => paging.PageSize(Model.ListDependenciasProyectos.Count()))
+        .OnSelectionChanged("onTreeListSelectionChange")
+    )
+}
+
+<!-- Template Almacenes -->
+@using (Html.DevExtreme().NamedTemplate("TreeListTemplateAlmacenes"))
+{
+    @(Html.DevExtreme().DataGrid()
+        .ID("dxGridAlmacenes")
+        .Height(250)
+        .DataSource(m => m.Array().Data(Model.ListAlmacenes).Key("AlmacenId"))
+        .KeyExpr("AlmacenId")
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .NoDataText("Sin registros")
+        .Selection(s => s.Mode(SelectionMode.Multiple))
+        .Option("selection.showCheckBoxesMode", "always")
+        .SearchPanel(
+            sp => sp.Placeholder("Buscar...")
+                    .SearchVisibleColumnsOnly(true)
+                    .HighlightSearchText(false)
+                    .Visible(true)
+                    .Width(200)
+        )
+        .Scrolling(s => s.UseNative(true))
+        .Columns(c =>
+        {
+            c.Add().DataField("Nombre").AllowSorting(false).Caption("Todos (Almacenes)");
+        })
+        .Paging(paging => paging.PageSize(Model.ListDependenciasProyectos.Count()))
+        .OnSelectionChanged("onTreeListSelectionChange")
+    )
+}
+
+<!-- Modal Modelo-->
+<div class="modal fade effect-scale" id="modalModelo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Configuración Área</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARtblControlMaestroConfiguracionArea>()
+                            .ID("dxFormModalModelo")
+                            .FormData(new ConfiguracionAreaItem())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.AreaId)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboAreas")
+                                                    .DataSource(Model.ListAreas)
+                                                    .ValueExpr("DependenciaId")
+                                                    .DisplayExpr(new JS("(params) => {return params ? params.DependenciaId + ' - ' + params.Nombre : null}"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción")
+                                                    .OnValueChanged("cboAreasChange"));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Comentarios)
+                                                .ColSpan(12)
+                                                .Editor(e => e.TextArea().MaxLength(4000));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple().IsRequired(true)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Label(label => label.Text("Configuración presupuestaria").ShowColon(true));
+
+                                            itemGroup.AddSimple().Template(new TemplateName("TreeListTemplate")).ColSpan(12);
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple().IsRequired(true)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Label(label => label.Text("Almacenes").ShowColon(true));
+
+                                            itemGroup.AddSimple().Template(new TemplateName("TreeListTemplateAlmacenes")).ColSpan(12);
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalModelo.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Guardar")
+                                .OnClick("guardaCambiosModal")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Deshacer-->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacerCambios" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaDeshacerCambios.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaDeshacerCambios.modal('hide'); recargarFicha(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">¿Está seguro de eliminar el registro?</h5>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaRegistro(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/Compras/Catalogos/Views/ConfiguracionAreas/ConfiguracionArea.js"></script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _listDependenciasProyectos = @Html.Raw(Json.Encode(Model.ListDependenciasProyectos));
+    var _listAreas = @Html.Raw(Json.Encode(Model.ListAreas));
+</script>

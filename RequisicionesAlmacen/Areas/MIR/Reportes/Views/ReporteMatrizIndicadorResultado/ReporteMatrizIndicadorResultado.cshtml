@@ -1,0 +1,91 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Reportes.Models.ViewModel.ReporteMatrizIndicadorResultadoViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Reportes" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">REPORTE MATRIZ DE INDICADORES PARA RESULTADOS</h6>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @(Html.DevExtreme().Form()
+                            .ID("dxForm")
+                            .LabelLocation(FormLabelLocation.Left)
+                            .RequiredMark("(*)")
+                            .ElementAttr("class","green")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(itemGroup =>
+                            {
+                                itemGroup.AddGroup()
+                                .ColCount(12)
+                                .Items(item =>
+                                {
+                                    item.AddSimple()
+                                    .DataField("MIRId")
+                                    .Label(label => label.Text("Matriz de Indicador de Resultados"))
+                                    .ColSpan(11)
+                                    .ValidationRules(validationRules => {
+                                        validationRules.AddRequired().Message("Matriz de Indicador de Resultados Requierdo");
+                                    })
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ComboListadoMIR)
+                                        .DisplayExpr("Descripcion")
+                                        .ValueExpr("MIRId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .ShowClearButton(true)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+                                    );
+
+                                    item.AddSimple()
+                                    .ColSpan(1)
+                                    .Template(new TemplateName("templateButton"));
+                                });
+                            })
+                        )
+                    }
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="reporteActualizar">
+                    @ViewBag.WebReport
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Template Button *@
+@using (Html.DevExtreme().NamedTemplate("templateButton"))
+{
+    <div class="row mb-">
+        <div class="col-12">
+            <div class="d-flex flex-row justify-content-center justify-content-sm-center justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                @(Html.DevExtreme()
+                .Button()
+                .Text("Aceptar")
+                .ElementAttr("class", "btn-success btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                .OnClick("onClickBusca")
+                )
+
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Areas/MIR/Reportes/Views/ReporteMatrizIndicadorResultado/ReporteMatrizIndicadorResultado.js"></script>

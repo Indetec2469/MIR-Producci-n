@@ -1,0 +1,7 @@
+ALTER TABLE ARtblControlMaestroConceptoAjusteInventario
+DROP CONSTRAINT FK_ARtblControlMaestroConceptoAjusteInventario_tblCatalogoCuenta
+GO
+
+ALTER TABLE ARtblControlMaestroConceptoAjusteInventario
+DROP COLUMN CatalogoCuentaId
+GO

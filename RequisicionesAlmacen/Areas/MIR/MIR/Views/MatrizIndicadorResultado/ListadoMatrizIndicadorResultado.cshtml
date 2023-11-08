@@ -1,0 +1,137 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizIndicadorResultadoViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Matriz de Indicadores para Resultados" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text">¿Está seguro de eliminar la MIR?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaEliminar.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("eliminaRow")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">LISTADO GENERAL MIR</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                        .Text("Nuevo")
+                        .OnClick("redirigirNuevo")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.MIvwListadoMIR>()
+                    .ID("dxDataGridListado")
+                    .DataSource(m => m.Array().Data(Model.ListMatrizIndicadorResultado).Key("MIRId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+                        column.AddFor(m => m.Codigo)
+                        .Width(120)
+                        .Caption("Código");
+
+                        column.AddFor(m => m.Ejercicio);
+
+                        column.AddFor(m => m.NombrePlan)
+                        .Caption("Plan  de Desarrollo");
+
+                        column.AddFor(m => m.Nombre)
+                        .Caption("Programa Presupuestario");
+
+                        column.AddFor(m => m.Valor)
+                        .Caption("Tipo de Plan de Desarrollo");
+
+                        column.AddFor(m => m.Estatus);
+
+                        column.Add()
+                        .Width(100)
+                        .Caption("Acciones")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Right)
+                        .Type(GridCommandColumnType.Buttons)
+                        .Buttons(button =>
+                        {
+                            button.Add()
+                                .Hint("Ver")
+                                .Icon("doc")
+                                .OnClick("redirigirEditar")
+                                .Visible(new JS("habilitaAccionVer"));
+
+                            button.Add()
+                                .Hint("Editar")
+                                .Icon("edit")
+                                .OnClick("redirigirEditar")
+                                .Visible(new JS("habilitaAccion"));
+
+                            button.Add()
+                                .Hint("Eliminar")
+                                .Icon("trash")
+                                .OnClick("validaEliminar")
+                                .Visible(new JS("habilitaAccion"));
+                        });
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/MIR/MIR/Views/MatrizIndicadorResultado/ListadoMatrizIndicadorResultado.js"></script>

@@ -1,0 +1,114 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Compras.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model InvitacionCompraViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Invitaciones de Compra" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado de Invitaciones de Compra</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARvwListadoInvitacionCompra>()
+                    .ID("dxDataGrid")
+                    .DataSource(m => m.Array().Data(Model.ListInvitacionCompra).Key("InvitacionCompraId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CodigoInvitacion).Caption("Código").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Fecha);
+                        c.AddFor(m => m.Proveedores).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Cotizaciones).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.MontoInvitacion).Caption("Monto").Format("$ #,##0.00##");
+                        c.AddFor(m => m.Estatus);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Hint("Ver")
+                                    .Icon("doc")
+                                    .OnClick("ver");
+
+                                b.Add()
+                                    .Hint("Editar")
+                                    .Icon("edit")
+                                    .Visible(new JS("function(event) { return event.row.data.PermiteEditar; }"))
+                                    .OnClick("editar");
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">¿Está seguro de cancelar la Invitación de Compra?</h5>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaRegistro(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Loader-->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/Compras/Compras/Views/InvitacionCompra/ListadoInvitacionCompra.js"></script>

@@ -1,0 +1,31 @@
+﻿#dxTextBoxCodigo, #dxTextBoxProgramaPresupuestario, #dxTextBoxEjercicio, #dxTextBoxNombrePlanPeriodo {
+    border: none;
+}
+
+.left-content {
+    padding: 0 10px 10px;
+    background-color: rgba(191, 191, 191, 0.15);
+    box-shadow: -5px 0px 14px -8px rgba(0, 0, 0, 0.25) inset;
+    height: 100%
+}
+
+.right-content {
+    position: absolute;
+    right: 0;
+    left: 220px;
+    top: 0;
+    height: 100%;
+}
+
+.right-content .sub-title {
+    font-size: 120%;
+    color: rgba(152, 152, 152, 0.8);
+}
+
+.dx-datagrid-revert-tooltip {
+    display: none;
+}
+
+.pixvs-datagrid-cell {
+    background: #f7f7f7 !important;
+}

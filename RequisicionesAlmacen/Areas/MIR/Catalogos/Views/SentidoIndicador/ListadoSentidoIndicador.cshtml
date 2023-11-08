@@ -1,0 +1,63 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Catalogos.Models.ViewModel.SentidoIndicadorViewModel
+@{
+    ViewData["Title"] = "Catálogo de Sentido del Indicador";
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Catálogo de Sentido del Indicador" }, { "Accion", "" }, { "Icono", "fa fa-inbox" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-12 col-lg-12">
+                <h6 class="br-section-label">LISTADO SENTIDO DEL INDICADOR</h6>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.GRtblControlMaestro>()
+                    .ID("dxDataGridListado")
+                    .DataSource(Model.ListControlMaestroSentido)
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Paging(paging => paging.PageSize(5))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+
+                        column
+                        .AddFor(m => m.ControlId)
+                        .Width(200);
+
+                        column
+                        .AddFor(m => m.Valor)
+                        .Caption("Descripción");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Areas/MIR/Catalogos/Views/SentidoIndicador/ListadoSentidoIndicador.js"></script>

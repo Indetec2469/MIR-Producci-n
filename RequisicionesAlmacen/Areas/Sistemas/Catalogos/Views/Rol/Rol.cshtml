@@ -1,0 +1,257 @@
+﻿@model RequisicionesAlmacen.Areas.Sistemas.Catalogos.Models.ViewModel.RolViewModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Roles" }, { "Accion", Model.Rol.RolId > 0 ? "Editar" : "Nuevo" }, { "Icono", "icon ion-ios-filing-outline" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @(Html.DevExtreme().Form<RequisicionesAlmacenBL.Entities.GRtblRol>()
+                            .ID("dxForm")
+                            .FormData(Model.Rol)
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ColCount(12)
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(itemCaption =>
+                            {
+                                itemCaption.AddGroup()
+                                .ColSpan(4)
+                                .Items(itemsDatosGenerales =>
+                                {
+                                    itemsDatosGenerales.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple()
+                                                .Label(label => label.Text("Datos Generales").ShowColon(false))
+                                                .ColSpan(12)
+                                                .CssClass("h6 br-section-label");
+                                        }
+                                    );
+
+                                    itemsDatosGenerales.AddGroup()
+                                    .ColSpan(12)
+                                    .ColCount(12)
+                                    .Items(itemsDatosGeneralesGrupo =>
+                                    {
+                                        itemsDatosGeneralesGrupo.AddSimpleFor(m => m.Nombre)
+                                        .ColSpan(12)
+                                        .CssClass("tx-bold")
+                                        .Editor(editor => editor
+                                            .TextBox()
+                                            .OnValueChanged("setCambios")
+                                        );
+
+                                        itemsDatosGeneralesGrupo.AddSimpleFor(m => m.Descripcion)
+                                        .ColSpan(12)
+                                        .Editor(editor => editor
+                                            .TextBox()
+                                            .OnValueChanged("setCambios")
+                                        );
+
+                                        itemsDatosGeneralesGrupo.AddSimple()
+                                        .DataField("EsActivo")
+                                        .ColSpan(12)
+                                        .Label(label => label.Text("Activo"))
+                                        .Editor(editor => editor
+                                            .CheckBox()
+                                            .Value(true)
+                                            .OnValueChanged("onValueChangedActivo")
+                                        );
+                                    });
+                                });
+
+                                itemCaption.AddGroup()
+                                .ColSpan(8)
+                                .Items(itemsPermisos =>
+                                {
+                                    itemsPermisos.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple()
+                                                .Label(label => label.Text("Permisos").ShowColon(false))
+                                                .ColSpan(12)
+                                                .CssClass("h6 br-section-label");
+                                        }
+                                    );
+
+                                    itemsPermisos.AddGroup()
+                                    .ColSpan(12)
+                                    .ColCount(12)
+                                    .Items(itemsPermisosGrupo =>
+                                    {
+                                        itemsPermisosGrupo
+                                        .AddSimple()
+                                        .ColSpan(12)
+                                        .Template(new TemplateName("templateTreeList"));
+                                    });
+                                });
+
+                            })
+                        )
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-column flex-sm-column flex-md-row flex-lg-row flex-xl-row justify-content-end">
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonCancelar")
+                        .Text("Cerrar")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        .OnClick("function() { validaDeshacer(true); }")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        .OnClick("function() { validaDeshacer(false); }")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonEliminar")
+                        .Text("Eliminar")
+                        .ElementAttr("class", "btn-danger btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        .OnClick("validaEliminar")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardaCambios")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("templateTreeList"))
+{
+    <div class="row">
+        <div class="col-12">
+            @(Html.DevExtreme()
+                .TreeList<RequisicionesAlmacenBL.Entities.GRtblMenuPrincipal>()
+                .ID("dxTreeList")
+                .DataSource(Model.ListMenuPrincipal)
+                .KeyExpr("NodoMenuId")
+                .ParentIdExpr("NodoPadreId")
+                .ShowBorders(true)
+                .ColumnAutoWidth(true)
+                .AllowColumnResizing(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .RowAlternationEnabled(true)
+                .NoDataText("Sin registros")
+                .Selection(selection => selection.Mode(SelectionMode.Multiple).Recursive(true))
+                .AutoExpandAll(true)
+                .OnSelectionChanged("onSelectionChanged")
+                .OnEditingStart("setCambios")
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.Etiqueta);
+
+                    columns.AddFor(m => m.Orden)
+                        .Visible(false)
+                        .SortOrder(SortOrder.Asc);
+                })
+            )
+        </div>
+    </div>
+}
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar el Rol?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaRow(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _rol = @Html.Raw(Json.Encode(Model.Rol));
+    var _listRolMenu = @Html.Raw(Json.Encode(Model.ListRolMenu));
+    var _rolMenuModel = @Html.Raw(Json.Encode(Model.RolMenuModel));
+</script>
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js" type="text/javascript"></script>
+<script src="~/Areas/Sistemas/Catalogos/Views/Rol/Rol.js" type="text/javascript"></script>

@@ -1,0 +1,208 @@
+
+/******************************/
+/*********** MENU *************/
+/******************************/
+
+/*.footer {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    background: #cc0022;
+}*/
+
+/*.br-mainpanel {
+    margin-top: 40px;
+
+}*/
+
+.br-logo {
+    background-color: #E9ECEF;
+    padding: 0 35px;
+}
+
+
+.head-panel {
+    background: url('../Content/assets/backgrounds/banner.jpg') no-repeat;
+    background-size: cover;
+    background-position: 60px;
+    background-color: white;
+}
+
+/******************************/
+/***        LABELS          ***/
+/******************************/
+.br-section-label {
+    margin-top: 40px;
+}
+
+.br-label-ente {
+    color: #6c757d;
+}
+
+/******************************/
+/***        BUTTONS         ***/
+/******************************/
+.btn-width-100 {
+    width: 100px !important;
+}
+
+.btn-oblong {
+    border-radius: 20px;
+}
+
+/******************************/
+/***        DXGRID          ***/
+/******************************/
+.dx-column-indicators {
+    float: unset !important;
+}
+
+.dx-datagrid-action.dx-cell-focus-disabled {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/**********************************/
+/***        DXDROPZONE          ***/
+/**********************************/
+#dropzone-external {
+    max-width: 200px;
+    height: 200px;
+    background-color: rgba(183, 183, 183, 0.1);
+    border-width: 2px;
+    border-style: dashed;
+    padding: 10px;
+}
+
+    #dropzone-external > * {
+        pointer-events: none;
+    }
+
+    #dropzone-external.dropzone-active {
+        border-style: solid;
+    }
+
+.widget-container > span {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+#dropzone-image {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#dropzone-text > span {
+    font-weight: 100;
+    opacity: 0.5;
+}
+
+#upload-progress {
+    display: flex;
+    margin-top: 10px;
+}
+
+.flex-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/******************************/
+/***        DRAWER          ***/
+/******************************/
+#dxToolbar {
+    background-color: rgba(191, 191, 191, .15);
+    padding: 5px 10px;
+}
+
+.dx-list-item-icon-container, .dx-toolbar-before {
+    width: 36px;
+    padding-right: 0px !important;
+    text-align: center;
+}
+
+.dx-list-item-content {
+    padding-left: 10px !important;
+}
+
+#btnToolbar {
+    background-color: transparent;
+    border: none;
+}
+
+.panel-list {
+    height: 400px;
+}
+
+.dx-drawer-expand.dx-drawer-right .panel-list {
+    float: right;
+}
+
+.panel-list .dx-list-item {
+    color: #fff;
+    border-top: 1px solid rgba(221, 221, 221, .2);
+}
+
+.panel-list .dx-list-item .dx-icon {
+    color: #fff !important;
+}
+
+#content {
+    height: 100%;
+    /*padding: 0px 20px 0px 20px;*/
+}
+
+/******************************************/
+/***        REQUISICION MATERIAL        ***/
+/***        POR COMPRAR DETALLES        ***/
+/******************************************/
+#dxGridDetallesPorComprar .dx-datagrid-header-panel {
+    padding: 0;
+    background-color: rgba(85, 149, 222, 0.6);
+}
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-toolbar {
+        margin: 0;
+        padding-right: 20px;
+        background-color: transparent;
+    }
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-toolbar-items-container {
+        height: 70px;
+    }
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+        background-color: rgba(103, 171, 255, 0.6);
+    }
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+        padding-right: 10px;
+    }
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-selectbox {
+        margin: 17px 10px;
+    }
+
+    #dxGridDetallesPorComprar .dx-datagrid-header-panel .dx-button {
+        margin: 17px 0;
+    }
+
+#dxGridDetallesPorComprar .informer {
+    height: 70px;
+    width: 130px;
+    text-align: center;
+    color: #fff;
+}
+
+#dxGridDetallesPorComprar .count {
+    padding-top: 15px;
+    line-height: 27px;
+    font-size: 28px;
+    margin: 0;
+    font-weight: normal;
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Verdana, sans-serif;
+}

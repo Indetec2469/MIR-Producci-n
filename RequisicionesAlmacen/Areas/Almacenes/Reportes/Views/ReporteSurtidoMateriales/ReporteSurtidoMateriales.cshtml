@@ -1,0 +1,175 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Reportes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model ReporteSurtidoMaterialesViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Salida de Almacén" }, { "Accion", "Reporte" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<ARrptSurtidoMateriales>()
+                    .ID("dxForm")
+                    .FormData(Model.Reporte)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Filtros").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup().ColSpan(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.FechaInicio)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.DateBox()
+                                                            .ID("dxTxtFecha")
+                                                            .DisplayFormat("dd/MM/yyyy")
+                                                            .Value(Model.FechaInicio)
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.FechaFin)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.DateBox()
+                                                            .ID("dxTxtFechaFin")
+                                                            .DisplayFormat("dd/MM/yyyy")
+                                                            .Value(Model.FechaFin)
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.Solicitud)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.TextBox()
+                                                            .ID("dxTxtSolicitud")
+                                                            .OnValueChanged("setCambios"));
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+
+                            items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Surtimientos").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Template(new TemplateName("detallesTemplate"))
+                                        .ColSpan(12);
+                                }
+                            );
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Aceptar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("detallesTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARrptSurtidoMateriales>()
+                    .ID("dxGridDetalles")
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.InventarioMovtoAgrupadorId).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Solicitud).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Poliza).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Fecha).Alignment(HorizontalAlignment.Center).Format("dd/MM/yyyy hh:mm a");
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnVerReporte")
+                                    .Hint("Ver")
+                                    .Icon("doc")
+                                    .OnClick("verReporte");
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Almacenes/Reportes/Views/ReporteSurtidoMateriales/ReporteSurtidoMateriales.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>

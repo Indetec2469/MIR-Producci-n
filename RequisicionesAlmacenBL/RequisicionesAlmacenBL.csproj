@@ -1,0 +1,901 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CAB8319A-3D78-4E10-919F-1AD0A50BC020}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RequisicionesAlmacenBL</RootNamespace>
+    <AssemblyName>RequisicionesAlmacenBL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFrameworkExtras.EF6, Version=3.0.5.0, Culture=neutral, PublicKeyToken=afc61983f100d280, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFrameworkExtras.EF6.3.0.5\lib\net45\EntityFrameworkExtras.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="ExpressiveAnnotations, Version=2.7.4.0, Culture=neutral, PublicKeyToken=d3e372f3c1e83cec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExpressiveAnnotations.2.9.6\lib\net45\ExpressiveAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="ExpressiveAnnotations.MvcUnobtrusive, Version=2.5.4.0, Culture=neutral, PublicKeyToken=d3e372f3c1e83cec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExpressiveAnnotations.2.9.6\lib\net45\ExpressiveAnnotations.MvcUnobtrusive.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcExtensions, Version=2.5.0.0, Culture=neutral, PublicKeyToken=ee6190c4449c24bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcExtensions.2.5.0\lib\net40\MvcExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\ARfnRptExistenciasPartidas_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptExistenciasPresupuestales_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptExistenciasTotales_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptKardex_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptLibroAlmacen_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptSolicitudMateriales_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptSurtidoSolicitud_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARfnRptSurtimientoOC_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaConfiguracionAreaAlmacenes_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaConfiguracionAreaProyectos_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaCortesiaDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaDatosFinanciamientoOrdenCompra_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaDatosOCReciboPorId_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaDependenciasPorAreaId_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaDependenciasProyectosPorAreaId_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaExistenciaAlmacen_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInventarioAjusteDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInventarioFisicoDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionArticulosPorConvertir_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionCompraDetallePreciosProveedores_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionCompraDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionCompraListadoProveedores_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionCompraOrdenesCompra_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaInvitacionCompraProveedorCotizaciones_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaOCPorRecibirDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaOCPorRecibir_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaOrdenCompraDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaOrdenCompraProductos_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaOrdenCompraReciboDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaProyectosPorAreaId_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionMaterialDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionMaterialProductos_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionPorComprarAlmacenes_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionPorComprarDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionPorComprarFuentesFinanciamiento_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionPorSurtirDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaRequisicionPorSurtirExistencias_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaTransferenciaDetalles_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaTransferenciaProductosDestino_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspConsultaTransferenciaProductos_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspListadoProductosPorAlmacenId_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARspObjetoGastoAlmacenProductos_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblAlmacenProducto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblCompraCancelInfo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblControlMaestroConceptoAjusteInventario.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblControlMaestroConfiguracionArea.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblControlMaestroConfiguracionAreaAlmacen.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblControlMaestroConfiguracionAreaProyecto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblControlMaestroConfiguracionMontoCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblCortesia.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblCortesiaDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioAjuste.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioAjusteDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioFisico.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioFisicoDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioMovimiento.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInventarioMovimientoAgrupador.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInvitacionArticulo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInvitacionArticuloDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInvitacionCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInvitacionCompraDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ArtblInvitacionCompraDetallePrecioProveedor.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblInvitacionCompraProveedor.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ArtblInvitacionCompraProveedorCotizacion.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblOrdenCompraInvitacionDet.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblOrdenCompraRequisicionDet.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblProveedorProspecto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblRequisicionMaterial.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblRequisicionMaterialDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblTransferencia.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARtblTransferenciaMovto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoConfiguracionArea.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoInventarioAjuste.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoInventarioFisico.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoInvitacionCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoOrdenCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoOrdenCompraRecibo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoReciboCortesia.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoRequisicionMaterial.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoRequisicionPorSurtir.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ARvwListadoTransferencias.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CGvwClasificadorObjetoGasto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRspAlertasConfiguracionEmpleados_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRspAlertasConfiguracionMenuPrincipal_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRspArbolPermisoFicha_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRspConsultaMenuPrincipalPermiso_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRspGetListadoAlertasPorUsuario_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblAlerta.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblAlertaConfiguracion.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblArchivo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblArchivoEstructuraCarpeta.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblAutonumerico.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblConfiguracionEnte.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblControlMaestro.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblControlMaestroOrigenArchivo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblMenuPrincipal.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblPermisoFicha.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblRol.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblRolMenu.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblUsarioPermiso.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRtblUsuario.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRvwListadoRol.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GRvwListadoUsuario.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIfnObtenerSeguimientoIndicadorDesempenio_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaDimensionConNivel_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaFrecuenciaMedicionConNivel_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaListaVariableIndicador_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaMatrizIndicadorResultado_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoDevengadoH_Result.cs" />
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoDevengado_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoVigenteH_Result.cs" />
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoVigente_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaPresupuestoVigente_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaRepProyecto_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaTipoIndicadorConNivel_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspConsultaUnidadMedidaConDimension_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspRep_Proyecto_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspRptLibroConsultaListaMatrizIndicadorResultado_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspRptLibroConsultaMatrizIndicadorResultadoIndicador_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspRptLibroConsultaMatrizIndicadorResultado_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIspRptLibroConsultaPlanDesarrolloEstructura_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroControlPeriodo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroDimension.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroDimensionNivel.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroFrecuenciaMedicion.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroFrecuenciaMedicionNivel.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroTipoIndicador.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroTipoIndicadorNivel.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroUnidadMedida.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroUnidadMedidaDimension.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblControlMaestroUnidadMedidaFormulaVariable.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestal.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalDetalle.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalDetalleH.cs" />
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalSeguimientoVariable.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalSeguimientoVariableH.cs" />
+    <Compile Include="Entities\MItblMatrizIndicadorResultado.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizIndicadorResultadoIndicador.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizIndicadorResultadoIndicadorFormulaVariable.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblMatrizIndicadorResultadoIndicadorMeta.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblPlanDesarrollo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MItblPlanDesarrolloEstructura.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwComboListadoMIR.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoMatrizConfiguracionPresupuestal.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoMatrizConfiguracionPresupuestalSeguimientoVariable.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoMatrizPresupuestoDevengado.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoMatrizPresupuestoVigente.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoMIR.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MIvwListadoPlanNacionalDesarrollo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RHspConsultaEmpleadoLigado_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RHtblEmpleado.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SAACGContext.cs" />
+    <Compile Include="Entities\spComboProgramaGobierno_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\spObjetoGasto_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\spObtenerFechaDelServidor_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblAdministracionPeriodo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblAlmacen.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblCatalogoCuenta.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblCompraDet.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblCuentaPresupuestalEgr.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblDependencia.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblEstado.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblMunicipio.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblObjetoGasto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblOrdenCompra.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblOrdenCompraDet.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblPais.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblPoliza.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblPolizaRef.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblProducto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblProgramaGobierno.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblProveedor.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblProyecto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblProyecto_Dependencia.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblRamo.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblSubProgramaGobierno.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblTarifaImpuesto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblTipoComprobanteFiscal.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblTipoGasto.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblTipoOperacion.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblTipoProveedor.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\tblUnidadDeMedida.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\UserExceptionHelper.cs" />
+    <Compile Include="Helpers\SAACGContextHelper.cs" />
+    <Compile Include="Entities\EntityDataModelSAACG.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityDataModelSAACG.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\EntityDataModelSAACG.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\EntityDataModelSAACG.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityDataModelSAACG.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\SessionHelper.cs" />
+    <Compile Include="Models\ARrptLibroAlmacen.cs" />
+    <Compile Include="Models\ARrptExistencias.cs" />
+    <Compile Include="Models\ARrptReciboOC.cs" />
+    <Compile Include="Models\ARrptSurtidoMateriales.cs" />
+    <Compile Include="Models\ARrptKardex.cs" />
+    <Compile Include="Models\ARspCargaInventarioInicial.cs" />
+    <Compile Include="Models\ARspProcesadorInventarios.cs" />
+    <Compile Include="Models\ARtblInvitacionArticulo.cs" />
+    <Compile Include="Models\ARtblInvitacionArticuloDetalle.cs" />
+    <Compile Include="Models\ARtblCortesia.cs" />
+    <Compile Include="Models\ARtblInvitacionCompraDetalle.cs" />
+    <Compile Include="Models\ArtblInvitacionCompraDetallePrecioProveedor.cs" />
+    <Compile Include="Models\ARtblInvitacionCompraProveedor.cs" />
+    <Compile Include="Models\ArtblInvitacionCompraProveedorCotizacion.cs" />
+    <Compile Include="Models\ARtblTransferencia.cs" />
+    <Compile Include="Models\ARudtImportarAlmacenProducto.cs" />
+    <Compile Include="Models\Attributes\CorreosAttibute.cs" />
+    <Compile Include="Models\Attributes\ManualStringLengthAttribute.cs" />
+    <Compile Include="Models\Attributes\PostiveNumberAttribute .cs" />
+    <Compile Include="Models\ARtblControlMaestroConceptoAjusteInventario.cs" />
+    <Compile Include="Models\ARtblControlMaestroConfiguracionMontoCompra.cs" />
+    <Compile Include="Models\GRtblConfiguracionEnte.cs" />
+    <Compile Include="Models\GRtblAlertaConfiguracion.cs" />
+    <Compile Include="Models\GRtblControlMaestro.cs" />
+    <Compile Include="Models\GRtblArchivo.cs" />
+    <Compile Include="Models\GRtblPermisoFicha.cs" />
+    <Compile Include="Models\GRtblRol.cs" />
+    <Compile Include="Models\GRtblRolMenu.cs" />
+    <Compile Include="Models\GRtblUsarioPermiso.cs" />
+    <Compile Include="Models\GRvwListadoRol.cs" />
+    <Compile Include="Models\GRvwListadoUsuario.cs" />
+    <Compile Include="Models\Mapeos\Tablas.cs" />
+    <Compile Include="Models\Mapeos\tblTipoMovimiento.cs" />
+    <Compile Include="Models\Mapeos\AlertaDefinicion.cs" />
+    <Compile Include="Models\Mapeos\FrecuenciaMedicionMapeo.cs" />
+    <Compile Include="Models\Mapeos\MenuPrincipalMapeo.cs" />
+    <Compile Include="Models\Mapeos\MesMapeo.cs" />
+    <Compile Include="Models\Mapeos\PermisoFichaMapeo.cs" />
+    <Compile Include="Models\MatrizIndicadorResultadoIndicadorFormulaVariable.cs" />
+    <Compile Include="Models\MItblMatrizConfiguracionPresupuestalDetalleH.cs" />
+    <Compile Include="Models\MItblMatrizConfiguracionPresupuestalSeguimientoVariable.cs" />
+    <Compile Include="Models\MItblMatrizConfiguracionPresupuestalSeguimientoVariableH.cs" />
+    <Compile Include="Models\MItblMatrizIndicadorResultadoIndicadorFormulaVariable.cs" />
+    <Compile Include="Models\MItblControlMaestroControlPeriodo.cs" />
+    <Compile Include="Models\MItblControlMaestroDimension.cs" />
+    <Compile Include="Models\MItblControlMaestroDimensionNivel.cs" />
+    <Compile Include="Models\MItblControlMaestroTipoIndicador.cs" />
+    <Compile Include="Models\MItblControlMaestroTipoIndicadorNivel.cs" />
+    <Compile Include="Models\MItblControlMaestroUnidadMedida.cs" />
+    <Compile Include="Models\MItblControlMaestroUnidadMedidaDimension.cs" />
+    <Compile Include="Models\MItblControlMaestroUnidadMedidaFormulaVariable.cs" />
+    <Compile Include="Models\ARtblInventarioAjuste.cs" />
+    <Compile Include="Models\ARtblInventarioFisico.cs" />
+    <Compile Include="Models\ARtblInventarioAjusteDetalle.cs" />
+    <Compile Include="Models\ARtblInventarioFisicoDetalle.cs" />
+    <Compile Include="Models\MItblMatrizIndicadorResultado.cs" />
+    <Compile Include="Models\MItblMatrizIndicadorResultadoIndicador.cs" />
+    <Compile Include="Models\MItblMatrizIndicadorResultadoIndicadorMeta.cs" />
+    <Compile Include="Models\MItblMatrizConfiguracionPresupuestal.cs" />
+    <Compile Include="Models\MItblMatrizConfiguracionPresupuestalDetalle.cs" />
+    <Compile Include="Models\MItblPlanDesarrollo.cs" />
+    <Compile Include="Models\MItblPlanDesarrolloEstructura.cs" />
+    <Compile Include="Models\MIvwListadoMatrizConfiguracionPresupuestalSeguimientoVariable.cs" />
+    <Compile Include="Models\RHtblEmpleado.cs" />
+    <Compile Include="Models\JsonResponse.cs" />
+    <Compile Include="Models\Mapeos\ControlMaestroMapeo.cs" />
+    <Compile Include="Models\ARtblProveedorProspecto.cs" />
+    <Compile Include="Models\ARtblControlMaestroConfiguracionArea.cs" />
+    <Compile Include="Models\ARtblControlMaestroConfiguracionAreaAlmacen.cs" />
+    <Compile Include="Models\ARtblControlMaestroConfiguracionAreaProyecto.cs" />
+    <Compile Include="Models\RequisicionDetalleSurtirItem.cs" />
+    <Compile Include="Models\ARtblRequisicionMaterial.cs" />
+    <Compile Include="Models\ARtblRequisicionMaterialDetalle.cs" />
+    <Compile Include="Models\GRtblUsuario.cs" />
+    <Compile Include="Models\ARtblInvitacionCompra.cs" />
+    <Compile Include="Models\ARudtInventarioMovimiento.cs" />
+    <Compile Include="Models\tblCompra.cs" />
+    <Compile Include="Models\tblOrdenCompra.cs" />
+    <Compile Include="Models\tblCompraDet.cs" />
+    <Compile Include="Models\tblOrdenCompraDet.cs" />
+    <Compile Include="Models\TransferenciaMovtoItem.cs" />
+    <Compile Include="Models\UsuarioSesion.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Almacen\AlmacenProductoService.cs" />
+    <Compile Include="Services\Almacen\InventarioMovimientoAgrupadorService.cs" />
+    <Compile Include="Services\Almacen\ReportesService.cs" />
+    <Compile Include="Services\Almacen\TransferenciaService.cs" />
+    <Compile Include="Services\Compras\InvitacionArticuloService.cs" />
+    <Compile Include="Services\Compras\InvitacionCompraDetallePrecioProveedorService.cs" />
+    <Compile Include="Services\Compras\InvitacionCompraProveedorCotizacionService.cs" />
+    <Compile Include="Services\Compras\InvitacionCompraProveedorService.cs" />
+    <Compile Include="Services\Compras\CortesiaService.cs" />
+    <Compile Include="Services\Compras\OrdenCompraReciboService.cs" />
+    <Compile Include="Services\Compras\OrdenCompraService.cs" />
+    <Compile Include="Services\Compras\InvitacionCompraService.cs" />
+    <Compile Include="Services\Compras\RequisicionMaterialService.cs" />
+    <Compile Include="Services\Compras\RequisicionPorComprarService.cs" />
+    <Compile Include="Services\Compras\RequisicionPorSurtirService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroFrecuenciaMedicionNivelService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroFrecuenciaMedicionService.cs" />
+    <Compile Include="Services\MIR\MatrizConfiguracionPresupuestalDetalleHService.cs" />
+    <Compile Include="Services\MIR\MatrizConfiguracionPresupuestalSeguimientoVariableHService.cs" />
+    <Compile Include="Services\MIR\MatrizConfiguracionPresupuestalSeguimientoVariableService.cs" />
+    <Compile Include="Services\SAACG\MunicipioService.cs" />
+    <Compile Include="Services\SAACG\EstadoService.cs" />
+    <Compile Include="Services\SAACG\PolizaService.cs" />
+    <Compile Include="Services\SAACG\PaisService.cs" />
+    <Compile Include="Services\SAACG\ProveedorService.cs" />
+    <Compile Include="Services\SAACG\TarifaImpuestoService.cs" />
+    <Compile Include="Services\SAACG\TipoComprobanteFiscalService.cs" />
+    <Compile Include="Services\SAACG\TipoProveedorService.cs" />
+    <Compile Include="Services\SAACG\TipoOperacionService.cs" />
+    <Compile Include="Services\Sistema\AlertaConfiguracionService.cs" />
+    <Compile Include="Services\Sistema\AlertaService.cs" />
+    <Compile Include="Services\Sistema\ArchivoEstructuraCarpetaService.cs" />
+    <Compile Include="Services\Sistema\PermisoFichaService.cs" />
+    <Compile Include="Services\Sistema\ProcesadorInventariosService.cs" />
+    <Compile Include="Services\Sistema\AutonumericoService.cs" />
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\Almacen\ControlMaestroConceptoAjusteInventarioService.cs" />
+    <Compile Include="Services\Compras\ControlMaestroConfiguracionMontoCompraService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroControlPeriodoService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroDimensionNivelService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroDimensionService.cs" />
+    <Compile Include="Services\Sistema\ArchivoService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroTipoIndicadorNivelService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroTipoIndicadorService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroUnidadMedidaDimensionService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroUnidadMedidaFormulaVariableService.cs" />
+    <Compile Include="Services\MIR\ControlMaestroUnidadMedidaService.cs" />
+    <Compile Include="Services\Almacen\InventarioAjusteService.cs" />
+    <Compile Include="Services\Almacen\InventarioFisicoService.cs" />
+    <Compile Include="Services\MIR\MatrizConfiguracionPresupuestalDetalleService.cs" />
+    <Compile Include="Services\MIR\MatrizConfiguracionPresupuestalService.cs" />
+    <Compile Include="Services\MIR\MatrizIndicadorResultadoIndicadorFormulaVariableService.cs" />
+    <Compile Include="Services\MIR\MatrizIndicadorResultadoIndicadorMetaService.cs" />
+    <Compile Include="Services\MIR\MatrizIndicadorResultadoIndicadorService.cs" />
+    <Compile Include="Services\MIR\MatrizIndicadorResultadoService.cs" />
+    <Compile Include="Services\MIR\PlanDesarrolloEstructuraService.cs" />
+    <Compile Include="Services\MIR\PlanDesarrolloService.cs" />
+    <Compile Include="Services\Sistema\MenuPrincipalService.cs" />
+    <Compile Include="Services\Compras\ProveedorProspectoService.cs" />
+    <Compile Include="Services\SAACG\ConfiguracionAreaService.cs" />
+    <Compile Include="Services\Sistema\ControlMaestroService.cs" />
+    <Compile Include="Services\SAACG\CuentaPresupuestalEgrService.cs" />
+    <Compile Include="Services\SAACG\ObjetoGastoService.cs" />
+    <Compile Include="Services\SAACG\ProgramaGobiernoService.cs" />
+    <Compile Include="Services\SAACG\TipoGastoService.cs" />
+    <Compile Include="Services\SAACG\UnidadDeMedidaService.cs" />
+    <Compile Include="Services\SAACG\RamoService.cs" />
+    <Compile Include="Services\SAACG\ProyectoService.cs" />
+    <Compile Include="Services\SAACG\DependenciaService.cs" />
+    <Compile Include="Services\SAACG\AlmacenService.cs" />
+    <Compile Include="Services\SAACG\ProductoService.cs" />
+    <Compile Include="Services\SAACG\CatalogoCuentaService.cs" />
+    <Compile Include="Services\Sistema\RolMenuService.cs" />
+    <Compile Include="Services\Sistema\ConfiguracionEnteService.cs" />
+    <Compile Include="Services\Sistema\SistemaService.cs" />
+    <Compile Include="Services\Sistema\RolService.cs" />
+    <Compile Include="Services\Sistema\UsuarioPermisoService.cs" />
+    <Compile Include="Services\Sistema\UsuarioService.cs" />
+    <Compile Include="Services\RH\EmpleadoService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Entities\EntityDataModelSAACG.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityDataModelSAACG.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Entities\EntityDataModelSAACG.edmx.diagram">
+      <DependentUpon>EntityDataModelSAACG.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entities\EntityDataModelSAACG.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityDataModelSAACG.edmx</DependentUpon>
+      <LastGenOutput>EntityDataModelSAACG.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Entities\EntityDataModelSAACG.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityDataModelSAACG.edmx</DependentUpon>
+      <LastGenOutput>EntityDataModelSAACG.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\expressive.annotations.validate.js" />
+    <Content Include="Scripts\expressive.annotations.validate.min.js" />
+    <Content Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.8.2.js" />
+    <Content Include="Scripts\jquery-1.8.2.min.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SACG.GDALib\SACG.GDALib.csproj">
+      <Project>{F0265409-3F6E-4690-AEB1-03284CADBFF1}</Project>
+      <Name>SACG.GDALib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SACG.sysSacg\SACG.sysSacg.csproj">
+      <Project>{48bd32cb-c8f0-4ce9-b805-3192a7d3bdbe}</Project>
+      <Name>SACG.sysSacg</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

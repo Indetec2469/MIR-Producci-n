@@ -1,0 +1,187 @@
+﻿@model RequisicionesAlmacen.Areas.Compras.Catalogos.Models.ViewModel.RequisicionMaterialViewModel
+@{
+    ViewData["Title"] = "Solicitud de Materiales y/o Consumibles";
+}
+
+@Html.Partial("~/Areas/Compras/Catalogos/Views/Shared/_HeaderLayout.cshtml", new ViewDataDictionary { { "NombreFicha", "Solicitud de Materiales y/o Consumibles" }, { "Accion", "Nuevo" }, { "Icono", "icon ion-ios-filing-outline" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- CONTENT -->
+<div class="br-pagebody" id="content-123">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">LISTADO DE SOLICITUD DE MATERIALES Y/O CONSUMIBLES</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html
+                        .DevExtreme()
+                        .Button()
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                        .Text("Nuevo")
+                        .OnClick("testtt")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                @(Html
+                    .DevExtreme()
+                    .DataGrid<RequisicionesAlmacenBL.Entities.RequisicionMaterial>()
+                    .ID("dxDataGridRequisicionMaterial")
+                    .DataSource(m => m.Array().Data(Model.ListRequisicionMaterial).Key("RequisicionMaterialId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .ShowBorders(true)
+                    .Paging(paging => paging.PageSize(5))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+                        column
+                        .AddFor(m => m.CodigoRequisicion);
+
+                        column
+                        .AddFor(m => m.FechaCreacion);
+
+                        column
+                        .AddFor(m => m.CreadoPorId)
+                        .Alignment(HorizontalAlignment.Left)
+                        .CalculateCellValue("cargarNombreCreado");
+
+                        column
+                        .AddFor(m => m.AreaId)
+                        .Alignment(HorizontalAlignment.Left);
+
+                        column
+                        .AddFor(m => m.AlmacenId)
+                        .Alignment(HorizontalAlignment.Left);
+
+                        column
+                        .Add()
+                        .Caption("Monto $")
+                        .Alignment(HorizontalAlignment.Left)
+                        .CalculateCellValue("cargarTotalMonto")
+                        .Format("$ #,##0.##");
+
+                        column
+                        .AddFor(m => m.EstatusId)
+                        .Alignment(HorizontalAlignment.Left)
+                        .CalculateCellValue("cargarEstatus");
+
+                        column
+                        .Add()
+                        .Width(100)
+                        .Caption("Acciones")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Right)
+                        .Type(GridCommandColumnType.Buttons)
+                        .Buttons(button =>
+                        {
+                            button
+                                .Add()
+                                .Hint("Ver")
+                                .Icon("doc")
+                                .Visible(new JS("habilitaAccionVer"));
+
+                            button
+                                .Add()
+                                .Hint("Editar")
+                                .Icon("edit")
+                                .Visible(new JS("habilitaAccionEditar"));
+                            
+                            button
+                                .Add()
+                                .Hint("Eliminar")
+                                .Icon("trash")
+                                .Visible(new JS("habilitaAccionEliminar"));
+
+                        });
+
+
+                    })
+                )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Scripts/mapeos/accion_mapeo.js"></script>
+<script>
+    // VARIABLES GLOBAL //
+    var _listUsuario = @Html.Raw(Json.Encode(Model.ListUsuario)),
+        _listEmpleado = @Html.Raw(Json.Encode(Model.ListEmpleado));
+    //////////////////////
+
+    cargarNombreCreado = (params) => {
+        var empleado = _listEmpleado.find(empleado => empleado.EmpleadoId == _listUsuario.find(usuario => usuario.UsuarioId == params.CreadoPorId).EmpleadoId);
+        return empleado.Nombre + " " + empleado.PrimerApellido;
+    }
+
+    cargarTotalMonto = (params) => {
+        return 0;
+    }
+
+    cargarEstatus = (params) => {
+        return ControlMaestroMapeo.GetEstatusSolicitud(params.EstatusId);
+    }
+
+    habilitaAccionVer = (params) => {
+        return AccionMapeo.AccionVer.includes(params.row.data.EstatusId);
+    }
+
+    habilitaAccionEditar = (params) => {
+        return AccionMapeo.AccionEditar.includes(params.row.data.EstatusId);
+    }
+
+    habilitaAccionEliminar = (params) => {
+        return AccionMapeo.AccionEliminar.includes(params.row.data.EstatusId);
+    }
+
+    testtt = () => {
+        window.location = "/compras/catalogos/requisicionmaterial/nuevo";
+    }
+</script>

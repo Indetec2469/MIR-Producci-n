@@ -1,0 +1,2 @@
+ALTER TABLE MItblMatrizConfiguracionPresupuestalDetalle DROP COLUMN Editado
+GO

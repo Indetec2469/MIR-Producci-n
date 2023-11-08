@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<inherited BaseReport="..\..\Encabezados\EncabezadoVertical.frx" BaseReportAbsolutePath="C:\Users\elias\OneDrive\Documentos\indetec-almacenes-requisicion-asp-net-mvc\RequisicionesAlmacen\App_Data\Reportes\Encabezados\EncabezadoVertical.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/18/2021 11:33:22" ReportInfo.Modified="11/15/2022 11:54:39" ReportInfo.CreatorVersion="2022.1.14.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHmUxX4WG48H9HdUBoWojdIt0OXisRvf3hZwzoKcjGiJsSbLVrIJtt18pAQNfnCRM+EuIrnf5dkTbvjPB4S2Jg/e8jNiegkDvW3MhXGaemq4BlsgsB5RZIHD0sNpiB0cRnfkKgWqZrdlc1LQG9E+4Bf1Q==">
+      <TableDataSource Name="Table" Alias="ARfnRptLibroAlmacen" DataType="System.Int32" Enabled="true" SelectCommand="SELECT *,&#13;&#10;       SUM(Cantidad) OVER(PARTITION BY CuentaAlmacenCodigo) AS CantidadCuenta,&#13;&#10;       SUM(Monto) OVER(PARTITION BY CuentaAlmacenCodigo) AS MontoCuenta&#13;&#10;FROM ARfnRptLibroAlmacenAcumulado(@pObjetosGastoId, @pFecha)&#13;&#10;ORDER BY CuentaAlmacenCodigo,&#13;&#10;         ProductoId,&#13;&#10;         CostoUnitario">
+        <Column Name="ProductoId" DataType="System.String"/>
+        <Column Name="Descripcion" DataType="System.String"/>
+        <Column Name="CuentaAlmacenCodigo" DataType="System.String"/>
+        <Column Name="CuentaAlmacen" DataType="System.String"/>
+        <Column Name="Cantidad" DataType="System.Decimal"/>
+        <Column Name="UM" DataType="System.String"/>
+        <Column Name="CostoUnitario" DataType="System.Decimal"/>
+        <Column Name="Monto" DataType="System.Decimal"/>
+        <Column Name="CantidadCuenta" DataType="System.Decimal"/>
+        <Column Name="MontoCuenta" DataType="System.Decimal"/>
+        <Column Name="FechaCorte" DataType="System.String"/>
+        <CommandParameter Name="@pObjetosGastoId" DataType="22" Expression="[@pObjetosGastoId]"/>
+        <CommandParameter Name="@pFecha" DataType="22" Expression="[@pFecha]"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pObjetosGastoId" DataType="System.String"/>
+    <Parameter Name="@pFecha" DataType="System.String"/>
+    <Total Name="CantidadTotal" Expression="[ARfnRptLibroAlmacen.Cantidad]" Evaluator="Data1"/>
+    <Total Name="MontoTotal" Expression="[ARfnRptLibroAlmacen.Monto]" Evaluator="Data1"/>
+  </Dictionary>
+  <inherited Name="Page1">
+    <inherited Name="PageHeader1" Height="175.77">
+      <inherited Name="Text3"/>
+      <inherited Name="Text2"/>
+      <inherited Name="Text1"/>
+      <inherited Name="Picture2"/>
+      <inherited Name="Text4"/>
+      <inherited Name="Text5" Width="189"/>
+      <inherited Name="Text6"/>
+      <inherited Name="Text7" Width="189"/>
+      <inherited Name="Text8" IsIntersectedWithOtherObject="true"/>
+      <inherited Name="Line1"/>
+      <inherited Name="Text9"/>
+      <inherited Name="Text10" Visible="false" IsIntersectedWithOtherObject="true"/>
+      <TextObject Name="Text56" ZOrder="12" Left="274.05" Top="132.3" Width="292.95" Height="37.8" Text="(CIFRAS EN PESOS Y CENTAVOS)&#13;&#10;(1)" HorzAlign="Center" VertAlign="Center" Font="Arial, 7.8pt"/>
+      <TextObject Name="Text57" ZOrder="13" Left="113.4" Top="94.5" Width="614.25" Height="18.9" IsIntersectedWithOtherObject="true" Text="Al [ARfnRptLibroAlmacen.FechaCorte]" HorzAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text58" ZOrder="14" Left="472.5" Top="102.06" Width="255.15" Height="18.9" IsIntersectedWithOtherObject="true" Text="Página [Page] de [TotalPages]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7.8pt"/>
+    </inherited>
+    <ColumnHeaderBand Name="ColumnHeader1" ZOrder="-1" Top="177.9" Width="740.5" Height="49.14">
+      <TextObject Name="Text29" Left="9.45" Width="75.6" Height="49.14" Border.Lines="All" Text="CÓDIGO&#13;&#10;(2)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text32" Left="85.05" Width="302.4" Height="49.14" Border.Lines="All" Text="SUBCUENTA / PARTIDA GENÉRICA&#13;&#10;(3)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text33" Left="472.5" Width="85.05" Height="49.14" Border.Lines="All" Text="UNIDAD DE&#13;&#10;MEDIDA&#13;&#10;(5)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text36" Left="642.6" Width="85.05" Height="49.14" Border.Lines="All" Text="MONTO ($)&#13;&#10;(7)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text40" Left="557.55" Width="85.05" Height="49.14" Border.Lines="All" Text="COSTO&#13;&#10;UNITARIO&#13;&#10;(6)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text45" Left="387.45" Width="85.05" Height="49.14" Border.Lines="All" Text="CANTIDAD&#13;&#10;(4)" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+    </ColumnHeaderBand>
+    <GroupHeaderBand Name="GroupHeader1" ZOrder="0" Top="229.18" Width="740.5" Height="30.24" Condition="[ARfnRptLibroAlmacen.CuentaAlmacenCodigo]" KeepTogether="true">
+      <TextObject Name="Text46" Left="9.45" Width="75.6" Height="30.24" Border.Lines="All" Text="[ARfnRptLibroAlmacen.CuentaAlmacenCodigo]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text47" Left="85.05" Width="302.4" Height="30.24" Border.Lines="All" Text="[ARfnRptLibroAlmacen.CuentaAlmacen]" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text48" Left="472.5" Width="85.05" Height="30.24" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text49" Left="642.6" Width="85.05" Height="30.24" Border.Lines="All" Text="[ARfnRptLibroAlmacen.MontoCuenta]" Format="Custom" Format.Format="$ #,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text50" Left="557.55" Width="85.05" Height="30.24" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text51" Left="387.45" Width="85.05" Height="30.24" Border.Lines="All" Text="[ARfnRptLibroAlmacen.CantidadCuenta]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Center" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <DataBand Name="Data1" Top="261.55" Width="740.5" Height="22.68" CanGrow="true" DataSource="Table">
+        <TextObject Name="Text37" Left="9.45" Width="75.6" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" Text="[ARfnRptLibroAlmacen.ProductoId]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text38" Left="85.05" Width="302.4" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" CanGrow="true" Text="[ARfnRptLibroAlmacen.Descripcion]" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text39" Left="557.55" Width="85.05" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" Text="[ARfnRptLibroAlmacen.CostoUnitario]" Format="Custom" Format.Format="$ #,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text42" Left="642.6" Width="85.05" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" Text="[ARfnRptLibroAlmacen.Monto]" Format="Custom" Format.Format="$ #,##0.00##" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 7pt" Trimming="EllipsisCharacter"/>
+        <TextObject Name="Text43" Left="472.5" Width="85.05" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" Text="[ARfnRptLibroAlmacen.UM]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text44" Left="387.45" Width="85.05" Height="22.68" Border.Lines="Left, Right, Bottom" Border.BottomLine.Style="Dash" Text="[ARfnRptLibroAlmacen.Cantidad]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+        <Sort>
+          <Sort Expression="[ARfnRptLibroAlmacen.ProductoId]"/>
+          <Sort Expression="[ARfnRptLibroAlmacen.UM]"/>
+          <Sort Expression="[ARfnRptLibroAlmacen.CostoUnitario]"/>
+        </Sort>
+      </DataBand>
+    </GroupHeaderBand>
+    <ReportSummaryBand Name="ReportSummary1" ZOrder="-1" Top="286.36" Width="740.5" Height="28.35">
+      <LineObject Name="Line3" Left="9.45" Top="5.67" Width="718.2"/>
+      <TextObject Name="Text52" Left="103.95" Top="9.45" Width="283.5" Height="13.23" Text="Cantidad Total de Materiales y Suministros:" HorzAlign="Right" VertAlign="Bottom" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text53" Left="387.45" Top="9.45" Width="85.05" Height="13.23" Text="[CantidadTotal]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Bottom" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text54" Left="472.5" Top="9.45" Width="170.1" Height="13.23" Text="Total de Montos:" HorzAlign="Right" VertAlign="Bottom" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text55" Left="642.6" Top="9.45" Width="85.05" Height="13.23" Text="[MontoTotal]" Format="Custom" Format.Format="$ #,##0.00##" HorzAlign="Right" VertAlign="Bottom" Font="Arial, 7.2pt, style=Bold"/>
+    </ReportSummaryBand>
+    <inherited Name="PageFooter1" Top="316.85" Height="9.45">
+      <inherited Name="Text12" Height="0"/>
+    </inherited>
+  </inherited>
+</inherited>

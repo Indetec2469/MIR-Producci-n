@@ -1,0 +1,370 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizIndicadorResultadoViewModel
+
+@{
+    ViewData["Title"] = "Matriz de Indicadores para Resultados";
+}
+
+<link href="~/Content/areas/mir/MatrizIndicadorResultado.css" rel="stylesheet" />
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- MODAL ELIMINAR MIR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25 btn">
+                <h5 class="dx-field-item-label-text modal-title">Está a punto de eliminar la MIR. ¿Desea continuar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaEliminar.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("onClickEliminar")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+@*<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Existen cambios sin guardar.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaDeshacer.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("recargarFicha")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<!-- MODAL DESHACER NIVEL -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacerNivel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => { if(esMenu) esMenu = false; modalConfirmaDeshacerNivel.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("onClickModalDeshacerNivel")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminarNivel" nivel="" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar el nivel?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaEliminarNivel.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("onClickEliminaRowNivel")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CERRAR -->
+<div class="modal fade effect-scale" id="modalCerrar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text">Existen cambios sin guardar.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalCerrar.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("() => { modalCerrar.modal('hide'); regresarListado(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="bd">
+                    <div class="toolbar">
+                        @(Html.DevExtreme()
+                            .Toolbar()
+                            .ID("dxToolbar")
+                            .Items(items => {
+                                items
+                                .Add()
+                                .Widget(w =>
+                                    w
+                                    .Button()
+                                    .Icon("menu")
+                                    .OnClick("onClickToolbar")
+                                ).Location(ToolbarItemLocation.Before);
+                            })
+                        )
+                    </div>
+                    <div class="drawer">
+
+                        @(Html.DevExtreme()
+                            .Drawer()
+                            .ID("dxDrawer")
+                            .OpenedStateMode(DrawerOpenedStateMode.Shrink)
+                            .Opened(true)
+                            .Position(DrawerPosition.Left)
+                            .RevealMode(DrawerRevealMode.Slide)
+                            .CloseOnOutsideClick(true)
+                            .Template(@<text>
+                                <div style="width: 200px; height: 100%">
+                                    @(Html.DevExtreme().List()
+                                        .ID("dxListDrawer")
+                                        .Items(items => {
+                                            items.Add().Text("Datos Generales").Icon("product").Option("index", 1);
+                                            items.Add().Text("Fin").Icon("money").Option("index", 2);
+                                            items.Add().Text("Propósito").Icon("group").Option("index", 3);
+                                            items.Add().Text("Componente").Icon("card").Option("index", 4);
+                                            items.Add().Text("Actividad").Icon("chart").Option("index", 5);
+                                            items.Add().Text("Resumen").Icon("chart").Option("index", 6);
+                                        })
+                                        .KeyExpr("index")
+                                        .HoverStateEnabled(false)
+                                        .FocusStateEnabled(false)
+                                        .ActiveStateEnabled(false)
+                                        .SelectionMode(ListSelectionMode.Single)
+                                        .OnItemClick("onItemClickDrawer")
+                                        .ElementAttr("class", "panel-list dx-theme-accent-as-background-color")
+                                        .SelectedItemKeys(new[] { 1 })
+                                    )
+                                </div>
+                            </text>)
+                            .Content(@<text>
+                                <div id="templateContent" class="d-none dx-theme-background-color p-3">
+                                    <div id="contenido"></div>
+                                </div>
+                            </text>)
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-column flex-sm-column flex-md-row flex-lg-row flex-xl-row justify-content-end">
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonCerrar")
+                        .Text("Cerrar")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0 mr-md-3 mr-lg-3 mr-xl-3")
+                        .OnClick("validaHayCambiosModal")
+                    )
+
+                    @*@(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 ml-auto ml-sm-auto ml-md-0 ml-lg-0 ml-xl-0 mr-auto mr-sm-auto mr-md-3 mr-lg-3 mr-xl-3 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0")
+                        .OnClick("() => modalConfirmaDeshacer.modal('show')")
+                    )*@
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonEliminar")
+                        .Text("Eliminar")
+                        .ElementAttr("class", "btn-danger btn-oblong btn-width-100 ml-auto ml-sm-auto ml-md-0 ml-lg-0 ml-xl-0 mr-auto mr-sm-auto mr-md-3 mr-lg-3 mr-xl-3 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0")
+                        .OnClick("() => modalConfirmaEliminar.modal('show')")
+                    )
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 ml-auto ml-sm-auto ml-md-0 ml-lg-0 ml-xl-0 mr-auto mr-sm-auto mr-md-0 mr-lg-0 mr-xl-0 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("templateTreeListPlanDesarrolloEstructura"))
+{
+    @(Html.DevExtreme().TreeList()
+        .ID("dxTreeListPlanDesarrolloEstructura")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .RootValue(0)
+        .KeyExpr("PlanDesarrolloEstructuraId")
+        .ParentIdExpr("EstructuraPadreId")
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .NoDataText("Sin registros")
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .Columns(column =>
+        {
+            column.Add()
+            .DataField("Nombre")
+            .AllowSorting(false);
+
+            column.Add()
+            .DataField("Etiqueta")
+            .AllowSorting(false);
+        })
+        .Paging(paging => paging.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+            pager.ShowInfo(true);
+            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+        })
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+                if(selectedItems.selectedRowKeys.length) {
+                    component.option("value", selectedItems.selectedRowKeys[0]);
+                    component.close();
+                }
+            }
+        </text>)
+    )
+}
+
+<script>DevExpress.localization.locale(navigator.language);</script>
+
+<script type="text/javascript">
+    // VARIABLES GLOBALES MODEL //
+    var _matrizIndicadorResultado = @Html.Raw(Json.Encode(Model.MatrizIndicadorResultado)),
+        _matrizIndicadorResultadoModel = @Html.Raw(Json.Encode(Model.MatrizIndicadorResultadoModel)),
+        _matrizIndicadorResultadoIndicadorModel = @Html.Raw(Json.Encode(Model.MatrizIndicadorResultadoIndicadorModel)),
+        _matrizIndicadorResultadoIndicadorMetaModel = @Html.Raw(Json.Encode(Model.MatrizIndicadorResultadoIndicadorMetaModel)),
+        _matrizIndicadorResultadoIndicadorFormulaVariableModel = @Html.Raw(Json.Encode(Model.MatrizIndicadorResultadoIndicadorFormulaVariableModel)),
+        _listMatrizIndicadorResultadoIndicador = @Html.Raw(Json.Encode(Model.ListMatrizIndicadorResultadoIndicador)),
+        _listMatrizIndicadorResultadoIndicadorMeta = @Html.Raw(Json.Encode(Model.ListMatrizIndicadorResultadoIndicadorMeta)),
+        _listMatrizIndicadorResultadoIndicadorFormulaVariable = @Html.Raw(Json.Encode(Model.ListMatrizIndicadorResultadoIndicadorFormulaVariable)),
+        _listEjercicio = @Html.Raw(Json.Encode(Model.ListEjercicio)),
+        _listPlanDesarrollo = @Html.Raw(Json.Encode(Model.ListPlanDesarrollo)),
+        _listPlanDesarrolloEstructura = @Html.Raw(Json.Encode(Model.ListPlanDesarrolloEstructura)),
+        _listProgramaGobierno = @Html.Raw(Json.Encode(Model.ListProgramaGobierno)),
+        _listTipoComponente = @Html.Raw(Json.Encode(Model.ListTipoComponente)),
+        _listProyecto = @Html.Raw(Json.Encode(Model.ListProyecto)),
+        _listControlMaestroUnidadMedidaConDimension = @Html.Raw(Json.Encode(Model.ListControlMaestroUnidadMedidaConDimension)),
+        _listControlMaestroUnidadMedidaFormulaVariable = @Html.Raw(Json.Encode(Model.ListControlMaestroUnidadMedidaFormulaVariable)),
+        _listNivel = @Html.Raw(Json.Encode(Model.ListNivel)),
+        _listControlMaestroFrecuenciaMedicionConNivel = @Html.Raw(Json.Encode(Model.ListControlMaestroFrecuenciaMedicionConNivel)),
+        _listSentido = @Html.Raw(Json.Encode(Model.ListSentido)),
+        _listControlMaestroTipoIndicadorConNivel = @Html.Raw(Json.Encode(Model.ListControlMaestroTipoIndicadorConNivel)),
+        _listControlMaestroDimensionConNivel = @Html.Raw(Json.Encode(Model.ListControlMaestroDimensionConNivel)),
+        _esPermisoProyecto = @Html.Raw(Json.Encode(Model.EsPermisoProyecto));
+    //////////////////////////////
+</script>
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Scripts/mapeos/control_maestro_frecuencia_medicion.js"></script>
+<script src="~/Areas/MIR/MIR/Views/MatrizIndicadorResultado/MatrizIndicadorResultado.js"></script>

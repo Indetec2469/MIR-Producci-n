@@ -1,0 +1,170 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Catalogos.Models.ViewModel.ControlMaestroControlPeriodoViewModel
+@{
+    ViewData["Title"] = "Catálogo de Control Periódos";
+}
+
+<link href="~/Content/areas/mir/ControlPeriodo.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Catálogo de Control Periodos" }, { "Accion", "" }, { "Icono", "icon ion-ios-filing-outline" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Existen cambios sin guardar.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaDeshacer.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("recargarFicha")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ADVERTENCIA -->
+<div class="modal fade effect-scale" id="modalAdvertencia" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5>¿Esta seguro que desea continuar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Una vez seleccionado Auditado no podrá ser abierto este periodo mas que con permiso del administrador.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalAdvertencia.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("onClickModalAdvertenciaAcepta")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">CONTROL DE PERIODOS</h6>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.MItblControlMaestroControlPeriodo>()
+                .ID("dxDataGridListado")
+                .DataSource(Model.ListControlMaestroControlPeriodo)
+                .ShowBorders(true)
+                .Paging(paging => paging.Enabled(false))
+                .Editing(editing =>
+                {
+                    editing.Mode(GridEditMode.Cell)
+                    .AllowUpdating(true);
+                })
+                .ColumnAutoWidth(false)
+                .AllowColumnResizing(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .RowAlternationEnabled(true)
+                .Columns(column =>
+                {
+
+                    column
+                    .AddFor(m => m.Codigo)
+                    .Width(200)
+                    .AllowEditing(false);
+
+                    column
+                    .AddFor(m => m.Periodo)
+                    .AllowEditing(false);
+
+                    column
+                    .AddFor(m => m.EstatusPeriodoId)
+                    .Lookup(lookup => lookup
+                        .DataSource(dataSource => dataSource.Array().Data(Model.ListControlMaestroMIEstatusPeriodo).Key("ControlId"))
+                        .ValueExpr("ControlId")
+                        .DisplayExpr("Valor")
+                    );
+                })
+                .OnEditorPrepared("onEditorPrepared")
+                )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-sm-column flex-md-row flex-lg-row flex-xl-row align-items-center align-items-sm-center justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0 mr-md-3 mr-lg-3 mr-xl-3")
+                        .OnClick("() => validaHayCambios('deshacer')")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script type="text/javascript">
+    // VARIABLES GLOBALES MODEL //
+    var _listControlMaestroControlPeriodo = @Html.Raw(Json.Encode(Model.ListControlMaestroControlPeriodo));
+    //////////////////////////////
+</script>
+<script src="~/Areas/MIR/Catalogos/Views/ControlPeriodo/ListadoControlPeriodo.js"></script>

@@ -1,0 +1,795 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Requisiciones.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model RequisicionPorComprarViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Artículos por Comprar" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form()
+                    .ID("dxForm")
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Listado de Artículos por Comprar").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+                        }
+                    )
+                )
+
+                @(Html.DevExtreme().MultiView()
+                    .ID("dxMultiview")
+                    .SelectedIndex(0)
+                    .Loop(false)
+                    .AnimationEnabled(true)
+                    .SwipeEnabled(false)
+                    .OnSelectionChanged("multiView_selectionChanged")
+                    .Items(
+                        items =>
+                        {
+                            items.Add().Template(new TemplateName("detallesTemplate"));
+
+                            items.Add().Template(new TemplateName("proveedoresTemplate"));
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonProductos")
+                                    .Text("Listado")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("regresarDetalles")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonCompras")
+                                    .Text("Resumen")
+                                    .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("construirOrdenesCompra")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(false); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("detallesTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARspConsultaRequisicionPorComprarDetalles_Result>()
+                    .ID("dxGridDetallesPorComprar")
+                    .DataSource(m => m.Array().Data(Model.ListRequisicionMaterialDetalles).Key("RequisicionMaterialDetalleId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnCellPrepared("onCellPrepared")
+                    .OnToolbarPreparing("toolbar_preparing")
+                    .OnEditingStart("onEditingStart")
+                    .OnOptionChanged("onDetallesChange")
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.Solicitud).AllowEditing(false).GroupIndex(0);
+
+                        c.AddFor(m => m.Comprar)
+                            .Width(100)
+                            .Caption("Comprar")
+                            .Alignment(HorizontalAlignment.Center)
+                            .DataType(GridColumnDataType.Boolean);
+                        c.AddFor(m => m.Revision)
+                            .Width(100)
+                            .Caption("Revisión")
+                            .Alignment(HorizontalAlignment.Center)
+                            .DataType(GridColumnDataType.Boolean);
+                        c.AddFor(m => m.Rechazar)
+                            .Width(100)
+                            .Caption("Rechazar")
+                            .Alignment(HorizontalAlignment.Center)
+                            .DataType(GridColumnDataType.Boolean);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Motivo")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnMotivo")
+                                    .Hint("Motivo")
+                                    .Icon("comment")
+                                    .Visible(new JS("function(event) { return event.row.data.Revision || event.row.data.Rechazar; }"))
+                                    .OnClick("editaMotivo");
+                            });
+                        c.AddFor(m => m.Fecha).AllowEditing(false);
+                        c.AddFor(m => m.Descripcion).AllowEditing(false).Caption("Producto").CalculateCellValue("gridBox_displayExpr");
+                        c.AddFor(m => m.CantidadSolicitada).AllowEditing(false).Format("#,##0.00##");
+                        c.AddFor(m => m.CantidadSurtida).AllowEditing(false).Format("#,##0.00##");
+                        c.AddFor(m => m.CantidadComprar).Format("#,##0.00##").Caption("Cantidad por Comprar")
+                            .DataType(GridColumnDataType.Number)
+                            .ValidationRules(r => r.AddRange().Min(0.0001).Message("Cantidad no válida."));
+                        c.AddFor(m => m.CostoUnitario).Format("$ #,##0.00##")
+                            .DataType(GridColumnDataType.Number)
+                            .ValidationRules(r => r.AddRange().Min(0.0001).Message("Costo no válido."));
+                        c.AddFor(m => m.TarifaImpuestoId).Caption("Impuesto")
+                            .Lookup(e => e.DataSource(Model.ListTarifasImpuesto)
+                                          .ValueExpr("TarifaImpuestoId")
+                                          .DisplayExpr("Nombre"));
+                        c.AddFor(m => m.Importe).AllowEditing(false).Format("$ #,##0.00##");
+                        c.AddFor(m => m.Ajuste).Format("$ #,##0.00##").Caption("Ajuste")
+                            .DataType(GridColumnDataType.Number)
+                            .ValidationRules(r => r.AddRange().Min(0).Message("Cantidad no válida."));
+                        c.AddFor(m => m.IEPS).Format("$ #,##0.00##").Caption("IEPS")
+                            .DataType(GridColumnDataType.Number)
+                            .ValidationRules(r => r.AddRange().Min(0).Message("Cantidad no válida."));
+                        c.AddFor(m => m.Total).AllowEditing(false).Format("$ #,##0.00##");
+                        c.AddFor(m => m.AlmacenId)
+                            .Caption("Almacén").Width(200)
+                            .Lookup(e => e.DataSource("filtrarAlmacenes")
+                                          .ValueExpr("AlmacenId")
+                                          .DisplayExpr(new JS("(params) => { return params ? params.Nombre : null }")));
+                        c.AddFor(m => m.FuenteFinanciamientoId)
+                            .Caption("Fuente de Financiamiento")
+                            .Lookup(e => e.DataSource("filtrarFuentesFinanciamiento")
+                                          .ValueExpr("RamoId")
+                                          .DisplayExpr(new JS("(params) => { return params ? params.RamoId + ' - ' + params.Nombre : null }")));
+                        c.AddFor(m => m.ProveedorId).Caption("Proveedor").Width(400)
+                            .Lookup(e => e.DataSource(Model.ListProveedores)
+                                          .ValueExpr("ProveedorId")
+                                          .DisplayExpr("RazonSocial"));
+                        c.Add()
+                            .Width(100)
+                            .Caption("Comentarios")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnComentario")
+                                    .Hint("Comentario")
+                                    .Icon("comment")
+                                    .Visible(new JS("function(event) { return event.row.data.Comentarios; }"))
+                                    .OnClick("editaComentario");
+                            });
+                        c.AddFor(m => m.Usuario).AllowEditing(false);
+                        c.AddFor(m => m.Area).AllowEditing(false).Caption("Área");
+                        c.AddFor(m => m.UnidadAdministrativaId)
+                            .Caption("Unidad Administrativa")
+                            .Alignment(HorizontalAlignment.Center)
+                            .AllowEditing(false);
+                        c.AddFor(m => m.ProyectoId)
+                            .Caption("Proyecto")
+                            .Alignment(HorizontalAlignment.Center)
+                            .AllowEditing(false);
+                        c.AddFor(m => m.TipoGastoId)
+                            .Caption("Tipo de Gasto")
+                            .Alignment(HorizontalAlignment.Center)
+                            .AllowEditing(false);
+                        c.AddFor(m => m.UM).AllowEditing(false);
+                        c.AddFor(m => m.Existencia).AllowEditing(false).Format("#,##0.00##");
+                        c.AddFor(m => m.ExistenciaMinima).AllowEditing(false).Format("#,##0.00##").Caption("Existencia Mínima");
+                        c.AddFor(m => m.Estatus).AllowEditing(false);
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("proveedoresTemplate"))
+{
+    <div class="bd">
+        <div class="toolbar">
+            @(Html.DevExtreme()
+                .Toolbar()
+                .ID("dxToolbar")
+                .Items(items => {
+                    items
+                    .Add()
+                    .Widget(w => w.Button()
+                        .Icon("menu")
+                        .OnClick("onClickToolbar")
+                    ).Location(ToolbarItemLocation.Before);
+                })
+            )
+        </div>
+        <div class="drawer">
+            @(Html.DevExtreme()
+                .Drawer()
+                .ID("dxDrawer")
+                .OpenedStateMode(DrawerOpenedStateMode.Shrink)
+                .Opened(true)
+                .Position(DrawerPosition.Left)
+                .RevealMode(DrawerRevealMode.Slide)
+                .CloseOnOutsideClick(false)
+                .Template(@<text>
+                    <div style="width: 200px; height: 100%">
+                        @(Html.DevExtreme().List()
+                            .ID("dxListDrawer")
+                            .Items(items => {
+                                items.Add().Text("Órdenes de Compra").Icon("product").Option("index", 1);
+                                items.Add().Text("Invitaciones de Compra").Icon("money").Option("index", 2);
+                                items.Add().Text("Licitaciones").Icon("exportselected").Option("index", 3);
+                                items.Add().Text("En Revisión").Icon("info").Option("index", 4);
+                                items.Add().Text("Por Rechazar").Icon("clear").Option("index", 5);
+                            })
+                            .KeyExpr("index")
+                            .HoverStateEnabled(false)
+                            .FocusStateEnabled(false)
+                            .ActiveStateEnabled(false)
+                            .SelectionMode(ListSelectionMode.Single)
+                            .OnItemClick("onItemClickDrawer")
+                            .ElementAttr("class", "panel-list dx-theme-accent-as-background-color")
+                            .SelectedItemKeys(new[] { 1 })
+                        )
+                    </div>
+                </text>)
+                .Content(@<text>
+                    <div id="templateContent" class="d-none dx-theme-background-color p-3">
+                        @* Ordenes de Compra *@
+                        <div id="tabOrdenesCompra">
+                            <div class="row">
+                                <div class="col-12">
+                                    @(Html.DevExtreme().DataGrid<RequisicionOrdenCompraItem>()
+                                        .ID("dxGridOrdenesCompra")
+                                        .DataSource(m => m.Array().Data(Model.ListOrdenesCompra).Key("OrdenCompraId"))
+                                        .ShowBorders(true)
+                                        .ColumnAutoWidth(true)
+                                        .AllowColumnResizing(true)
+                                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                                        .RowAlternationEnabled(true)
+                                        .NoDataText("Sin registros")
+                                        .Editing(e =>
+                                        {
+                                            e.Mode(GridEditMode.Cell);
+                                            e.AllowUpdating(true);
+                                        })
+                                        .OnCellPrepared("onCellPreparedFechas")
+                                        .LoadPanel(p => p.Enabled(true))
+                                        .Scrolling(s => s.UseNative(true))
+                                        .Columns(c =>
+                                        {
+                                            c.AddFor(m => m.Proveedor).AllowEditing(false);
+                                            c.AddFor(m => m.Almacen).AllowEditing(false);
+                                            c.AddFor(m => m.Monto).AllowEditing(false).Format("$ #,##0.00##");
+                                            c.AddFor(m => m.Fecha).Caption("Fecha Orden de Compra").DataType(GridColumnDataType.Date).Alignment(HorizontalAlignment.Center).Format("dd/MM/yyyy");
+                                            c.AddFor(m => m.FechaRecepcion).DataType(GridColumnDataType.Date).Alignment(HorizontalAlignment.Center).Format("dd/MM/yyyy");
+                                            c.AddFor(m => m.Referencia);
+                                            c.AddFor(m => m.Observacion);
+                                            c.Add()
+                                                .Width(100)
+                                                .Caption("Invitar")
+                                                .Fixed(true)
+                                                .FixedPosition(HorizontalEdge.Right)
+                                                .Type(GridCommandColumnType.Buttons)
+                                                .Buttons(b =>
+                                                {
+                                                    b.Add()
+                                                        .Hint("Invitar")
+                                                        .Icon("info")
+                                                        .OnClick("invitar");
+                                                });
+                                        })
+                                        .Paging(paging => paging.PageSize(10))
+                                        .Pager(pager =>
+                                        {
+                                            pager.ShowPageSizeSelector(true);
+                                            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                                            pager.ShowInfo(true);
+                                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                                        })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Invitaciones de Compra *@
+                        <div id="tabInvitacionesCompra">
+                            <div class="row">
+                                <div class="col-12">
+                                    @(Html.DevExtreme().DataGrid<RequisicionOrdenCompraItem>()
+                                        .ID("dxGridInvitacionesCompra")
+                                        .DataSource(m => m.Array().Data(Model.ListOrdenesCompra).Key("InvitacionCompraId"))
+                                        .ShowBorders(true)
+                                        .ColumnAutoWidth(true)
+                                        .AllowColumnResizing(true)
+                                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                                        .RowAlternationEnabled(true)
+                                        .NoDataText("Sin registros")
+                                        .LoadPanel(p => p.Enabled(true))
+                                        .Scrolling(s => s.UseNative(true))
+                                        .Columns(c =>
+                                        {
+                                            c.AddFor(m => m.Proveedor).AllowEditing(false).Caption("Proveedor sugerido");
+                                            c.AddFor(m => m.Almacen).AllowEditing(false);
+                                            c.AddFor(m => m.Monto).AllowEditing(false).Format("$ #,##0.00##");
+                                            c.Add()
+                                                .Width(100)
+                                                .Caption("Orden de Compra")
+                                                .Fixed(true)
+                                                .FixedPosition(HorizontalEdge.Right)
+                                                .Type(GridCommandColumnType.Buttons)
+                                                .Buttons(b =>
+                                                {
+                                                    b.Add()
+                                                        .Hint("Orden de Compra")
+                                                        .Icon("info")
+                                                        .Visible(new JS("function(event) { return event.row.data.PermiteInvitar; }"))
+                                                        .OnClick("ordenCompra");
+                                                });
+                                        })
+                                        .Paging(paging => paging.PageSize(10))
+                                        .Pager(pager =>
+                                        {
+                                            pager.ShowPageSizeSelector(true);
+                                            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                                            pager.ShowInfo(true);
+                                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                                        })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Licitaciones *@
+                        <div id="tabLicitaciones">
+                            <div class="row">
+                                <div class="col-12">
+                                    @(Html.DevExtreme().DataGrid<RequisicionOrdenCompraItem>()
+                                        .ID("dxGridLicitaciones")
+                                        .DataSource(m => m.Array().Data(Model.ListOrdenesCompra).Key("InvitacionCompraId"))
+                                        .ShowBorders(true)
+                                        .ColumnAutoWidth(true)
+                                        .AllowColumnResizing(true)
+                                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                                        .RowAlternationEnabled(true)
+                                        .NoDataText("Sin registros")
+                                        .LoadPanel(p => p.Enabled(true))
+                                        .Scrolling(s => s.UseNative(true))
+                                        .Columns(c =>
+                                        {
+                                            c.AddFor(m => m.Proveedor).AllowEditing(false).Caption("Proveedor sugerido");
+                                            c.AddFor(m => m.Almacen).AllowEditing(false);
+                                            c.AddFor(m => m.Monto).AllowEditing(false).Format("$ #,##0.00##");
+                                        })
+                                        .Paging(paging => paging.PageSize(10))
+                                        .Pager(pager =>
+                                        {
+                                            pager.ShowPageSizeSelector(true);
+                                            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                                            pager.ShowInfo(true);
+                                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                                        })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Revisión *@
+                        <div id="tabRevision">
+                            <div class="row">
+                                <div class="col-12">
+                                    @(Html.DevExtreme().DataGrid<ARspConsultaRequisicionPorComprarDetalles_Result>()
+                                        .ID("dxGridDetallesPorRevisar")
+                                        .DataSource(m => m.Array().Data(Model.ListRequisicionMaterialDetalles).Key("RequisicionMaterialDetalleId"))
+                                        .ShowBorders(true)
+                                        .ColumnAutoWidth(true)
+                                        .AllowColumnResizing(true)
+                                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                                        .RowAlternationEnabled(true)
+                                        .NoDataText("Sin registros")
+                                        .OnCellPrepared("onCellPrepared")
+                                        .Scrolling(s => s.UseNative(true))
+                                        .Columns(c =>
+                                        {
+                                            c.AddFor(m => m.Solicitud).AllowEditing(false).GroupIndex(0);
+                                            c.AddFor(m => m.Almacen).AllowEditing(false).Caption("Almacén");
+                                            c.AddFor(m => m.UnidadAdministrativaId).AllowEditing(false).Caption("Unidad Administrativa");
+                                            c.AddFor(m => m.ProyectoId).AllowEditing(false).Caption("Proyecto");
+                                            c.AddFor(m => m.TipoGastoId).AllowEditing(false).Caption("Tipo de Gasto");
+                                            c.AddFor(m => m.Descripcion).AllowEditing(false).Caption("Producto");
+                                            c.Add()
+                                                .Width(100)
+                                                .Caption("Motivo")
+                                                .Fixed(false)
+                                                .Type(GridCommandColumnType.Buttons)
+                                                .Buttons(b =>
+                                                {
+                                                    b.Add()
+                                                        .Name("btnMotivo")
+                                                        .Hint("Motivo")
+                                                        .Icon("comment")
+                                                        .Visible(new JS("function(event) { return event.row.data.Revision || event.row.data.Rechazar; }"))
+                                                        .OnClick("verMotivo");
+                                                });
+                                        })
+                                        .Paging(paging => paging.PageSize(10))
+                                        .Pager(pager =>
+                                        {
+                                            pager.ShowPageSizeSelector(true);
+                                            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                                            pager.ShowInfo(true);
+                                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                                        })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Rechazar *@
+                        <div id="tabRechazar">
+                            <div class="row">
+                                <div class="col-12">
+                                    @(Html.DevExtreme().DataGrid<ARspConsultaRequisicionPorComprarDetalles_Result>()
+                                        .ID("dxGridDetallesPorRechazar")
+                                        .DataSource(m => m.Array().Data(Model.ListRequisicionMaterialDetalles).Key("RequisicionMaterialDetalleId"))
+                                        .ShowBorders(true)
+                                        .ColumnAutoWidth(true)
+                                        .AllowColumnResizing(true)
+                                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                                        .RowAlternationEnabled(true)
+                                        .NoDataText("Sin registros")
+                                        .OnCellPrepared("onCellPrepared")
+                                        .Scrolling(s => s.UseNative(true))
+                                        .Columns(c =>
+                                        {
+                                            c.AddFor(m => m.Solicitud).AllowEditing(false).GroupIndex(0);
+                                            c.AddFor(m => m.Almacen).AllowEditing(false).Caption("Almacén");
+                                            c.AddFor(m => m.UnidadAdministrativaId).AllowEditing(false).Caption("Unidad Administrativa");
+                                            c.AddFor(m => m.ProyectoId).AllowEditing(false).Caption("Proyecto");
+                                            c.AddFor(m => m.TipoGastoId).AllowEditing(false).Caption("Tipo de Gasto");
+                                            c.AddFor(m => m.Descripcion).AllowEditing(false).Caption("Producto");
+                                            c.Add()
+                                                .Width(100)
+                                                .Caption("Motivo")
+                                                .Fixed(false)
+                                                .Type(GridCommandColumnType.Buttons)
+                                                .Buttons(b =>
+                                                {
+                                                    b.Add()
+                                                        .Name("btnMotivo")
+                                                        .Hint("Motivo")
+                                                        .Icon("comment")
+                                                        .Visible(new JS("function(event) { return event.row.data.Revision || event.row.data.Rechazar; }"))
+                                                        .OnClick("verMotivo");
+                                                });
+                                        })
+                                        .Paging(paging => paging.PageSize(10))
+                                        .Pager(pager =>
+                                        {
+                                            pager.ShowPageSizeSelector(true);
+                                            pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                                            pager.ShowInfo(true);
+                                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                                        })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </text>)
+            )
+        </div>
+    </div>
+}
+
+<!-- PLANTILLA PARA EL TOOLTIP -->
+<div>
+    @(Html.DevExtreme().Tooltip()
+        .ID("tooltip")
+        .ShowEvent("mouseenter")
+        .HideEvent("mouseleave")
+        .CloseOnOutsideClick(false)
+        .Position(Position.Top)
+    )
+</div>
+
+<!-- Modal Comentario-->
+<div class="modal fade effect-scale" id="modalComentario" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Comentario</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<RequisicionMaterialDetalleItem>()
+                            .ID("dxFormModalComentario")
+                            .FormData(new RequisicionMaterialDetalleItem())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Comentarios)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextArea().ReadOnly(true));
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Motivo -->
+<div class="modal fade effect-scale" id="modalMotivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Comentario</h6>
+                <button type="button" class="close" onclick="cancelarCambiosMotivo()" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup3"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARspConsultaRequisicionPorComprarDetalles_Result>()
+                            .ID("dxFormModalMotivo")
+                            .FormData(new ARspConsultaRequisicionPorComprarDetalles_Result())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Descripcion)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().ReadOnly(true));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Comentarios)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextArea().ReadOnly(true));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Motivo)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                                .ValidationRules(v => v.AddRequired().Message("Motivo requerido"))
+                                                .Editor(e => e.TextArea());
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("cancelarCambiosMotivo")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Guardar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("guardaCambiosMotivo")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Motivo Ver -->
+<div class="modal fade effect-scale" id="modalMotivoVer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Comentario</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup4"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARspConsultaRequisicionPorComprarDetalles_Result>()
+                            .ID("dxFormModalMotivoVer")
+                            .FormData(new ARspConsultaRequisicionPorComprarDetalles_Result())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Descripcion)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().ReadOnly(true));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Comentarios)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextArea().ReadOnly(true));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Motivo)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextArea().ReadOnly(true));
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Compras/Requisiciones/Views/RequisicionPorComprar/RequisicionPorComprar.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _listTarifasImpuesto = @Html.Raw(Json.Encode(Model.ListTarifasImpuesto));
+    var _listAlmacenes = @Html.Raw(Json.Encode(Model.ListAlmacenes));
+    var _listFuentesFinanciamiento = @Html.Raw(Json.Encode(Model.ListFuentesFinanciamiento));
+    var _listProveedores = @Html.Raw(Json.Encode(Model.ListProveedores));
+    var _listMontosCompra = @Html.Raw(Json.Encode(Model.ListMontosCompra));
+    var _listDetallesOriginal = @Html.Raw(Json.Encode(Model.ListRequisicionMaterialDetalles));
+    var _ejercicio = @Html.Raw(Json.Encode(Model.EjercicioUsuario));
+    var _fechaOperacion = @Html.Raw(Json.Encode(Model.FechaOperacion));
+</script>

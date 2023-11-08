@@ -1,0 +1,405 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Catalogos.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model ProveedorProspectoViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Prospectos Proveedor" }, { "Accion", "" }, { "Icono", "icon ion-person-add" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado de Prospectos a Proveedor</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .Text("Nuevo")
+                        .OnClick("nuevoProspectoProveedor")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARtblProveedorProspecto>()
+                    .ID("dxGridProspectosProveedor")
+                    .DataSource(m => m.Array().Data(Model.ListProveedorProspecto).Key("ProveedorProspectoId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CodigoProspecto);
+                        c.AddFor(m => m.RFC);
+                        c.AddFor(m => m.RazonSocial);
+                        c.AddFor(m => m.NombreContacto);
+                        c.AddFor(m => m.PrimerApellido);
+                        c.AddFor(m => m.SegundoApellido);
+                        c.AddFor(m => m.Telefono);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEditar")
+                                    .Hint("Editar")
+                                    .Icon("edit")
+                                    .OnClick("editaProspectoProveedor");
+
+                                b.Add()
+                                .Name("btnEliminar")
+                                .Hint("Eliminar")
+                                .Icon("trash")
+                                .OnClick("validaEliminar");
+                            });
+
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+        <div class="form-layout-footer pd-t-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        @(Html.DevExtreme()
+                            .Button()
+                            .ID("dxButtonDeshacer")
+                            .Text("Deshacer")
+                            .OnClick("function() { modalConfirmaDeshacerCambios.modal('show'); }")
+                            .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        )
+                        @(Html.DevExtreme()
+                            .Button()
+                            .ID("dxButtonGuardaCambios")
+                            .Text("Guardar")
+                            .OnClick("guardaCambios")
+                            .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Prospecto Proveedor-->
+<div class="modal fade effect-scale" id="modalProspectoProveedor" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Prospecto a Proveedor</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARtblProveedorProspecto>()
+                            .ID("dxFormModalProspectoProveedor")
+                            .FormData(new ARtblProveedorProspecto())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.CodigoProspecto)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().ReadOnly(true));
+                                            itemGroup.AddSimpleFor(m => m.RFC)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().MaxLength(13));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.RazonSocial)
+                                                .ColSpan(6)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().MaxLength(200));
+
+                                            itemGroup.AddSimpleFor(m => m.Domicilio)
+                                                .ColSpan(6)
+                                                .Editor(e => e.TextBox().MaxLength(250));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.PaisId)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboPais")
+                                                    .DataSource(Model.ListPaises)
+                                                    .ValueExpr("PaisId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.PaisId + ' - ' + params.Nombre : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción")
+                                                    .OnSelectionChanged("cboPaisChange"));
+
+                                            itemGroup.AddSimpleFor(m => m.EstadoId)
+                                                .ColSpan(4)
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboEstado")
+                                                    //.DataSource(Model.ListEstados)
+                                                    .ValueExpr("EstadoId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.EstadoId + ' - ' + params.Nombre : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción")
+                                                    .OnSelectionChanged("cboEstadoChange"));
+
+                                            itemGroup.AddSimpleFor(m => m.MunicipioId)
+                                                .ColSpan(4)
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboMunicipio")
+                                                    //.DataSource(Model.ListMunicipios)
+                                                    .ValueExpr("MunicipioId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.MunicipioId + ' - ' + params.Nombre : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción"));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.TipoProveedorId)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboTipoProveedor")
+                                                    .DataSource(Model.ListTiposProveedor)
+                                                    .ValueExpr("TipoProveedorId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.TipoProveedorId + ' - ' + params.Descripcion : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción"));
+
+                                            itemGroup.AddSimpleFor(m => m.TipoOperacionId)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboTipoOperacion")
+                                                    .DataSource(Model.ListTiposOperacion)
+                                                    .ValueExpr("TipoOperacionId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.TipoOperacionId + ' - ' + params.Descripcion : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción"));
+
+                                            itemGroup.AddSimpleFor(m => m.TipoComprobanteFiscalId)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboTipoComprobanteFiscal")
+                                                    .DataSource(Model.ListTiposComprobanteFiscal)
+                                                    .ValueExpr("TipoComprobanteFiscalId")
+                                                    .DisplayExpr("Nombre")
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción"));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.NombreContacto)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().MaxLength(50));
+                                            itemGroup.AddSimpleFor(m => m.PrimerApellido)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().MaxLength(50));
+                                            itemGroup.AddSimpleFor(m => m.SegundoApellido)
+                                                .ColSpan(4)
+                                                .Editor(e => e.TextBox().MaxLength(50));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Telefono)
+                                                .ColSpan(4)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.TextBox().MaxLength(20));
+                                            itemGroup.AddSimpleFor(m => m.Extension)
+                                                .ColSpan(4)
+                                                .Editor(e => e.TextBox().MaxLength(5));
+                                            itemGroup.AddSimpleFor(m => m.CorreoElectronico)
+                                                .ColSpan(4)
+                                                .Editor(e => e.TextBox().MaxLength(50)); ;
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Comentarios)
+                                                .ColSpan(12)
+                                                .Editor(e => e.TextArea().MaxLength(2000));
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalProspectoProveedor.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Guardar")
+                                .OnClick("guardaCambiosModal")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Deshacer-->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacerCambios" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaDeshacerCambios.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaDeshacerCambios.modal('hide'); recargarFicha(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">¿Está seguro de eliminar el registro?</h5>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaProspectoProveedor(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script>
+    //Variables Globales
+    var _listPaises = @Html.Raw(Json.Encode(Model.ListPaises));
+    var _listEstados = @Html.Raw(Json.Encode(Model.ListEstados));
+    var _listMunicipios = @Html.Raw(Json.Encode(Model.ListMunicipios));
+</script>
+
+<script src="~/Areas/Compras/Catalogos/Views/ProveedoresProspectos/ProveedorProspecto.js"></script>

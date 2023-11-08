@@ -1,0 +1,140 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Meta -->
+    <title>Indetec - Sistema de Seguimiento a la MIR</title>
+
+    <!--FastReport-->
+    @WebReportGlobals.Scripts()
+    @WebReportGlobals.Styles()
+
+    <!-- DevExtreme Bundle-->
+    @Styles.Render("~/Content/bundle")
+    @Styles.Render("~/Content/DevExtremeBundle")
+
+    @Scripts.Render("~/Scripts/bundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")*@
+
+    @RenderSection("scripts", required: false)
+
+    <!-- vendor css -->
+    <link href="~/Content/lib/fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="~/Content/lib/rickshaw/rickshaw.min.css" rel="stylesheet">
+    <link href="~/Content/lib/select2/css/select2.min.css" rel="stylesheet">
+
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="~/Content/css/bracket.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>
+
+<!-- <script src="~/Content/lib/jquery/jquery.min.js"></script> -->
+<script src="~/Content/lib/jquery-ui/ui/widgets/datepicker.js"></script>
+@*<script src="~/Content/lib/bootstrap/js/bootstrap.bundle.min.js"></script>*@
+<script src="~/Content/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="~/Content/lib/moment/min/moment.min.js"></script>
+<script src="~/Content/lib/peity/jquery.peity.min.js"></script>
+<script src="~/Content/lib/rickshaw/vendor/d3.min.js"></script>
+<script src="~/Content/lib/rickshaw/vendor/d3.layout.min.js"></script>
+<script src="~/Content/lib/rickshaw/rickshaw.min.js"></script>
+<script src="~/Content/lib/jquery.flot/jquery.flot.js"></script>
+<script src="~/Content/lib/jquery.flot/jquery.flot.resize.js"></script>
+<script src="~/Content/lib/flot-spline/js/jquery.flot.spline.min.js"></script>
+<script src="~/Content/lib/jquery-sparkline/jquery.sparkline.min.js"></script>
+<script src="~/Content/lib/echarts/echarts.min.js"></script>
+<script src="~/Content/lib/select2/js/select2.full.min.js"></script>
+@*<script src="http://maps.google.com/maps/api/js?key=AIzaSyAq8o5-8Y5pudbJMJtDFzb8aHiWJufa5fg"></script>
+    <script src="~/Content/lib/gmaps/gmaps.min.js"></script>*@
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+@*<script src="~/Content/js/map.shiftworker.js"></script>*@
+<script src="~/Content/js/ResizeSensor.js"></script>
+@*<script src="~/Content/js/dashboard.js"></script>*@
+<script src="~/Content/js/bracket.js"></script>
+
+<!-- Dictionary files for German and Russian languages -->
+@*<script src="https://cdn3.devexpress.com/jslib/21.2.4/js/localization/dx.messages.es.js"></script>*@
+<script src="~/Scripts/localization/dx.messages.es.js"></script>
+<!-- Common and language-specific CLDR data -->
+<script src="https://unpkg.com/devextreme-cldr-data/supplemental.js"></script>
+@*<script src="https://unpkg.com/devextreme-cldr-data/es-MX.js"></script>*@
+<script src="~/Scripts/cldr/es-MX.js"></script>
+
+<script>
+
+    Globalize.locale("es-MX");
+
+    var ViewBagError;
+    var ViewBagWarning;
+    var ViewBagRedireccionarA;
+
+    $(function () {
+        'use strict'
+
+        ViewBagError = '@Html.Raw(ViewBag.Error)';
+        ViewBagWarning = '@Html.Raw(ViewBag.Warning)';
+        ViewBagRedireccionarA = '@Html.Raw(ViewBag.RedireccionarA)';
+
+        if (ViewBagError) {
+            toast(ViewBagError, "error");
+        } else if (ViewBagWarning) {
+            toast(ViewBagWarning, "warning");
+        } else if (ViewBagRedireccionarA) {
+            window.location.href = ViewBagRedireccionarA;
+        }
+
+        window.addEventListener('storage', function (event) {
+            if (event.key == 'logout-event') {
+                //Redireccionamos a la pagina de Login
+                window.location.href = '/Login/Login';
+            }
+        });
+
+        // FOR DEMO ONLY
+        // menu collapsed by default during first page load or refresh with screen
+        // having a size between 992px and 1299px. This is intended on this page only
+        // for better viewing of widgets demo.
+        $(window).resize(function () {
+            minimizeMenu();
+        });
+
+        minimizeMenu();
+
+        function minimizeMenu() {
+            if (window.matchMedia('(min-width: 992px)').matches && window.matchMedia('(max-width: 1299px)').matches) {
+                // show only the icons and hide left menu label by default
+                $('.menu-item-label,.menu-item-arrow').addClass('op-lg-0-force d-lg-none');
+                $('body').addClass('collapsed-menu');
+                $('.show-sub + .br-menu-sub').slideUp();
+            } else if (window.matchMedia('(min-width: 1300px)').matches && !$('body').hasClass('collapsed-menu')) {
+                $('.menu-item-label,.menu-item-arrow').removeClass('op-lg-0-force d-lg-none');
+                $('body').removeClass('collapsed-menu');
+                $('.show-sub + .br-menu-sub').slideDown();
+            }
+        }
+    });
+
+    //Toast
+    toast = (message, type) => {
+        DevExpress.ui.notify({ message: message, width: "auto" }, type, 3000);
+    }
+</script>

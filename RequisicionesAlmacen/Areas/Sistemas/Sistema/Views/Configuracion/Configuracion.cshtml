@@ -1,0 +1,152 @@
+﻿@using RequisicionesAlmacen.Areas.Sistemas.Sistema.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model ConfiguracionViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Configuración de Sistema" }, { "Accion", "Editar" }, { "Icono", "icon ion-gear-a" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<GRtblConfiguracionEnte>()
+                    .ID("dxForm")
+                    .FormData(Model.ConfiguracionEnte)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Datos Generales").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup().ColSpan(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.TipoConfiguracionFechaId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboTipoFecha")
+                                                            .DataSource(Model.ListTipoConfiguracionFecha)
+                                                            .ValueExpr("ControlId")
+                                                            .DisplayExpr("Valor")
+                                                            .SearchEnabled(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("cboTipoFecha"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.FechaOperacion)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.DateBox()
+                                                            .ID("dxTxtFechaOperacion")
+                                                            .DisplayFormat("dd/MM/yyyy")
+                                                            .OnValueChanged("setCambios"));
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Sistemas/Sistema/Views/Configuracion/Configuracion.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _ejercicio = @Html.Raw(Json.Encode(Model.EjercicioUsuario));
+</script>

@@ -1,0 +1,1 @@
+update GRtblMenuPrincipal set Etiqueta = 'Ficha Técnica Indicador' where NodoMenuId = 41

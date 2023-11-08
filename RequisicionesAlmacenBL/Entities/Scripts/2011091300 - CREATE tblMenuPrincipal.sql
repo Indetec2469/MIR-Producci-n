@@ -1,0 +1,27 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblMenuPrincipal](
+	[NodoMenuId] [INT] IDENTITY(1,1) NOT NULL,
+	[Etiqueta] [VARCHAR](100) NOT NULL,
+	[Descripcion] [VARCHAR](255) NULL,
+	[TipoNodoId] [INT] NOT NULL,
+	[NodoPadreId] [INT] NULL,
+	[SistemaAccesoId] [INT] NOT NULL,
+	[Url] [VARCHAR](255) NULL,
+	[Icono] [VARCHAR](50) NULL,
+	[AdmitePermiso] [BIT] NOT NULL,
+	[Orden] [TINYINT] NOT NULL,
+	[EstatusId] [INT] NOT NULL,
+	[Timestamp] [TIMESTAMP] NOT NULL,
+ CONSTRAINT [PK_tblMenuPrincipal] PRIMARY KEY CLUSTERED 
+(
+	[NodoMenuId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+

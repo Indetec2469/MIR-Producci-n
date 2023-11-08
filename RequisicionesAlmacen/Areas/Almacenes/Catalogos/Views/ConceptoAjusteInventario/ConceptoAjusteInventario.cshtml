@@ -1,0 +1,309 @@
+﻿@model RequisicionesAlmacen.Areas.Almacenes.Catalogos.Models.ViewModel.ControlMaestroConceptoAjusteInventarioViewModel
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Conceptos ajustes de inventario";
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Conceptos ajustes de inventario" }, { "Accion", "Nuevo" }, { "Icono", "icon ion-settings" } })
+
+<!-- MODAL NUEVO O EDITAR CONCEPTO AJUSTE INVENTARIO -->
+<div class="modal fade effect-scale" id="modalConceptoAjusteInventario" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" isEdit>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold modal-title">Nuevo Concepto Movimiento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                <!-- Crear Begin form -->
+                @using (Html.BeginForm())
+                {
+                    <!-- Grupo de validación -->
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+
+                        <!-- Seguridad -->
+                        @Html.AntiForgeryToken();
+
+                        <!-- HIDDEN FIELDS SECTION-->
+                        <input id="hiddenConceptoAjusteInventarioId" name="ConceptoAjusteInventarioId" type="hidden" value="">
+                        <input id="hiddenFechaCreacion" name="FechaCreacion" type="hidden" value="">
+
+                        <!-- Crear el Formulario -->
+                        @(Html
+                            .DevExtreme()
+                            .Form<RequisicionesAlmacenBL.Entities.ARtblControlMaestroConceptoAjusteInventario>()
+                            .ID("dxFormConceptoAjusteInventario")
+                            .FormData(Model.ControlMaestroConceptoAjusteInventario)
+                            .RequiredMark("(*)")
+                            .LabelLocation(FormLabelLocation.Top)
+                            .Items(item =>
+                            {
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .ColCountByScreen(c => c.Sm(12).Md(12).Lg(12).Xs(12))
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.TipoMovimientoId)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ListTipoMovimiento)
+                                        .DisplayExpr("Valor")
+                                        .ValueExpr("ControlId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+
+                                    );
+
+                                    itemGroup
+                                    .AddSimpleFor(m => m.ConceptoAjuste)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .TextBox()
+                                    );
+
+                                    itemGroup
+                                    .AddSimpleFor(m => m.SolicitaEvidencia)
+                                    .ColSpan(12)
+                                    .Label(l => l.Visible(false))
+                                    .DataField("SolicitaEvidencia")
+                                    .CssClass("d-flex justify-content-end")
+                                    .Editor(e => e
+                                        .CheckBox()
+                                        .Text("Solicita archivo evidencia")
+                                    );
+                                });
+                            })
+                        )
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConceptoAjusteInventario.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Guardar")
+                                .OnClick("guardaCambiosModal")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaDeshacer.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("recargarFicha")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar el registro?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaEliminar.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("eliminaRow")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody" id="content-123">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">LISTADO DE CONCEPTOS DE AJUSTE DE INVENTARIO</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html
+                        .DevExtreme()
+                        .Button()
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                        .Text("Nuevo")
+                        .OnClick("nuevoModal")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                @(Html
+                    .DevExtreme()
+                    .DataGrid<RequisicionesAlmacenBL.Entities.ARtblControlMaestroConceptoAjusteInventario>()
+                    .ID("dxDataGridConceptoAjusteInventario")
+                    .DataSource(m => m.Array().Data(Model.ListControlMaestroConceptoAjusteInventario).Key("ConceptoAjusteInventarioId"))
+                    .DataSourceOptions(dataSourceOption => dataSourceOption.Filter("['EstatusId', '=' , 1]"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .ShowBorders(true)
+                    .Paging(paging => paging.PageSize(5))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(column =>
+                    {
+                        column
+                        .AddFor(m => m.TipoMovimientoId)
+                        .Lookup(lookup => lookup
+                            .DataSource(Model.ListTipoMovimiento)
+                            .ValueExpr("ControlId")
+                            .DisplayExpr("Valor"));
+
+                        column
+                        .AddFor(m => m.ConceptoAjuste);
+
+                        column
+                        .AddFor(m => m.SolicitaEvidencia)
+                        .DataType(GridColumnDataType.Boolean);
+
+                        column
+                        .Add()
+                        .Width(100)
+                        .Caption("Acciones")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Right)
+                        .Type(GridCommandColumnType.Buttons)
+
+                        .Buttons(button =>
+                        {
+                            button
+                                .Add()
+                                .Hint("Editar")
+                                .Icon("edit")
+                                .OnClick("editaModal");
+                            button
+                                .Add()
+                                .Hint("Eliminar")
+                                .Icon("trash")
+                                .OnClick("confirmaEliminarModal");
+                        });
+
+
+                    })
+                )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                        .OnClick("() => modalConfirmaDeshacer.modal('show')")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+
+<script src="~/Areas/Almacenes/Catalogos/Views/ConceptoAjusteInventario/ConceptoAjusteInventario.js"></script>

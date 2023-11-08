@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<inherited BaseReport="..\..\Encabezados\EncabezadoVertical.frx" BaseReportAbsolutePath="C:\Users\elias\OneDrive\Documentos\indetec-almacenes-requisicion-asp-net-mvc\RequisicionesAlmacen\App_Data\Reportes\Encabezados\EncabezadoVertical.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/18/2021 11:33:22" ReportInfo.Modified="11/15/2022 11:57:41" ReportInfo.CreatorVersion="2022.1.14.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHmUxX4WG48H9HdUBoWojdIt0OXisRvf3hZwzoKcjGiJsSbLVrIJtt18pAQNfnCRM+EuIrnf5dkTbvjPB4S2Jg/e8jNiegkDvW3MhXGaemq4BlsgsB5RZIHD0sNpiB0cRnfb+u0vttz9nrFLdnt3/o8lQ==">
+      <TableDataSource Name="Table" Alias="ARfnRptLibroAlmacen" DataType="System.Int32" Enabled="true" SelectCommand="SELECT *&#13;&#10;FROM ARfnRptLibroAlmacenPorArticulo(@pInventarioId)&#13;&#10;ORDER BY Descripcion">
+        <Column Name="ProductoId" DataType="System.String"/>
+        <Column Name="Descripcion" DataType="System.String"/>
+        <Column Name="Almacen" DataType="System.String"/>
+        <Column Name="UnidadMedida" DataType="System.String"/>
+        <Column Name="Existencia" DataType="System.Decimal"/>
+        <Column Name="Conteo" DataType="System.Decimal"/>
+        <CommandParameter Name="@pInventarioId" DataType="22" Size="4" Expression="[@pInventarioId]"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pInventarioId" DataType="System.Int32" Expression="0"/>
+  </Dictionary>
+  <inherited Name="Page1">
+    <inherited Name="PageHeader1" Height="198.45">
+      <inherited Name="Text3"/>
+      <inherited Name="Text2"/>
+      <inherited Name="Text1"/>
+      <inherited Name="Picture2"/>
+      <inherited Name="Text4"/>
+      <inherited Name="Text5"/>
+      <inherited Name="Text6"/>
+      <inherited Name="Text7"/>
+      <inherited Name="Text8"/>
+      <inherited Name="Line1"/>
+      <inherited Name="Text9"/>
+      <inherited Name="Text10"/>
+      <TextObject Name="Text27" ZOrder="12" Left="9.45" Top="170.1" Width="66.15" Height="18.9" Text="Almacén:" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text28" ZOrder="13" Left="75.6" Top="170.1" Width="491.4" Height="18.9" Text="[ARfnRptLibroAlmacen.Almacen]" Font="Arial, 8pt"/>
+    </inherited>
+    <ColumnHeaderBand Name="ColumnHeader1" ZOrder="-1" Top="200.58" Width="740.5" Height="24.57">
+      <TextObject Name="Text29" Left="9.45" Width="103.95" Height="24.57" Text="PRODUCTO ID" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text32" Left="113.4" Width="321.3" Height="24.57" Text="DESCRIPCIÓN" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text33" Left="434.7" Width="103.95" Height="24.57" Text="UNIDAD MEDIDA" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text36" Left="633.15" Width="94.5" Height="24.57" Text="CONTEO" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <LineObject Name="Line3" Left="9.45" Width="718.2"/>
+      <TextObject Name="Text40" Left="538.65" Width="94.5" Height="24.57" Text="EXISTENCIA" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <LineObject Name="Line2" Left="9.45" Top="24.57" Width="718.2"/>
+    </ColumnHeaderBand>
+    <DataBand Name="Data1" ZOrder="0" Top="227.29" Width="740.5" Height="18.9" CanGrow="true" DataSource="Table">
+      <TextObject Name="Text37" Left="9.45" Width="103.95" Height="14.36" Text="[ARfnRptLibroAlmacen.ProductoId]" VertAlign="Bottom" Font="Arial, 7pt"/>
+      <TextObject Name="Text38" Left="113.4" Width="321.3" Height="14.36" CanGrow="true" Text="[ARfnRptLibroAlmacen.Descripcion]" VertAlign="Bottom" Font="Arial, 7pt"/>
+      <TextObject Name="Text39" Left="434.7" Width="103.95" Height="14.36" Text="[ARfnRptLibroAlmacen.UnidadMedida]" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 7pt"/>
+      <LineObject Name="Line4" Left="9.45" Top="17.01" Width="718.2" Border.Style="Dash"/>
+      <TextObject Name="Text42" Left="538.65" Width="94.5" Height="14.36" Text="[ARfnRptLibroAlmacen.Existencia]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 7pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text43" Left="633.15" Width="94.5" Height="14.36" VisibleExpression="[ARfnRptLibroAlmacen.Conteo] &gt; 0" Text="[ARfnRptLibroAlmacen.Conteo]" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 7pt" Trimming="EllipsisCharacter">
+        <Formats>
+          <CustomFormat Format="#,##0.00##"/>
+          <GeneralFormat/>
+        </Formats>
+      </TextObject>
+    </DataBand>
+    <inherited Name="PageFooter1" Top="248.32">
+      <inherited Name="Text12"/>
+    </inherited>
+  </inherited>
+</inherited>

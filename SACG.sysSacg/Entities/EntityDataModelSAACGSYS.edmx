@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SACGSYSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Entidad">
+          <Key>
+            <PropertyRef Name="EntidadId" />
+          </Key>
+          <Property Name="EntidadId" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Estado" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Ejercicio" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'SACGSYS.dbo.vwTipoVersion' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="vwTipoVersion">
+          <Key>
+            <PropertyRef Name="TipoVersion" />
+          </Key>
+          <Property Name="TipoVersion" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="SACGSYSModelStoreContainer">
+          <EntitySet Name="Entidad" EntityType="Self.Entidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vwTipoVersion" EntityType="Self.vwTipoVersion" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwTipoVersion].[TipoVersion] AS [TipoVersion]
+    FROM [dbo].[vwTipoVersion] AS [vwTipoVersion]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SACGSYSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Entidad">
+          <Key>
+            <PropertyRef Name="EntidadId" />
+          </Key>
+          <Property Name="EntidadId" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ejercicio" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="SACGSYSContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Entidad" EntityType="Self.Entidad" />
+          <EntitySet Name="vwTipoVersion" EntityType="SACGSYSModel.vwTipoVersion" />
+        </EntityContainer>
+        <EntityType Name="vwTipoVersion">
+          <Key>
+            <PropertyRef Name="TipoVersion" />
+          </Key>
+          <Property Name="TipoVersion" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SACGSYSModelStoreContainer" CdmEntityContainer="SACGSYSContext">
+          <EntitySetMapping Name="Entidad">
+            <EntityTypeMapping TypeName="SACGSYSModel.Entidad">
+              <MappingFragment StoreEntitySet="Entidad">
+                <ScalarProperty Name="EntidadId" ColumnName="EntidadId" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Ejercicio" ColumnName="Ejercicio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwTipoVersion">
+            <EntityTypeMapping TypeName="SACGSYSModel.vwTipoVersion">
+              <MappingFragment StoreEntitySet="vwTipoVersion">
+                <ScalarProperty Name="TipoVersion" ColumnName="TipoVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

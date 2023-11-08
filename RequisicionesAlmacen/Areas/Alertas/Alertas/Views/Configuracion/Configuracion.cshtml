@@ -1,0 +1,321 @@
+﻿@using RequisicionesAlmacen.Areas.Alertas.Alertas.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model ConfiguracionViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Alertas Configuración" }, { "Accion", "" }, { "Icono", "icon ion-gear-a" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<GRtblAlertaConfiguracion>()
+                    .ID("dxForm")
+                    .FormData(new GRtblAlertaConfiguracion())
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup().ColSpan(6).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup1 =>
+                                                {
+                                                    itemGroup1.AddSimple()
+                                                        .Label(label => label.Text("Menú Principal").ShowColon(false))
+                                                        .ColSpan(12)
+                                                        .CssClass("h6 br-section-label");
+                                                }
+                                            );
+
+                                            itemGroup.AddSimple()
+                                                .ColSpan(12)
+                                                .Template(new TemplateName("treeListTemplate"));
+                                        }
+                                    );
+
+                                    itemGroup0.AddGroup().ColSpan(6).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup1 =>
+                                                {
+                                                    itemGroup1.AddSimple()
+                                                        .Label(label => label.Text("Configuración").ShowColon(false))
+                                                        .ColSpan(12)
+                                                        .CssClass("h6 br-section-label");
+                                                }
+                                            );
+
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup1 =>
+                                                {
+                                                    itemGroup1.AddSimple().Template(new TemplateName("btnAgregarTemplate"))
+                                                        .ColSpan(12);
+
+                                                    itemGroup1.AddSimpleFor(m => m.TipoNotificacionId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.RadioGroup()
+                                                            .ID("dxRadioBtnTipoNotificacion")
+                                                            .DataSource(Model.ListTipoNotificacion)
+                                                            .ValueExpr("ControlId")
+                                                            .DisplayExpr("Valor"));
+
+                                                    itemGroup1.AddSimpleFor(m => m.EmpleadoId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboEmpleado")
+                                                            .DataSource(Model.ListEmpleado)
+                                                            .ValueExpr("Id")
+                                                            .DisplayExpr("Nombre")
+                                                            .SearchEnabled(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción"));
+                                                }
+                                            ).CssClass("form-layout form-layout-1");
+
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup1 =>
+                                                {
+                                                    itemGroup1.AddSimple().Template(new TemplateName("detallesTemplate"))
+                                                        .ColSpan(12);
+                                                }
+                                            );
+                                        }
+                                    );
+
+                                }
+                            );
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(false); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("btnAgregarTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .ID("dxButtonAgregar")
+                        .Text("Agregar")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10 mg-b-10")
+                        .OnClick("agregarRegistro")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("treeListTemplate"))
+{
+    <div class="row">
+        <div class="col-12">
+            @(Html.DevExtreme().TreeList<GRspAlertasConfiguracionMenuPrincipal_Result>()
+                .ID("dxTreeList")
+                .DataSource(Model.ListMenuPrincipal)
+                .KeyExpr("NodoMenuId")
+                .ParentIdExpr("NodoPadreId")
+                .ShowBorders(true)
+                .ColumnAutoWidth(true)
+                .AllowColumnResizing(true)
+                .AutoExpandAll(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .NoDataText("Sin registros")
+                .Selection(s => s.Mode(SelectionMode.Single))
+                .OnSelectionChanged("onSelectionChangedTree")
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.Etiqueta).Caption("Etapa/Acción");
+
+                    columns.AddFor(m => m.Orden)
+                        .Visible(false)
+                        .SortOrder(SortOrder.Asc);
+                })
+            )
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("detallesTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<GRtblAlertaConfiguracion>()
+                    .ID("dxGridDetalles")
+                    .DataSource(m => m.Array().Key("AlertaConfiguracionId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .LoadPanel(p => p.Enabled(true))
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .OnSelectionChanged("onSelectionChangedDetalle")
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.EmpleadoId).CalculateCellValue("displayExpr_empleado")
+                            .Alignment(HorizontalAlignment.Left);
+                        c.AddFor(m => m.FiguraId).CalculateCellValue("displayExpr_figura")
+                            .DataType(GridColumnDataType.Boolean)
+                            .Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.TipoNotificacionId).CalculateCellValue("displayExpr_tipo")
+                            .Alignment(HorizontalAlignment.Left);
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEliminarRegistro")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("validaEliminarRegistro")
+                                    .Visible(new JS("function(event) { return !event.row.data.Sistema; }"));
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR REGISTRO -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminarRegistro" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar la configuración?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaEliminarRegistro.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaEliminarRegistro.modal('hide'); eliminaRegistro(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js" type="text/javascript"></script>
+<script src="~/Areas/Alertas/Alertas/Views/Configuracion/Configuracion.js"></script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _listEmpleado = @Html.Raw(Json.Encode(Model.ListEmpleado));
+    var _listTipoNotificacion = @Html.Raw(Json.Encode(Model.ListTipoNotificacion));
+    var _listAlertaConfiguracion = @Html.Raw(Json.Encode(Model.ListAlertaConfiguracion));
+</script>

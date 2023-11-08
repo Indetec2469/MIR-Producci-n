@@ -1,0 +1,1 @@
+UPDATE tblControlMaestro SET Control = 'MITipoPlanDesarrollo' WHERE Control = 'NivelGobierno'

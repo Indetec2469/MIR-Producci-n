@@ -1,0 +1,9 @@
+ALTER TABLE ARtblInvitacionCompraDetalle ADD InvitacionArticuloDetalleId	INT NOT NULL
+GO
+
+ALTER TABLE ARtblInvitacionCompraDetalle WITH CHECK ADD CONSTRAINT FK_ARtblInvitacionCompraDetalle_ARtblInvitacionCompraDetalle FOREIGN KEY(InvitacionArticuloDetalleId)
+REFERENCES ARtblInvitacionArticuloDetalle (InvitacionArticuloDetalleId)
+GO
+
+ALTER TABLE ARtblInvitacionCompraDetalle CHECK CONSTRAINT FK_ARtblInvitacionCompraDetalle_ARtblInvitacionCompraDetalle
+GO

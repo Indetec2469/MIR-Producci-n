@@ -1,0 +1,83 @@
+﻿@model RequisicionesAlmacen.Areas.Sistemas.Catalogos.Models.ViewModel.UsuarioViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Listado de Usuario" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-8 col-lg-8 col-xl-8">
+                <h6 class="br-section-label">LISTADO GENERAL DE USUARIO</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                        .Text("Nuevo")
+                        .OnClick("redirigirNuevo")
+                    )
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.GRvwListadoUsuario>()
+                .ID("dxDataGridListado")
+                .DataSource(m => m.Array().Data(Model.ListadoUsuario).Key("UsuarioId"))
+                .ShowBorders(true)
+                .ColumnAutoWidth(false)
+                .AllowColumnResizing(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .RowAlternationEnabled(true)
+                .NoDataText("Sin registros")
+                .Paging(paging => paging.PageSize(10))
+                .Pager(pager =>
+                {
+                    pager.ShowPageSizeSelector(true);
+                    pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                    pager.ShowInfo(true);
+                    pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                })
+                .SearchPanel(sp =>
+                    sp
+                    .Placeholder("Buscar...")
+                    .SearchVisibleColumnsOnly(true)
+                    .HighlightSearchText(false)
+                    .Visible(true)
+                    .Width(200)
+                )
+                .Scrolling(s => s.UseNative(true))
+                .Columns(column =>
+                {
+                    column.AddFor(m => m.NombreUsuario);
+
+                    column.AddFor(m => m.NombreEmpleado);
+
+                    column.AddFor(m => m.NombreRol);
+
+                    column.Add()
+                    .Width(100)
+                    .Caption("Acciones")
+                    .Fixed(true)
+                    .FixedPosition(HorizontalEdge.Right)
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(button =>
+                    {
+
+                        button.Add()
+                            .Name("btnEditar")
+                            .Hint("Editar")
+                            .Icon("edit")
+                            .OnClick("redirigirEditar");
+                    });
+                })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Areas/Sistemas/Catalogos/Views/Usuario/ListadoUsuario.js" type="text/javascript"></script>

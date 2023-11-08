@@ -1,0 +1,20 @@
+﻿<!-- Load Panel -->
+@(Html.DevExtreme().LoadPanel()
+    .ID("loadPanel")
+    .ShadingColor("rgba(0,0,0,0.4)")
+    .Visible(false)
+    .ShowIndicator(true)
+    .ShowPane(true)
+    .Shading(true)
+    .CloseOnOutsideClick(false)
+    .Message("Espera...")
+)
+
+<!-- SCRIPT -->
+<script>
+    var dxLoaderPanel;
+
+    $(() => {
+        dxLoaderPanel = $("#loadPanel").dxLoadPanel("instance");
+    });
+</script>

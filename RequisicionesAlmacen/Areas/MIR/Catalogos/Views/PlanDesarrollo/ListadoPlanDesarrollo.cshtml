@@ -1,0 +1,78 @@
+﻿@using RequisicionesAlmacen.Areas.MIR.Catalogos.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model PlanDesarrolloViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Catálogo de Plan de Desarrollo" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado Plan de Desarrollo</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .Text("Nuevo")
+                        .OnClick("nuevo")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<MIvwListadoPlanNacionalDesarrollo>()
+                    .ID("dxGrid")
+                    .DataSource(m => m.Array().Data(Model.ListPlanDesarrollo).Key("Codigo"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Columns(c =>
+                    {
+
+                        c.AddFor(m => m.Codigo);
+                        c.AddFor(m => m.Nombre);
+                        c.AddFor(m => m.Periodo);
+                        c.AddFor(m => m.Estatus);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEditar")
+                                    .Hint("Editar")
+                                    .Icon("edit")
+                                    .OnClick("editar");
+                            });
+
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/MIR/Catalogos/Views/PlanDesarrollo/ListadoPlanDesarrollo.js"></script>

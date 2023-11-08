@@ -1,0 +1,137 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Reportes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model ReporteLibroAlmacenViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Libro de Almacén de Materiales y/o Consumibles" }, { "Accion", "Reporte" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<ARrptLibroAlmacen>()
+                    .ID("dxForm")
+                    .FormData(Model.Reporte)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Filtros").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup().ColSpan(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.Fecha)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.DateBox()
+                                                            .ID("dxTxtFecha")
+                                                            .DisplayFormat("dd/MM/yyyy")
+                                                            .Value(Model.FechaOperacion)
+                                                            .OnValueChanged("setFecha"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.CuentaAlmacenCodigo)
+                                                        .ColSpan(8)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.DropDownBox()
+                                                            .ID("dxCboCuenta")
+                                                            .DataSource(Model.ListClasificadorObjetoGasto)
+                                                            .ValueExpr("CuentaAlmacenCodigo")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.CuentaAlmacenCodigo + ' - ' + e.CuentaAlmacen : null; } "))
+                                                            .ContentTemplate(new TemplateName("EmbeddedTreeViewMultiple"))
+                                                            .ShowClearButton(true)
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("cboObjetosGastoChange"));
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Aceptar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="row pd-t-10">
+        <div class="col-12">
+            <div id="reporte">
+                @ViewBag.WebReport
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template Combos selección múltiple -->
+@using (Html.DevExtreme().NamedTemplate("EmbeddedTreeViewMultiple"))
+{
+    @(Html.DevExtreme().TreeView()
+        .DataSource(new JS(@"component.getDataSource()"))
+        .KeyExpr("CuentaAlmacenCodigo")
+        .DisplayExpr(new JS("(e) => { return e ? e.CuentaAlmacenCodigo + ' - ' + e.CuentaAlmacen : null; } "))
+        .DataStructure(TreeViewDataStructure.Plain)
+        .SelectionMode(NavSelectionMode.Multiple)
+        .ShowCheckBoxesMode(TreeViewCheckBoxMode.SelectAll)
+        .SelectNodesRecursive(false)
+        .SelectByClick(true)
+        .SearchEnabled(true)
+        .SearchEditorOptions(t => t.Placeholder("Buscar"))
+        .NoDataText("Sin registros que mostrar")
+        .OnItemSelectionChanged(@<text>
+            function(args) {
+                component.option("value", args.component.getSelectedNodeKeys());
+            }
+        </text>)
+        .SelectAllText("Seleccionar todo")
+        .OnSelectAllValueChanged(@<text>
+            function(args) {
+                component.option("value", args.component.getSelectedNodeKeys());
+            }
+        </text>)
+    )
+}
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/Almacenes/Reportes/Views/ReporteLibroAlmacen/ReporteLibroAlmacen.js"></script>

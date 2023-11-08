@@ -1,0 +1,85 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Catalogos.Models.ViewModel.ControlMaestroFrecuenciaMedicionViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Frecuencia de Medición" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">LISTADO FRECUENCIA DE MEDICIÓN</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid()
+                    .ID("dxDataGridListado")
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+                        column.Add()
+                        .Caption("Código")
+                        .DataField("FrecuenciaMedicionId")
+                        .Width(100);
+
+                        column.Add()
+                        .Caption("Frecuencia Medición")
+                        .DataField("Descripcion");
+
+                        column.Add()
+                        .AllowSorting(false)
+                        .Caption("Nivel")
+                        .DataField("Nivel")
+                        .Lookup(lookup => lookup
+                            .DataSource(dataSource => dataSource.Array().Data(Model.ListControlMaestroNivel).Key("ControlId"))
+                            .ValueExpr("ControlId")
+                            .DisplayExpr("Valor")
+                        )
+                        .CellTemplate(new JS("cellTemplate"))
+                        .CalculateFilterExpression(@<text>
+                            function(filterValue, selectedFilterOperation, target) {
+                                if(target === "search" && typeof(filterValue) === "string") {
+                                    return [this.dataField, "contains", filterValue]
+                                }
+                                return function(data) {
+                                    return (data.AssignedEmployee || []).indexOf(filterValue) !== -1
+                                }
+                            }</text>
+                        );
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // VARIABLES GLOBALES MODEL //
+    var _listControlMaestroFrecuenciaMedicion = @Html.Raw(Json.Encode(Model.ListControlMaestroFrecuenciaMedicion)),
+        _listControlMaestroFrecuenciaMedicionNivel =  @Html.Raw(Json.Encode(Model.ListControlMaestroFrecuenciaMedicionNivel));
+    //////////////////////////////
+</script>
+<script src="~/Areas/MIR/Catalogos/Views/FrecuenciaMedicion/ListadoFrecuenciaMedicion.js"></script>

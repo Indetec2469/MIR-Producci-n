@@ -1,0 +1,2 @@
+ALTER TABLE MItblMatrizIndicadorResultadoIndicador
+DROP COLUMN DescripcionVariable1, DescripcionVariable2, DescripcionVariable3, DescripcionVariable4

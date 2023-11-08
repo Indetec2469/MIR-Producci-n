@@ -1,0 +1,119 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Reportes.Models.ViewModel.ReporteVariableIndicadorViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Reportes" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">VARIABLES DE LOS INDICADORES</h6>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @(Html.DevExtreme().Form()
+                            .ID("dxForm")
+                            .LabelLocation(FormLabelLocation.Left)
+                            .RequiredMark("(*)")
+                            .ElementAttr("class","green")
+                            .ColCount(12)
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(itemGroup =>
+                            {
+                                itemGroup.AddGroup()
+                                .Name("Grupo1")
+                                .ColSpan(12)
+                                .ColCount(12)
+                                .Items(item =>
+                                {
+                                    item.AddSimple()
+                                    .DataField("MIRId")
+                                    .Label(label => label.Text("Matriz de Indicador de Resultados"))
+                                    .ColSpan(12)
+                                    .ValidationRules(validationRules => {
+                                        validationRules.AddRequired().Message("Matriz de Indicador de Resultados Requierdo");
+                                    })
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ComboListadoMIR)
+                                        .DisplayExpr("Descripcion")
+                                        .ValueExpr("MIRId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .ShowClearButton(true)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+                                    );
+
+                                });
+
+                                itemGroup.AddGroup()
+                                .Name("Grupo2")
+                                .ColSpan(12)
+                                .ColCount(12)
+                                .Items(item =>
+                                {
+                                    item.AddSimple()
+                                    .DataField("MesId")
+                                    .Label(label => label.Text("Fecha de Corte"))
+                                    .ColSpan(6)
+                                    .ValidationRules(validationRules =>
+                                    {
+                                        validationRules.AddRequired().Message("Fecha de Corte Requierda");
+                                    })
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ComboListaMes)
+                                        .DisplayExpr("NombreMes")
+                                        .ValueExpr("MesId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .ShowClearButton(true)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+                                    );
+
+                                    item.AddEmpty()
+                                    .ColSpan(4);
+
+                                    item.AddSimple()
+                                    .ColSpan(2)
+                                    .CssClass("ml-auto")
+                                    .Template(new TemplateName("templateButton"));
+                                });
+                            })
+                        )
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Template Button *@
+@using (Html.DevExtreme().NamedTemplate("templateButton"))
+{
+    <div class="row mb-">
+        <div class="col-12">
+            <div class="d-flex flex-row justify-content-center justify-content-sm-center justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                @(Html.DevExtreme()
+                .Button()
+                .Text("Buscar")
+                .ElementAttr("class", "btn-success btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                .OnClick("onClickBusca")
+                )
+
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Areas/MIR/Reportes/Views/ReporteVariableIndicador/ReporteVariableIndicador.js"></script>

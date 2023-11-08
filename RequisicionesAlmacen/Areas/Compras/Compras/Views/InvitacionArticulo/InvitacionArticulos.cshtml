@@ -1,0 +1,146 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Compras.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model InvitacionArticuloViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Artículos Invitación" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado de Artículos por Convertir</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<InvitacionArticuloDetalleItem>()
+                    .ID("dxGridDetalles")
+                    .DataSource(m => m.Array().Data(Model.ListArticulosInvitacion).Key("InvitacionCompraDetalleId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .OnEditingStart("onEditingStart")
+                    .OnOptionChanged("onDetallesChange")
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.Seleccionado)
+                            .Width(100)
+                            .Caption("")
+                            .Alignment(HorizontalAlignment.Center)
+                            .DataType(GridColumnDataType.Boolean);
+                        c.AddFor(m => m.TipoCompra).GroupIndex(0).AllowEditing(false);
+                        c.AddFor(m => m.Almacen).GroupIndex(1).AllowEditing(false);
+                        c.AddFor(m => m.Proveedor).GroupIndex(2).AllowEditing(false);
+                        c.AddFor(m => m.Requisicion).AllowEditing(false);
+                        c.AddFor(m => m.FechaRegistro).AllowEditing(false);
+                        c.AddFor(m => m.Producto).AllowEditing(false);
+                        c.AddFor(m => m.Cantidad).Format("$ #,##0.00##").AllowEditing(false);
+                        c.AddFor(m => m.Costo).Format("$ #,##0.00##").AllowEditing(false);
+                        c.AddFor(m => m.Importe).Format("$ #,##0.00##").AllowEditing(false);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Hint("Cancelar")
+                                    .Icon("clear")
+                                    .OnClick("validaEliminar");
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">¿Está seguro de cancelar el registro?</h5>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaRegistro(); }")                                
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Compras/Compras/Views/InvitacionArticulo/InvitacionArticulos.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>

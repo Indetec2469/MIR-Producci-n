@@ -1,0 +1,69 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Almacenes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model RequisicionPorSurtirViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Surtir Solicitudes de Materiales y/o Consumibles" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado de Solicitudes de Materiales y/o Consumibles Pendientes por Surtir</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARvwListadoRequisicionPorSurtir>()
+                    .ID("dxDataGrid")
+                    .DataSource(m => m.Array().Data(Model.ListRequisicionPorSurtir).Key("RequisicionMaterialId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CodigoRequisicion).Caption("Código").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Fecha);
+                        c.AddFor(m => m.CreadoPor);
+                        c.AddFor(m => m.Area).Caption("Área");
+                        c.AddFor(m => m.Monto).Format("$ #,##0.00##");
+                        c.AddFor(m => m.Estatus);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Hint("Ver")
+                                    .Icon("doc")
+                                    .OnClick("ver");
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/Almacenes/Almacenes/Views/SolicitudPorSurtir/ListadoRequisicionPorSurtir.js"></script>

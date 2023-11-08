@@ -1,0 +1,158 @@
+﻿@using RequisicionesAlmacenBL.Models
+@using RequisicionesAlmacen.Models.ViewModel
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model RequisicionesAlmacen.Models.ViewModel.UsuarioSesionViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<link href="~/Content/Login.css" rel="stylesheet" />
+
+<div class="container">
+    <section id="formHolder">
+        <div class="row">
+            <!-- Brand Box -->
+            <div class="col-sm-6 brand">
+                <div class="heading">
+                    <img class="logo" src="~/Content/assets/logos/logo_white.png" />
+
+                    @if(@Model.TipoVersion == ControlMaestroMapeo.TipoVersion.MIR) {
+                        <p>Sistema de Seguimiento a la</p>
+                        <p>MIR</p>
+                    }
+                    else if(@Model.TipoVersion == ControlMaestroMapeo.TipoVersion.COMPRAS) {
+                        <p>Sistema de Seguimiento a</p>
+                        <p>Almacenes, Requisiciones y Compras</p>
+                    }
+                    else {
+                        <p>Sistema de Seguimiento a</p>
+                        <p>MIR, Almacenes, Requisiciones y Compras</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Form Box -->
+            <div class="col-sm-6 form">
+                <!-- Login Form -->
+                <div class="login form-peice">
+                    <br /><br />
+                    @using (Html.BeginForm())
+                    {
+                        <div class="text-center">
+                            <h1>Bienvenido</h1>
+                            <p>Ingrese a su cuenta</p>
+                        </div>
+
+                        using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+                        {
+                            @Html.AntiForgeryToken();
+                            @(Html.DevExtreme().Form<UsuarioSesionViewModel>()
+                                .ID("dxFormLogin")
+                                .LabelLocation(FormLabelLocation.Top)
+                                .RequiredMark("(*)")
+                                .ScreenByWidth(@<text> function(width) {} </text>)
+                                .Items(
+                                    item =>
+                                    {
+                                        item.AddGroup().ColCount(12).Items(
+
+                                            itemGroup => itemGroup.AddSimpleFor(m => m.UsuarioSesion.EnteId)
+                                                .Editor(e => e.DropDownBox()
+                                                            .ID("dxDropDownBoxEntidad")
+                                                            .ValueExpr("EntidadId")
+                                                            .DataSource(d => d.Array().Data(Model.ListEntes).Key("EntidadId"))
+                                                            .DisplayExpr(new JS("enteDisplayExpr"))
+                                                            .OnValueChanged("enteValueChanged")
+                                                            .ContentTemplate(new TemplateName("DataGridTemplate"))
+                                                            .ShowClearButton(true)
+                                                            .Placeholder("Selecciona una opción"))
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                        );
+                                        item.AddGroup().ColCount(12).Items(
+
+                                            itemGroup => itemGroup.AddSimpleFor(m => m.UsuarioSesion.NombreUsuario)
+                                                .Editor(e => e.TextBox().Value(new JS("llenaUsuario()")))
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                        );
+                                        item.AddGroup().ColCount(12).Items(
+
+                                            itemGroup => itemGroup.AddSimpleFor(m => m.UsuarioSesion.Contrasenia)
+                                                .Editor(e => e.TextBox().Mode(TextBoxMode.Password))
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                        );
+                                        item.AddGroup().ColCount(12).Items(
+
+                                            itemGroup => itemGroup.AddSimple()
+                                                .Label(l => l.Text("Recordarme").Location(FormLabelLocation.Left))
+                                                .Editor(e => e.CheckBox().ID("chkRecordarme"))
+                                                .ColSpan(12)
+                                        );
+                                        item.AddGroup().ColCount(12).Items(
+                                            itemGroup =>
+                                            {
+                                                itemGroup.AddButton()
+                                                    .ColSpan(12)
+                                                    .ButtonOptions(bo => bo.Text("Ingresar")
+                                                    .ElementAttr("class", "btn-success text-center btn-oblong btn-login mg-t-15 mg-l-5")
+                                                    .ValidationGroup("dxValidationGroup")
+                                                    .OnClick("iniciarSesion"));
+                                            }
+                                        );
+                                    }
+                                )
+                            )
+                        }
+                    }
+                </div><!-- End Login Form -->
+                <!-- Signup Form -->
+                <div class="signup form-peice switched">
+                    <form class="signup-form" action="#" method="post"></form>
+                </div><!-- End Signup Form -->
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@using (Html.DevExtreme().NamedTemplate("DataGridTemplate"))
+{
+    @(Html.DevExtreme().DataGrid()
+        .ID("dxDataGridTemplate")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .NoDataText("Sin registros")
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .Columns(c =>
+        {
+            c.Add().DataField("EntidadId");
+            c.Add().DataField("Nombre");
+            c.Add().DataField("Ejercicio");
+            c.Add().DataField("Estado");
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .SelectedRowKeys(new JS(@"component.option(""value"") ? [component.option(""value"")] : []"))
+        .OnSelectionChanged(@<text>
+                function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                component.close();
+                }
+            </text>)
+        .Height(330)
+    )
+}
+
+<script src="~/Views/Login/login.js"></script>

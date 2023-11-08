@@ -1,0 +1,88 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Reportes.Models.ViewModel.ReporteFichaTecnicaIndicadorViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Reportes" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">REPORTE FICHA TÉCNICA INDICADOR</h6>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @(Html.DevExtreme().Form()
+                                            .ID("dxForm")
+                                            .LabelLocation(FormLabelLocation.Top)
+                                            .RequiredMark("(*)")
+                                            .ScreenByWidth(@<text> function(width) {} </text>)
+                                            .Items(itemGroup =>
+                                            {
+                                                itemGroup.AddGroup()
+                                                .ColCount(12)
+                                                .Items(item =>
+                                                {
+                                                    item.AddSimple()
+                                                    .Label( l => l.Text("Matriz de Indicador de Resultados"))
+                                                    .DataField("MIR")
+                                                    .ColSpan(5)
+                                                    .ValidationRules(validationRules =>
+                                                    {
+                                                        validationRules.AddRequired().Message("Campo Requerido");
+                                                    })
+                                                    .Editor(e => e
+                                                        .SelectBox()
+                                                        .DataSource(Model.ListMIR)
+                                                        .DisplayExpr("Descripcion")
+                                                        .ValueExpr("MIRId")
+                                                        .SearchEnabled(true)
+                                                        .SearchMode(DropDownSearchMode.Contains)
+                                                        .ShowClearButton(true)
+                                                        .NoDataText("Sin registros que mostrar")
+                                                        .Placeholder("Selecciona una opción")
+                                                    );
+
+                                                    item.AddSimple()
+                                                    .ColSpan(5)
+                                                    .Template(new TemplateName("templateButton"));
+                                                });
+                                            })
+                        )
+                    }
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="reporte">
+                    @ViewBag.WebReport
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Template Button *@
+@using (Html.DevExtreme().NamedTemplate("templateButton"))
+{
+    <div class="row pd-t-10">
+        <div class="col-md-12">
+            @(Html.DevExtreme()
+                            .Button()
+                            .Text("Buscar")
+                            .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                            .OnClick("onClickBusca")
+            )
+        </div>
+    </div>
+}
+
+<script src="~/Areas/MIR/Reportes/Views/ReporteFichaTecnicaIndicador/ReporteFichaTecnicaIndicador.js"></script>

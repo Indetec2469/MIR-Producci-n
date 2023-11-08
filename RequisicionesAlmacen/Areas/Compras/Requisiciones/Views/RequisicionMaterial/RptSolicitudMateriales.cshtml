@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Reporte";
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Reporte Solicitud de Materiales" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-12">
+                @ViewBag.WebReport.GetHtml()
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Areas/Compras/Requisiciones/Views/RequisicionMaterial/reportStyles.css" rel="stylesheet" />

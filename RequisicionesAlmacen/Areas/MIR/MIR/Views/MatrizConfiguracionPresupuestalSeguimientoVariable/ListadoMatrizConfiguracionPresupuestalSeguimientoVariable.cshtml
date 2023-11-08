@@ -1,0 +1,77 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizConfiguracionPresupuestalSeguimientoVariableViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Seguimiento a Variables" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">LISTADO SEGUIMIENTO A VARIABLES</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.MIvwListadoMatrizConfiguracionPresupuestalSeguimientoVariable>()
+                    .ID("dxDataGridListado")
+                    .DataSource(m => m.Array().Data(Model.ListadoMatrizConfiguracionPresupuestalSeguimientoVariable).Key("MIRId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+                        column.AddFor(m => m.Codigo).Width(120);
+
+                        column.AddFor(m => m.Ejercicio);
+
+                        column.AddFor(m => m.TipoPlanDesarrollo);
+
+                        column.AddFor(m => m.NombrePlanPeriodo);
+
+                        column.AddFor(m => m.ProgramaPresupuestario);
+
+                        column.AddFor(m => m.Indicadores);
+
+                        column.Add()
+                        .Width(100)
+                        .Caption("Acciones")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Right)
+                        .Type(GridCommandColumnType.Buttons)
+                        .Buttons(button =>
+                        {
+
+                            button.Add()
+                                .Name("btnEditar")
+                                .Hint("Editar")
+                                .Icon("edit")
+                                .OnClick("redirigirEditar");
+                        });
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/MIR/MIR/Views/MatrizConfiguracionPresupuestalSeguimientoVariable/ListadoMatrizConfiguracionPresupuestalSeguimientoVariable.js"></script>

@@ -1,0 +1,1 @@
+UPDATE GRtblControlMaestro SET Control = 'MITipoPlanDesarrollo' WHERE Control = 'NivelGobierno'

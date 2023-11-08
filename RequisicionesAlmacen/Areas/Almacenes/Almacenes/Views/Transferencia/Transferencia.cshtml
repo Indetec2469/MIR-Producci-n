@@ -1,0 +1,635 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Almacenes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model TransferenciaViewModel
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Transferencias" }, { "Accion", !Model.SoloLectura ? "Nuevo" : "Ver" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<ARtblTransferencia>()
+                    .ID("dxForm")
+                    .FormData(Model.Transferencia)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ReadOnly(Model.SoloLectura)
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Datos Generales").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddSimpleFor(m => m.Codigo)
+                                        .ColSpan(3)
+                                        .CssClass("tx-bold")
+                                        .Editor(e => e.TextBox()
+                                            .ID("dxTxtCodigo")
+                                            .ReadOnly(true));
+
+                                    itemGroup0.AddSimpleFor(m => m.Fecha)
+                                        .ColSpan(4)
+                                        .CssClass("tx-bold")
+                                        .Editor(e => e.DateBox()
+                                            .ID("dxTxtFecha")
+                                            .DisplayFormat("dd/MM/yyyy")
+                                            .OnValueChanged("setCambios")
+                                            .ReadOnly(true));
+
+                                    itemGroup0.AddSimpleFor(m => m.AlmacenOrigenId)
+                                        .ColSpan(5)
+                                        .CssClass("tx-bold")
+                                        .Editor(e => e.SelectBox()
+                                            .ID("dxCboAlmacen")
+                                            .DataSource(Model.ListAlmacenes)
+                                            .ValueExpr("AlmacenId")
+                                            .DisplayExpr("Nombre")
+                                            .DataSourceOptions( o => o.Filter("['Seleccionado', '=', 1]"))
+                                            .SearchEnabled(true)
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .NoDataText("Sin registros que mostrar")
+                                            .Placeholder("Selecciona una opción")
+                                            .ReadOnly(Model.SoloLectura)
+                                            .OnValueChanged("cboAlmacenChange"));
+
+                                    itemGroup0.AddSimpleFor(m => m.Comentarios)
+                                        .ColSpan(12)
+                                        .Editor(e => e.TextArea()
+                                            .ID("dxTxtComentarios")
+                                            .MaxLength(2000)
+                                            .ReadOnly(Model.SoloLectura));
+                                }
+                            ).CssClass("form-layout form-layout-1");
+
+                            items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Movimientos").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddGroup().ColSpan(12).Items(
+                                        itemGroup0 =>
+                                        {
+                                            itemGroup0.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimple().Template(new TemplateName("btnAgregarTemplate"))
+                                                        .ColSpan(12)
+                                                        .Visible(!Model.SoloLectura);
+                                                }
+                                            );
+
+                                            itemGroup0.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimple().Template(new TemplateName("detallesTemplate"))
+                                                        .ColSpan(12);
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonCancelar")
+                                    .Text("Cerrar")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(true); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(false); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("validaAfectar")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("btnAgregarTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .ID("dxButtonAgregar")
+                        .Text("Agregar")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10 mg-b-10")
+                        .OnClick("nuevoRegistro")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("detallesTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<TransferenciaMovtoItem>()
+                    .ID("dxGridDetalles")
+                    .DataSource(m => m.Array().Data(Model.ListTransferenciaMovtos).Key("TransferenciaMovtoId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnCellPrepared("onCellPrepared")
+                    .OnEditingStart("onEditingStart")
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CuentaPresupuestalOrigenId).Alignment(HorizontalAlignment.Center).AllowEditing(false);
+                        c.AddFor(m => m.CuentaPresupuestalDestinoId).Alignment(HorizontalAlignment.Center).AllowEditing(false);
+                        c.AddFor(m => m.AlmacenDestino).AllowEditing(false);
+                        c.AddFor(m => m.Descripcion).CalculateCellValue("gridBox_displayExpr").AllowEditing(false);
+                        c.AddFor(m => m.UnidadDeMedida).AllowEditing(false);
+                        c.AddFor(m => m.Cantidad).Format("#,##0.00##")
+                            .DataType(GridColumnDataType.Number)
+                            .ValidationRules(r => r.AddRange().Min(.0001).Message("Cantidad no válida."))
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right);
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Visible(!Model.SoloLectura)
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEliminar")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("validaEliminarArticulo");
+                            });
+                    })
+                    .SortByGroupSummaryInfo(i => i.Add().SummaryItem("count"))
+                    .Summary(s => s.TotalItems(items =>
+                    {
+                        items.AddFor(m => m.Cantidad)
+                            .CssClass("h6 font-weight-bold")
+                            .SummaryType(SummaryType.Sum)
+                            .ValueFormat("#,##0.00##")
+                            .ShowInColumn("Cantidad")
+                            .Alignment(HorizontalAlignment.Right)
+                            .DisplayFormat("Total: {0}");
+                    }))
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("DataGridTemplateOrigen"))
+{
+    @(Html.DevExtreme().DataGrid()
+        .ID("dxDataGridTemplateOrigen")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .KeyExpr("AlmacenProductoId")
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .Grouping(g => g.AutoExpandAll(false))
+        .NoDataText("Sin registros")
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .OnCellPrepared("onCellPrepared")
+        .Scrolling(s => s.UseNative(true))
+        .Columns(c =>
+        {
+            c.Add().DataField("Producto").AllowSorting(false).GroupIndex(0);
+            c.Add().DataField("UnidadAdministrativaId")
+                .Caption("Unidad Administrativa")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("ProyectoId")
+                .Caption("Proyecto")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("FuenteFinanciamientoId")
+                .Caption("Fuente de Financiamiento")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("TipoGastoId")
+                .Caption("Tipo de Gasto")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("Cantidad").AllowSorting(false);
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .SearchPanel(
+            sp => sp.Placeholder("Buscar...")
+                .SearchVisibleColumnsOnly(true)
+                .HighlightSearchText(false)
+                .Visible(true)
+                .Width(200)
+        )
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .Height(330)
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+                if(selectedItems.selectedRowKeys.length) {
+                    cboProductoOrigenChange(selectedItems.selectedRowKeys[0]);
+                    component.option("value", selectedItems.selectedRowKeys[0]);
+                }
+            }
+        </text>)
+    )
+}
+
+@using (Html.DevExtreme().NamedTemplate("DataGridTemplateDestino"))
+{
+    @(Html.DevExtreme().DataGrid()
+        .ID("dxDataGridTemplateDestino")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .KeyExpr("AlmacenProductoId")
+        .AllowColumnReordering(false)
+        .ColumnAutoWidth(true)
+        .WordWrapEnabled(true)
+        .ShowBorders(true)
+        .NoDataText("Sin registros")
+        .Selection(s => s.Mode(SelectionMode.Multiple))
+        .LoadPanel(p => p.Enabled(true))
+        .OnCellPrepared("onCellPrepared")
+        .Scrolling(s => s.UseNative(true))
+        .Columns(c =>
+        {
+            c.Add().DataField("UnidadAdministrativaId")
+                .Caption("Unidad Administrativa")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("ProyectoId")
+                .Caption("Proyecto")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("FuenteFinanciamientoId")
+                .Caption("Fuente de Financiamiento")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("TipoGastoId")
+                .Caption("Tipo de Gasto")
+                .Alignment(HorizontalAlignment.Center)
+                .AllowSorting(false);
+            c.Add().DataField("Cantidad").AllowSorting(false);
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .SearchPanel(
+            sp => sp.Placeholder("Buscar...")
+                .SearchVisibleColumnsOnly(true)
+                .HighlightSearchText(false)
+                .Visible(true)
+                .Width(200)
+        )
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .Height(330)
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+                cboProductoDestinoChange(selectedItems.selectedRowsData);
+
+                if(selectedItems.selectedRowKeys.length) {
+                    component.option("value", selectedItems.selectedRowKeys[0]);
+                } else {
+                    component.option("value", null);
+                }
+            }
+        </text>)
+    )
+}
+
+<!-- PLANTILLA PARA EL TOOLTIP -->
+<div>
+    @(Html.DevExtreme().Tooltip()
+        .ID("tooltip")
+        .ShowEvent("mouseenter")
+        .HideEvent("mouseleave")
+        .CloseOnOutsideClick(false)
+        .Position(Position.Top)
+    )
+</div>
+
+<!-- MODAL NUEVO O EDITAR -->
+<div class="modal fade effect-scale" id="modalDetalle" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" isEdit>
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Agregar artículo</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup2"))
+                    {
+                        @Html.AntiForgeryToken();
+                        @(Html.DevExtreme().Form<TransferenciaMovtoItem>()
+                            .ID("dxFormModal")
+                            .FormData(new TransferenciaMovtoItem())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                item =>
+                                {
+                                    item.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.AlmacenDestinoId)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboAlmacenDestino")
+                                                    .ValueExpr("AlmacenId")
+                                                    .DataSource(Model.ListAlmacenes)
+                                                    .DisplayExpr("Nombre")
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción")
+                                                    .OnValueChanged("getComboProductosDestino"));
+
+                                            itemGroup.AddSimpleFor(m => m.AlmacenProductoOrigenId)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                                .Editor(e => e.DropDownBox()
+                                                    .ID("dxCboProductoOrigen")
+                                                    .ValueExpr("AlmacenProductoId")
+                                                    .DisplayExpr(new JS("gridBox_displayExpr"))
+                                                    .ContentTemplate(new TemplateName("DataGridTemplateOrigen"))
+                                                    .Placeholder("Selecciona una opción"));
+
+                                            itemGroup.AddSimpleFor(m => m.AlmacenProductoDestinoId)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                                .Editor(e => e.DropDownBox()
+                                                    .ID("dxCboProductoDestino")
+                                                    .DataSource(m => m.Array().Data(Model.ListProductos).Key("AlmacenProductoId"))
+                                                    .ValueExpr("AlmacenProductoId")
+                                                    .DisplayExpr(new JS("gridBox_displayExpr"))
+                                                    .ContentTemplate(new TemplateName("DataGridTemplateDestino"))
+                                                    .Placeholder("Cuenta presupuestal destino"));
+                                        }
+                                    );
+                                }
+                            )
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalDetalle.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Guardar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("guardaCambiosModal")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AFECTAR -->
+<div class="modal fade effect-scale" id="modalConfirmaAfectar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">Se afectará el inventario y no se podrán hacer cambios.</h5>
+                    ¿Desea continuar?
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalConfirmaAfectar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("function() { modalConfirmaAfectar.modal('hide'); guardaCambios(); }")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LIMPIAR TABLA -->
+<div class="modal fade effect-scale" id="modalConfirmaLimpiar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se borrarán los artículos añadidos a la tabla.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaLimpiar.modal('hide'); cancelarLimpirar(); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaLimpiar.modal('hide'); limpiarTabla(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR ARTICULO -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminarArticulo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar el artículo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaEliminarArticulo.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaEliminarArticulo.modal('hide'); eliminaArticulo(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/Almacenes/Almacenes/Views/Transferencia/Transferencia.js"></script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _soloLectura = @Html.Raw(Json.Encode(Model.SoloLectura));
+    var _listProductos = @Html.Raw(Json.Encode(Model.ListProductos));
+    var _listAlmacenes = @Html.Raw(Json.Encode(Model.ListAlmacenes));
+    var _ejercicio = @Html.Raw(Json.Encode(Model.EjercicioUsuario));
+    var _fechaOperacion = @Html.Raw(Json.Encode(Model.FechaOperacion));
+</script>

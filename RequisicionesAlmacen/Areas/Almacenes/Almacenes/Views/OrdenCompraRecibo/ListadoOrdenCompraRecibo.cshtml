@@ -1,0 +1,82 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Almacenes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model OrdenCompraReciboViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Recepciones de Compra" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-4">
+            <div class="col-md-8 col-lg-8">
+                <h6 class="br-section-label">Listado de Recepciones de Compra</h6>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .Text("Nuevo")
+                        .OnClick("nuevo")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARvwListadoOrdenCompraRecibo>()
+                    .ID("dxDataGrid")
+                    .DataSource(m => m.Array().Data(Model.ListOrdenCompraRecibo).Key("CompraId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CompraId).Caption("Código Recibo").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.FechaRecibo).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Estatus).Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.CodigoOC).Caption("Código Orden de Compra").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.FechaOC).Caption("Fecha Orden de Compra").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.EstatusOC).Caption("Estatus Orden de Compra").Alignment(HorizontalAlignment.Center);
+                        c.AddFor(m => m.Proveedor);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Hint("Ver")
+                                    .Icon("doc")
+                                    .OnClick("ver");
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Loader-->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/Almacenes/Almacenes/Views/OrdenCompraRecibo/ListadoOrdenCompraRecibo.js"></script>

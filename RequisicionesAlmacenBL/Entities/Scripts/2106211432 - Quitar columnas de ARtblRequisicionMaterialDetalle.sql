@@ -1,0 +1,8 @@
+ALTER TABLE ARtblRequisicionMaterialDetalle DROP COLUMN AlmacenProductoId
+GO
+
+ALTER TABLE ARtblRequisicionMaterialDetalle DROP COLUMN FuenteFinanciamientoId
+GO
+
+ALTER TABLE ARtblRequisicionMaterialDetalle DROP COLUMN CuentaPresupuestalId
+GO

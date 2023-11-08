@@ -1,0 +1,363 @@
+﻿@using RequisicionesAlmacen.Areas.RH.Ingreso.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@model EmpleadoViewModel
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@using (Html.DevExtreme().NamedTemplate("imagenTemplateForm"))
+{
+    <div class="widget-container flex-box">
+        @*<span>Imagen de Perfil</span>*@
+
+        <div id="dropzone-external" class="flex-box dx-theme-border-color">
+            <img id="dropzone-image" src="@Model.ImageSrc" hidden alt="" onload="toggleImageVisible(true)" />
+
+            <div id="dropzone-text" class="flex-box">
+                <span>Arrastra y suelta el archivo</span>
+                <span>…o haga clic para buscar un archivo.</span>
+            </div>
+        </div>
+
+        <div class="float-right">
+            @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonEliminarImagen")
+                        .Text("Eliminar")
+                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15")
+                        .OnClick("eliminaFotografia")
+            )
+        </div>
+
+        @(Html.DevExtreme().FileUploader()
+                    .DialogTrigger("#dropzone-external")
+                    .DropZone("#dropzone-external")
+                    .ID("file-uploader")
+                    .Name("myFile")
+                    .Multiple(false)
+                    .AllowedFileExtensions(new[] { ".jpg", ".jpeg", ".gif", ".png" })
+                    .Visible(false)
+                    .OnDropZoneEnter("dropZoneEnter")
+                    .OnDropZoneLeave("dropZoneLeave")
+                    .OnValueChanged("cambiarFotografia")
+        )
+    </div>
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Empleado" }, { "Accion", "Nuevo" }, { "Icono", "icon ion-person" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken()
+
+                @(Html.DevExtreme().Form<RHtblEmpleado>()
+                            .ID("dxFormEmpleado")
+                            .FormData(Model.Empleado)
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple()
+                                                .Label(label => label.Text("Datos Generales").ShowColon(false))
+                                                .ColSpan(12)
+                                                .CssClass("h6 br-section-label");
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup0 =>
+                                        {
+                                            itemGroup0.AddGroup().ColSpan(3).Items(
+                                                itemGroup =>
+                                                {
+                                                    itemGroup.AddGroup().ColCount(12).Items(
+                                                        itemGroup2 =>
+                                                        {
+                                                            itemGroup2.AddSimple().Template(new TemplateName("imagenTemplateForm"))
+                                                                .ColSpan(12);
+                                                        }
+                                                    );
+                                                }
+                                            );
+
+                                            itemGroup0.AddGroup().ColSpan(9).Items(
+                                                itemGroup =>
+                                                {
+                                                    itemGroup.AddGroup().ColCount(12).Items(
+                                                        itemGroup2 =>
+                                                        {
+                                                            itemGroup2.AddSimpleFor(m => m.RFC)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.TextBox().MaxLength(13).OnValueChanged("setCambios"));
+                                                        }
+                                                    );
+
+                                                    itemGroup.AddGroup().ColCount(12).Items(
+                                                        itemGroup2 =>
+                                                        {
+                                                            itemGroup2.AddSimpleFor(m => m.Nombre)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.TextBox().MaxLength(50).OnValueChanged("setCambios"));
+
+                                                            itemGroup2.AddSimpleFor(m => m.PrimerApellido)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.TextBox().MaxLength(50).OnValueChanged("setCambios"));
+
+                                                            itemGroup2.AddSimpleFor(m => m.SegundoApellido)
+                                                                .ColSpan(4)
+                                                                .Editor(e => e.TextBox().MaxLength(50).OnValueChanged("setCambios"));
+                                                        }
+                                                    );
+
+                                                    itemGroup.AddGroup().ColCount(12).Items(
+                                                        itemGroup2 =>
+                                                        {
+                                                            itemGroup2.AddSimpleFor(m => m.EmailInstitucional)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.TextBox().ID("dxEmailInstitucional").MaxLength(100).Mode(TextBoxMode.Email).OnValueChanged("setCambios"));
+
+                                                            itemGroup2.AddSimpleFor(m => m.EmailPersonal)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.TextBox().ID("dxEmailPersonal").MaxLength(100).Mode(TextBoxMode.Email).OnValueChanged("setCambios"));
+
+                                                            itemGroup2.AddSimpleFor(m => m.Vigente)
+                                                                .ColSpan(4)
+                                                                .CssClass("tx-bold")
+                                                                .Editor(e => e.CheckBox().Disabled(Model.Empleado.EmpleadoId == 0).Value(Model.Empleado.EmpleadoId == 0 || Model.Empleado.Vigente).ID("dxChkActivo").OnValueChanged("setCambios"));
+                                                        }
+                                                    );
+                                                }
+                                            );
+                                        }
+                                    ).CssClass("form-layout form-layout-1");
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple()
+                                                .HelpText("")
+                                                .ColSpan(12)
+                                                .CssClass("h6 br-section-label");
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimple()
+                                                .Label(label => label.Text("Datos Laborales").ShowColon(false))
+                                                .ColSpan(12)
+                                                .CssClass("h6 br-section-label");
+                                        }
+                                    );
+
+                                    items.AddGroup().ColSpan(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.NumeroEmpleado)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.TextBox().MaxLength(20).OnValueChanged("setCambios"));
+                                                }
+                                            );
+
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.TipoEmpleadoId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                        .OnValueChanged("setCambios")
+                                                        .DataSource(Model.ListTipoEmpleado)
+                                                        .DisplayExpr("Value")
+                                                        .ValueExpr("ID")
+                                                        .SearchEnabled(true)
+                                                        .SearchMode(DropDownSearchMode.Contains)
+                                                        .NoDataText("Sin registros que mostrar")
+                                                        .Placeholder("Selecciona una opción"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.AreaAdscripcionId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                        .OnValueChanged("setCambios")
+                                                        .DataSource(Model.ListAreaAdscripcion)
+                                                        .ValueExpr("DependenciaId")
+                                                        .DisplayExpr(new JS("(params) => {return params ? params.DependenciaId + ' - ' + params.Nombre : null}"))
+                                                        .SearchEnabled(true)
+                                                        .SearchMode(DropDownSearchMode.Contains)
+                                                        .NoDataText("Sin registros que mostrar")
+                                                        .Placeholder("Selecciona una opción"));
+                                                }
+                                            );
+
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.PuestoId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                        .OnValueChanged("setCambios")
+                                                        .DataSource(Model.ListPuesto)
+                                                        .DisplayExpr("Value")
+                                                        .ValueExpr("ID")
+                                                        .SearchEnabled(true)
+                                                        .SearchMode(DropDownSearchMode.Contains)
+                                                        .NoDataText("Sin registros que mostrar")
+                                                        .Placeholder("Selecciona una opción"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.CargoId)
+                                                        .ColSpan(6)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                        .OnValueChanged("setCambios")
+                                                        .DataSource(Model.ListTipoEmpleado)
+                                                        .DisplayExpr("Value")
+                                                        .ValueExpr("ID")
+                                                        .SearchEnabled(true)
+                                                        .SearchMode(DropDownSearchMode.Contains)
+                                                        .NoDataText("Sin registros que mostrar")
+                                                        .Placeholder("Selecciona una opción"));
+                                                }
+                                            );
+                                        }
+                                    ).CssClass("form-layout form-layout-1");
+                                }
+                            )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonCancelar")
+                                    .Text("Cerrar")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(true); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(false); }")
+                                )
+                                @(Html.DevExtreme()
+                                            .Button()
+                                            .ID("dxButtonEliminar")
+                                            .Text("Eliminar")
+                                            .ElementAttr("class", "btn-danger btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                            .OnClick("validaEliminar")
+                                )
+                                @(Html.DevExtreme()
+                                            .Button()
+                                            .ID("dxButtonGuardaCambios")
+                                            .Text("Guardar")
+                                            .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                            .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <span>
+                    <h5 class="dx-field-item-label-text">¿Está seguro de eliminar el registro?</h5>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                        .Button()
+                                        .Text("Cancelar")
+                                        .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                        .OnClick("function() { modalConfirmaEliminar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                        .Button()
+                                        .Text("Aceptar")
+                                        .OnClick("function() { modalConfirmaEliminar.modal('hide'); eliminaEmpleado(); }")
+                                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Areas/RH/Ingreso/Views/Empleados/Empleado.js"></script>

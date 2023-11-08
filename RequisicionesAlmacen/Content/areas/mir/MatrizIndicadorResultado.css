@@ -1,0 +1,59 @@
+﻿.dx-toolbar {
+    background-color: rgba(191, 191, 191, .15);
+    padding: 5px 10px;
+}
+
+.dx-drawer-panel-content {
+    height: auto !important;
+}
+
+.dx-list-item-icon-container, .dx-toolbar-before {
+    width: 36px;
+    padding-right: 0px !important;
+    text-align: center;
+}
+
+.dx-list-item-content {
+    padding-left: 10px !important;
+}
+
+.dx-toolbar-items-container .dx-button {
+    background-color: rgba(191, 191, 191, -0.15);
+    border: none;
+}
+
+.panel-list {
+    height: 100%;
+}
+
+.dx-drawer-expand.dx-drawer-right .panel-list {
+    float: right;
+}
+
+.panel-list .dx-list-item {
+    color: #fff;
+    border-top: 1px solid rgba(221, 221, 221, .2);
+}
+
+    .panel-list .dx-list-item .dx-icon {
+        color: #fff !important;
+    }
+/* Este css es para cuando una etiqueta o elemento que sea centro en vertical y horizontal solo para position absolute tiene que estar primero div con position relative */
+.pixvs-position-v-h-center {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+#dxTreeListEstructura {
+    height: 100%;
+}
+
+.text-right input {
+    text-align: right !important;
+}
+
+.pixvs-cursor-pointer{
+    cursor: pointer !important;
+}

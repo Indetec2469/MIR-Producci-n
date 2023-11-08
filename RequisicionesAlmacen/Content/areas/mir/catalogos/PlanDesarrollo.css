@@ -1,0 +1,8 @@
+﻿.dx-form-group-with-caption > .dx-form-group-content {
+    border-top: none;
+    margin-top: 0;
+}
+
+#dxTreeListEstructura{
+    height: 100%;
+}

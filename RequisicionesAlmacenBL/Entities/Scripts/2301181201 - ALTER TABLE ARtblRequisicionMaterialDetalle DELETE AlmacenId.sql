@@ -1,0 +1,8 @@
+
+
+
+ALTER TABLE dbo.ARtblRequisicionMaterialDetalle DROP CONSTRAINT FK_ARtblRequisicionMaterialDetalle_tblAlmacen
+GO
+
+ALTER TABLE dbo.ARtblRequisicionMaterialDetalle DROP COLUMN AlmacenId
+GO

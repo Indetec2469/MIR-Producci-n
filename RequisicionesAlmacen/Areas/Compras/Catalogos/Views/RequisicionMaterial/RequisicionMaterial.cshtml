@@ -1,0 +1,707 @@
+﻿@model RequisicionesAlmacen.Areas.Compras.Catalogos.Models.ViewModel.RequisicionMaterialViewModel
+@{
+    ViewData["Title"] = "Solicitud de Materiales y/o Consumibles";
+}
+
+@Html.Partial("~/Areas/Compras/Catalogos/Views/Shared/_HeaderLayout.cshtml", new ViewDataDictionary { { "NombreFicha", "Solicitud de Materiales y/o Consumibles" }, { "Accion", "Nuevo" }, { "Icono", "icon ion-ios-filing-outline" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- MODAL NUEVO O EDITAR -->
+<div class="modal fade effect-scale" id="modalRequisicionMaterialDetalle" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" isEdit>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold modal-title">Agregar artículo</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                <!-- Crear Begin form -->
+                @using (Html.BeginForm())
+                {
+                    <!-- Grupo de validación -->
+                    using (Html.DevExtreme().ValidationGroup())
+                    {
+
+                        <!-- Seguridad -->
+                        @Html.AntiForgeryToken();
+
+                        <!-- HIDDEN FIELDS SECTION-->
+                        <input id="hiddenConceptoAjusteInventarioId" name="ConceptoAjusteInventarioId" type="hidden" value="">
+                        <input id="hiddenFechaCreacion" name="FechaCreacion" type="hidden" value="">
+
+                        <!-- Crear el Formulario -->
+                        @(Html
+                            .DevExtreme()
+                            .Form<RequisicionesAlmacenBL.Entities.RequisicionMaterialDetalle>()
+                            .ID("dxFormRequisicionMaterialDetalle")
+                            .FormData(new RequisicionesAlmacenBL.Entities.RequisicionMaterialDetalle())
+                            .RequiredMark("(*)")
+                            .LabelLocation(FormLabelLocation.Top)
+                            .Items(item =>
+                            {
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.ArticuloId)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ListProducto)
+                                        .DataSourceOptions(dataSourceOptions => dataSourceOptions
+                                            .Paginate(true)
+                                            .PageSize(20)
+                                        )
+                                        .DeferRendering(false)
+                                        .DisplayExpr("Descripcion")
+                                        .ValueExpr("ProductoId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+                                        .OnSelectionChanged("onSelectionChangedArticulo")
+                                        .ID("dxSelectBoxArticulo")
+
+                                    );
+                                });
+
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.UnidadMedidaId)
+                                    .ColSpan(6);
+
+                                    itemGroup
+                                    .AddSimpleFor(m => m.CostoUnitario)
+                                    .ColSpan(6)
+                                    .Editor(e => e
+                                        .NumberBox()
+                                        .Format("$ #,##0.##")
+                                        .OnValueChanged("onValueChangedTotalPartida")
+                                        .ShowSpinButtons(false)
+                                        .ReadOnly(true)
+                                        .ID("dxNumberBoxCostoUnitario")
+
+                                    );
+                                });
+
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.Cantidad)
+                                    .ColSpan(6)
+                                    .Editor(e =>
+                                        e.NumberBox()
+                                        .Format("#0")
+                                        .OnValueChanged("onValueChangedTotalPartida")
+                                        .Min(1)
+                                        .ID("dxNumberBoxCantidad")
+                                    );
+
+                                    itemGroup
+                                    .AddSimpleFor(m => m.TotalPartida)
+                                    .ColSpan(6)
+                                    .Editor(e => e
+                                        .NumberBox()
+                                        .Format("$ #,##0.##")
+                                        .ShowSpinButtons(false)
+                                        .ReadOnly(true)
+                                        .ID("dxNumberBoxTotalPartida")
+
+                                    );
+                                });
+
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.ProyectoId)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ListProyecto)
+                                        .DisplayExpr("Nombre")
+                                        .ValueExpr("ProyectoId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+                                    );
+                                });
+
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.FuenteFinanciamientoId)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .SelectBox()
+                                        .DataSource(Model.ListRamo)
+                                        .DisplayExpr("Nombre")
+                                        .ValueExpr("RamoId")
+                                        .SearchEnabled(true)
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .NoDataText("Sin registros que mostrar")
+                                        .Placeholder("Selecciona una opción")
+
+                                    );
+                                });
+
+                                item
+                                .AddGroup()
+                                .ColCount(12)
+                                .Items(itemGroup =>
+                                {
+                                    itemGroup
+                                    .AddSimpleFor(m => m.Comentarios)
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .TextArea()
+                                        .Height(70)
+                                    );
+                                });
+                            })
+                        )
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalRequisicionMaterialDetalle.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("guardaCambiosModal")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody" id="content-123">
+    <div class="br-section-wrapper">
+        <h6>DATOS GENERALES</h6>
+        <div class="form-layout form-layout-1 mb-3">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <!-- Create Ajax Send Data -->
+                    @using (Html.BeginForm())
+                    {
+                        <!-- Validation -->
+                        using (Html.DevExtreme().ValidationGroup())
+                        {
+
+                            <!-- Security -->
+                            @Html.AntiForgeryToken();
+                            
+                            <!-- Create Form -->
+                            @(Html
+                                .DevExtreme()
+                                .Form<RequisicionesAlmacenBL.Entities.RequisicionMaterial>()
+                                .ID("dxFormRequisicionMaterial")
+                                .FormData(new RequisicionesAlmacenBL.Entities.RequisicionMaterial())
+                                .RequiredMark("(*)")
+                                .LabelLocation(FormLabelLocation.Top)
+                                .OnFieldDataChanged("campoDatoCambio")
+                                .Items(item =>
+                                {
+                                    item
+                                    .AddGroup()
+                                    .ColCount(12)
+                                    .Items(itemGroup =>
+                                    {
+                                        itemGroup
+                                        .AddSimpleFor(m => m.AreaId)
+                                        .ColSpan(4)
+                                        .Editor(e => e
+                                            .SelectBox()
+                                            .DataSource(Model.ListEmpleado)
+                                            .DisplayExpr("Nombre")
+                                            .ValueExpr("EmpleadoId")
+                                            .SearchEnabled(true)
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .NoDataText("Sin registros que mostrar")
+                                            .Placeholder("Selecciona una opción")
+                                        );
+
+                                        itemGroup
+                                        .AddSimpleFor(m => m.AlmacenId)
+                                        .ColSpan(4)
+                                        .Editor(e => e
+                                            .SelectBox()
+                                            .DataSource(Model.ListAlmacen)
+                                            .DisplayExpr("Nombre")
+                                            .ValueExpr("AlmacenId")
+                                            .SearchEnabled(true)
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .NoDataText("Sin registros que mostrar")
+                                            .Placeholder("Selecciona una opción")
+
+                                        );
+
+                                        itemGroup
+                                        .AddSimpleFor(m => m.FechaRequisicion)
+                                        .ColSpan(4)
+                                        .Editor(e => e
+                                            .DateBox()
+                                            .Value(DateTime.Now)
+
+                                        );
+
+                                    });
+
+                                    item
+                                    .AddGroup()
+                                    .ColCount(12)
+                                    .Items(itemGroup =>
+                                    {
+                                        itemGroup
+                                        .AddSimpleFor(m => m.ProyectoId)
+                                        .ColSpan(6)
+                                        .Editor(e => e
+                                            .SelectBox()
+                                            .DataSource(Model.ListProyecto)
+                                            .DisplayExpr("Nombre")
+                                            .ValueExpr("ProyectoId")
+                                            .SearchEnabled(true)
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .NoDataText("Sin registros que mostrar")
+                                            .Placeholder("Selecciona una opción")
+
+                                        );
+
+                                        itemGroup
+                                        .AddSimpleFor(m => m.FuenteFinanciamientoId)
+                                        .ColSpan(6)
+                                        .Editor(e => e
+                                            .SelectBox()
+                                            .DataSource(Model.ListRamo)
+                                            .DisplayExpr("Nombre")
+                                            .ValueExpr("RamoId")
+                                            .SearchEnabled(true)
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .NoDataText("Sin registros que mostrar")
+                                            .Placeholder("Selecciona una opción")
+
+                                        );
+                                    });
+                                })
+                            )
+
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <h6>ARTICULOS</h6>
+        <div class="form-layout form-layout-1 mb-3">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="float-right">
+                        @(Html
+                            .DevExtreme()
+                            .Button()
+                            .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                            .Text("Agregar Artículo")
+                            .OnClick("nuevoModal")
+                        )
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    @(Html
+                        .DevExtreme()
+                        .DataGrid<RequisicionesAlmacenBL.Entities.RequisicionMaterialDetalle>()
+                        .ID("dxDataGridRequisicionMaterialDetalle")
+                        .DataSource(m => m.Array().Data(Model.ListRequisicionMaterialDetalle).Key("RequisicionMaterialDetalleId"))
+                        .ShowBorders(true)
+                        .ColumnAutoWidth(true)
+                        .AllowColumnResizing(true)
+                        .ColumnResizingMode(ColumnResizingMode.Widget)
+                        .RowAlternationEnabled(true)
+                        .NoDataText("Sin registros")
+                        .ShowBorders(true)
+                        .Paging(paging => paging.PageSize(5))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                            pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                        })
+                        .SearchPanel(sp =>
+                            sp
+                            .Placeholder("Buscar...")
+                            .SearchVisibleColumnsOnly(true)
+                            .HighlightSearchText(false)
+                            .Visible(true)
+                            .Width(200)
+                        )
+                        .Columns(column =>
+                        {
+                            column
+                            .AddFor(m => m.ArticuloId);
+
+                            column
+                            .AddFor(m => m.UnidadMedidaId);
+
+                            column
+                            .AddFor(m => m.CostoUnitario);
+
+                            column
+                            .AddFor(m => m.Cantidad);
+
+                            column
+                            .AddFor(m => m.ProyectoId);
+
+                            column
+                            .AddFor(m => m.FuenteFinanciamientoId);
+
+                            column
+                            .AddFor(m => m.Comentarios);
+
+                            column
+                            .AddFor(m => m.TotalPartida);
+
+                            column
+                            .Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Right)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(button =>
+                            {
+
+                                button
+                                    .Add()
+                                    .Hint("Editar")
+                                    .Icon("edit");
+                                button
+                                    .Add()
+                                    .Hint("Eliminar")
+                                    .Icon("trash");
+
+                            });
+
+
+                        })
+                    )
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Scripts/mapeos/accion_mapeo.js"></script>
+<script>
+    // VARIABLES GLOBALES MODAL //
+    var _listProducto = @Html.Raw(Json.Encode(Model.ListProducto));
+    //////////////////////////////
+
+    // DEV EXPRESS ESPAÑOL //
+    //DevExpress.localization.locale("es");
+    /////////////////////////
+
+    // VARIABLES GLOBALES //
+    var contadorRegistrosNuevos,
+        modalRequisicionMaterialDetalle,
+        modalConfirmaDeshacer,
+        modalConfirmaEliminar,
+        dxFormRequisicionMaterial,
+        dxDataGridRequisicionMaterialDetalle,
+        dxButtonDeshacer,
+        dxButtonGuardar,
+        rowEliminar,
+        dxSelectBoxArticulo,
+        dxNumberBoxCostoUnitario,
+        dxNumberBoxCantidad,
+        dxNumberBoxTotalPartida;
+    //////////////////////
+
+    // Function Default //
+    $(() => {
+        // Inicializamos las variables para la ficha
+        inicializaVariables();
+
+        // Inhabilitamos los botones de acciones
+        habilitaComponentes(false);
+    });
+    //////////////////////
+
+    inicializaVariables = () => {
+        contadorRegistrosNuevos = 0;
+        modalRequisicionMaterialDetalle = $('#modalRequisicionMaterialDetalle');
+        //modalConfirmaDeshacer = $('#modalConfirmaDeshacer');
+        //modalConfirmaEliminar = $('#modalConfirmaEliminar');
+        dxFormRequisicionMaterial = $("#dxFormRequisicionMaterial").dxForm("instance");
+        dxFormRequisicionMaterial.resetValues();
+        dxFormRequisicionMaterialDetalle = $("#dxFormRequisicionMaterialDetalle").dxForm("instance");
+        dxDataGridRequisicionMaterialDetalle = $("#dxDataGridRequisicionMaterialDetalle").dxDataGrid("instance");
+        dxButtonDeshacer = $("#dxButtonDeshacer").dxButton("instance");
+        dxButtonGuardar = $("#dxButtonGuardar").dxButton("instance");
+        dxSelectBoxArticulo = $("#dxSelectBoxArticulo").dxSelectBox("instance");
+        dxNumberBoxCostoUnitario = $("#dxNumberBoxCostoUnitario").dxNumberBox("instance");
+        dxNumberBoxCantidad = $("#dxNumberBoxCantidad").dxNumberBox("instance");
+        dxNumberBoxTotalPartida = $("#dxNumberBoxTotalPartida").dxNumberBox("instance");
+
+        cargarArticulos();
+
+        // Agregan el ID Requisicion Material y Estatus en el formulario
+        dxFormRequisicionMaterial.updateData("RequisicionMaterialId", contadorRegistrosNuevos);
+        dxFormRequisicionMaterial.updateData("EstatusId", ControlMaestroMapeo.EstatusSolicitud.EN_EDICION);
+
+        contadorRegistrosNuevos -= 1;
+    }
+
+    habilitaComponentes = (enabled) => {
+        dxButtonDeshacer.option("disabled", !enabled);
+        dxButtonGuardar.option("disabled", !enabled);
+    }
+
+    cargarArticulos = () => {
+        var listRequisicionMaterialDetalle;
+
+        // Obtenemos todos los registros que hay en el Data Grid
+        dxDataGridRequisicionMaterialDetalle.getDataSource().store().load().done(response => listRequisicionMaterialDetalle = response);
+
+        if (listRequisicionMaterialDetalle.length > 0) {
+            listRequisicionMaterialDetalle.filter(rmd => rmd.EstatusId == ControlMaestroMapeo.EstatusRegistro.ACTIVO).map(rmd => {
+                const producto = _listProducto.find(producto => producto.ProductoId == rmd.ArticuloId);
+                if (producto)
+                    producto.disabled = true;
+            });
+            dxSelectBoxArticulo.option("dataSource", _listProducto);
+        } else {
+            _listProducto.map(producto => {
+                if (producto.disabled)
+                    producto.disabled = false;
+            });
+            dxSelectBoxArticulo.option("dataSource", _listProducto);
+        }
+    }
+
+    // MODAL //
+    nuevoModal = () => {
+        dxFormRequisicionMaterialDetalle.resetValues();
+        dxFormRequisicionMaterialDetalle.updateData("RequisicionMaterialDetalleId", contadorRegistrosNuevos);
+        dxFormRequisicionMaterialDetalle.updateData("EstatusId", ControlMaestroMapeo.EstatusRegistro.ACTIVO);
+
+        contadorRegistrosNuevos -= 1;
+
+        modalRequisicionMaterialDetalle.find(".modal-title").text("Agregar artículo");
+        modalRequisicionMaterialDetalle.attr("isEdit", false);
+        modalRequisicionMaterialDetalle.modal('show');
+    }
+
+    guardaCambiosModal = () => {
+
+        if (!dxFormRequisicionMaterialDetalle.validate().isValid)
+            return;
+
+        var requisicionMaterialDetalle = dxFormRequisicionMaterialDetalle.option("formData");
+
+        // La validación
+        if (!esValidacion(requisicionMaterialDetalle))
+            return;
+       
+        var store = dxDataGridRequisicionMaterialDetalle.getDataSource().store();
+
+        // Si el modo editar es falso (Nuevo) o si es verdad (Editar)
+        if (modalRequisicionMaterialDetalle.attr("isEdit") == "false") {
+            // Nuevo
+            store.insert(requisicionMaterialDetalle)
+                .done(function () {
+
+                    dxDataGridRequisicionMaterialDetalle.getDataSource().reload();
+
+                    // Habilitamos los botones de acciones
+                    habilitaComponentes(true);
+
+                    // Ocultamos el modal
+                    modalRequisicionMaterialDetalle.modal('hide');
+
+                    // Cargar los articulos para seleccionar
+                    cargarArticulos();
+                })
+                .fail(function () {
+                    toast("No se pudo agregar el nuevo registro a la tabla.", "error");
+                });
+        } else {
+            // Editar
+            store.update(requisicionMaterialDetalle.RequisicionMaterialDetalleId, requisicionMaterialDetalle)
+                .done(function () {
+                    // Recargamos la informacion de la tabla
+                    dxDataGridRequisicionMaterialDetalle.getDataSource().reload();
+
+                    // Habilitamos los botones de acciones
+                    habilitaComponentes(true);
+
+                    // Ocultamos el modal
+                    modalRequisicionMaterialDetalle.modal('hide');
+
+                    // Cargar los articulos para seleccionar
+                    cargarArticulos();
+                })
+                .fail(function () {
+                    toast("No se pudo actualizar el registro en la tabla.", "error");
+                });
+        }
+
+    }
+    ///////////
+
+    // Event OnFieldDataChange //
+    campoDatoCambio = (params) => {
+        if (params.value) {
+            habilitaComponentes(true);
+        }
+    }
+    /////////////////////////////
+
+    guardaCambios = () => {
+        // Mostramos Loader
+        dxLoaderPanel.show();
+
+        // Validamos que la informacion requerida del Formulario este completa
+        if (!dxFormRequisicionMaterial.validate().isValid) {
+            dxLoaderPanel.hide();
+            return;
+        }
+
+        var requisicionMaterial = dxFormRequisicionMaterial.option("formData"),
+            listRequisicionMaterialDetalle;
+
+        //// Obtenemos todos los registros que hay en el DataGrid
+        dxDataGridRequisicionMaterialDetalle.getDataSource().store().load().done(response => listRequisicionMaterialDetalle = response);
+
+        $.ajax({
+            type: "POST",
+            url: "/compras/catalogos/requisicionmaterial/guardar",
+            data: { requisicionMaterial, listRequisicionMaterialDetalle },
+            success: function (response) {
+                //Mostramos mensaje de Exito
+                toast(response, 'success');
+                //Recargamos la ficha
+                window.location.href = '/compras/catalogos/requisicionmaterial/listar';
+            },
+            error: function (response, status, error) {
+                //Mostramos mensaje de error
+                toast(response.responseText, "error");
+            }
+        });
+    }
+
+    // Las Validaciones //
+    esValidacion = (requisicionMaterialDetalle) => {
+        var listRequisicionMaterialDetalle;
+
+        //Obtenemos todos los registros que hay en el Data Grid
+        dxDataGridRequisicionMaterialDetalle.getDataSource().store().load().done(response => listRequisicionMaterialDetalle = response.filter(filter => filter.EstatusId == ControlMaestroMapeo.EstatusRegistro.ACTIVO));
+
+        // Articulo
+        if (listRequisicionMaterialDetalle.some(rmd => rmd.ArticuloId == requisicionMaterialDetalle.ArticuloId)) {
+            var _dxSelectBoxArticulo = dxFormRequisicionMaterialDetalle.getEditor("ArticuloId");
+            _dxSelectBoxArticulo.option({
+                validationStatus: 'invalid',
+                validationError: {
+                    type: "custom", message: "El artículo " + _listProducto.find(producto => producto.ProductoId == requisicionMaterialDetalle.ArticuloId).Descripcion + " ya existe, elige el artículo otro."
+                }
+            });
+            return false;
+        }
+
+        return true;
+    }
+    //////////////////////
+
+    recargarFicha = () => {
+        modalConfirmaDeshacer.modal('hide');
+        window.location.href = '/compras/catalogos/conceptoajusteinventario/listar';
+    }
+
+    // Event OnValueChanged //
+    onValueChangedTotalPartida = (params) => {
+        var valueCostoUnitario = dxNumberBoxCostoUnitario.option("value"),
+            valueCantidad = dxNumberBoxCantidad.option("value");
+        if (valueCantidad) {
+            dxNumberBoxTotalPartida.option("value", valueCostoUnitario * valueCantidad);
+        }
+    }
+    //////////////////////////
+
+    // Event OnSelectionChanged //
+    onSelectionChangedArticulo = (params) => {
+        var producto = params.selectedItem;
+        if (producto) {
+            dxNumberBoxCostoUnitario.option("value", producto.CostoUltimo);
+        } else {
+            dxNumberBoxCostoUnitario.option("value", 0);
+        }
+    }
+    //////////////////////////////
+
+    // Toast //
+    toast = (message, type) => {
+        DevExpress.ui.notify({ message: message, width: "auto" }, type, 1500);
+    }
+    ///////////
+
+</script>

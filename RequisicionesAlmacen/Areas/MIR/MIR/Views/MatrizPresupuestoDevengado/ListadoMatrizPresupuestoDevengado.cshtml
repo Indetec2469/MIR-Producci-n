@@ -1,0 +1,117 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizPresupuestoDevengadoListViewModel
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Matriz de Presupuesto Devengado" }, { "Accion", "" }, { "Icono", "icon ion-clipboard" } })
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h6 class="br-section-label">LISTADO MATRIZ DE PRESUPUESTO DEVENGADO</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<RequisicionesAlmacenBL.Entities.MIvwListadoMatrizConfiguracionPresupuestal>()
+                    .ID("dxDataGridListado")
+                    .DataSource(m => m.Array().Data(Model.ListadoMatrizConfiguracionPresupuestal).Key("MIRId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(false)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                    .SearchPanel(sp =>
+                        sp
+                        .Placeholder("Buscar...")
+                        .SearchVisibleColumnsOnly(true)
+                        .HighlightSearchText(false)
+                        .Visible(true)
+                        .Width(200)
+                    )
+                    .Columns(column =>
+                    {
+                        column.AddFor(m => m.Codigo)
+                        .Width(120)
+                        .Caption("Código");
+
+                        column.AddFor(m => m.Ejercicio);
+
+                        column.AddFor(m => m.TipoPlanDesarrollo)
+                        .Caption("Tipo de Plan de Desarrollo");
+
+                        column.AddFor(m => m.ProgramaPresupuestario)
+                        .Caption("Programa Presupuestario");
+
+                        column.AddFor(m => m.PresupuestoDevengado)
+                       .Caption("Presupuesto Devengado")
+                       .Format("$ #,##0.00");
+
+                        @*column.AddFor(m => m.PresupuestoDevengado)
+                        .Caption("Presupuesto Devengado")
+                        .DataType(GridColumnDataType.Number)
+                        .Format(Format.Percent)
+                        .Alignment(HorizontalAlignment.Right)
+                        .CssClass("bullet")
+                        .CellTemplate(@<text>
+                            @(Html.DevExtreme().Bullet()
+                                .Value(new JS("data.PresupuestoPorEjercer ? functionPercentageV2IsV1(data.PresupuestoPorEjercer, value) : 0"))
+                                .Size(s => s
+                                    .Width(150)
+                                )
+                                .Color("#7AB8EB")
+                                .Margin(m => m
+                                    .Top(5)
+                                    .Bottom(0)
+                                    .Left(5)
+                                )
+                                .ShowTarget(false)
+                                .ShowZeroLevel(true)
+                                .StartScaleValue(0)
+                                .EndScaleValue(100)
+                                .Tooltip(t => t
+                                    .Enabled(true)
+                                    .Font(f => f.Size(18))
+                                    .PaddingTopBottom(2)
+                                    .CustomizeTooltip("customizeTooltip")
+                                    .ZIndex(999)
+                                )
+                            )
+                        </text>);*@
+
+                        column.AddFor(m => m.Estatus);
+
+                        column.Add()
+                        .Width(100)
+                        .Caption("Acciones")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Right)
+                        .Type(GridCommandColumnType.Buttons)
+                        .Buttons(button =>
+                        {
+
+                            button.Add()
+                                .Name("btnEditar")
+                                .Hint("Editar")
+                                .Icon("edit")
+                                .OnClick("redirigirEditar");
+                        });
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/funciones/funcion.js" type="text/javascript"></script>
+<script src="~/Areas/MIR/MIR/Views/MatrizPresupuestoDevengado/ListadoMatrizPresupuestoDevengado.js" type="text/javascript"></script>

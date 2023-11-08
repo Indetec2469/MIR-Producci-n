@@ -1,0 +1,20 @@
+
+update GRtblMenuPrincipal set Url = 'compras/catalogos/configuracionmontocompra/listar' where NodoMenuId = 4
+update GRtblMenuPrincipal set Url = 'compras/catalogos/proveedoresprospectos' where NodoMenuId = 5
+update GRtblMenuPrincipal set Url = 'compras/catalogos/configuracionareas/index' where NodoMenuId = 6
+update GRtblMenuPrincipal set Url = 'compras/requisiciones/requisicionmaterial/listar' where NodoMenuId = 8
+update GRtblMenuPrincipal set Url = 'compras/requisiciones/requisicionporsurtir/listar' where NodoMenuId = 9
+update GRtblMenuPrincipal set Url = 'compras/requisiciones/requisicionporcomprar' where NodoMenuId = 10
+update GRtblMenuPrincipal set Url = 'compras/compras/ordencompra/listar' where NodoMenuId = 12
+update GRtblMenuPrincipal set Url = 'compras/compras/ordencomprarecibo/listar' where NodoMenuId = 13
+update GRtblMenuPrincipal set Url = 'compras/compras/ordencompracancelacionrecibo/listar' where NodoMenuId = 14
+update GRtblMenuPrincipal set Url = 'inventarios/catalogos/conceptoajusteinventario/listar' where NodoMenuId = 17
+update GRtblMenuPrincipal set Url = 'inventarios/inventarios/inventariosfisicos/listar' where NodoMenuId = 19
+update GRtblMenuPrincipal set Url = 'inventarios/inventarios/inventariosajustes/listar' where NodoMenuId = 20
+update GRtblMenuPrincipal set Url = 'compras/catalogos/configuracionmontocompra/listar' where NodoMenuId = 22
+update GRtblMenuPrincipal set Url = 'compras/compras/invitacionarticulo' where NodoMenuId = 43
+update GRtblMenuPrincipal set Url = 'compras/compras/invitacioncompra/listar' where NodoMenuId = 44
+update GRtblMenuPrincipal set Url = 'compras/compras/cortesia/listar' where NodoMenuId = 45
+update GRtblMenuPrincipal set Url = 'inventarios/inventarios/transferencia/listar' where NodoMenuId = 46
+update GRtblMenuPrincipal set Url = 'rh/ingreso/empleados/listar' where NodoMenuId = 49
+update GRtblMenuPrincipal set Url = 'inventarios/reportes/reportekardex' where NodoMenuId = 23

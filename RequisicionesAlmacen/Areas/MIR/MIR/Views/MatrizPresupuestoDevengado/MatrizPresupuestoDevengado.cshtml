@@ -1,0 +1,632 @@
+﻿@using RequisicionesAlmacenBL.Entities
+@model RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizPresupuestoDevengadoViewModel
+@{
+    ViewData["Title"] = "Matriz de Presupuesto Devengado";
+}
+
+<link href="~/Content/areas/mir/MatrizConfiguracionPresupuestal.css" rel="stylesheet" />
+
+@if (Model != null)
+{
+    @Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Matriz de Presupuesto Devengado" }, { "Accion", "" }, { "Icono", "icon ion-ios-filing-outline" } })
+
+    <!-- MODAL LOADER -->
+    @Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+    <!-- MODAL CERRAR -->
+    <div class="modal fade effect-scale" id="modalCerrar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content bd-0">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    <div>
+                        <h5 class="dx-field-item-label-text">Existen cambios sin guardar.</h5>
+                        ¿Desea continuar?
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                                @(Html.DevExtreme()
+                                                    .Button()
+                                                    .Text("Cancelar")
+                                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                                    .OnClick("() => modalCerrar.modal('hide')")
+                                )
+                                @(Html.DevExtreme()
+                                                    .Button()
+                                                    .Text("Aceptar")
+                                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                                    .OnClick("() => { window.location.href = API_FICHA + 'listar' }")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Create Form -->
+                    @(Html.DevExtreme()
+                .Form<RequisicionesAlmacen.Areas.MIR.MIR.Models.ViewModel.MatrizPresupuestoDevengadoViewModel>()
+                .ID("dxFormMatrizConfiguracionPresupuestal")
+                .FormData(Model)
+                .LabelLocation(FormLabelLocation.Left)
+                .Items(itemCaption =>
+                {
+                    itemCaption.AddGroup()
+                    .ColSpan(12)
+                    .ColCount(12)
+                    .Caption("Datos Generales")
+                    .Name("DatosGenerales")
+                    .Items(itemDatosIndicador =>
+                    {
+                        itemDatosIndicador.AddGroup()
+                        .ColSpan(12)
+                        .ColCount(12)
+                        .Name("DatosGeneralesGrupo")
+                        .Items(itemGroup =>
+                        {
+
+                            itemGroup.AddGroup()
+                            .ColSpan(6)
+                            .ColCount(12)
+                            .Items(_itemGroup =>
+                            {
+                                _itemGroup.AddSimple()
+                                .Label(label => label.Text("Código"))
+                                .DataField("CodigoMIR")
+                                .ColSpan(12)
+                                .Editor(e => e
+                                    .TextBox()
+                                    .ReadOnly(true)
+                                    .ID("dxTextBoxCodigo")
+                                );
+
+                                _itemGroup.AddSimple()
+                                .Label(label => label.Text("Programa Presupuestario"))
+                                .DataField("ProgramaPresupuestario")
+                                .ColSpan(12)
+                                .Editor(e => e
+                                    .TextArea()
+                                    .ReadOnly(true)
+                                    .ID("dxTextBoxProgramaPresupuestario")
+                                );
+
+
+                            });
+
+                            itemGroup.AddGroup()
+                            .ColSpan(6)
+                            .ColCount(12)
+                            .Items(_itemGroup =>
+                            {
+                                _itemGroup.AddSimple()
+                                    .Label(label => label.Text("Presupuesto Devengado"))
+                                    .DataField("PresupuestoDevengado")
+                                    .ColSpan(12)
+                                    .Editor(e => e
+                                        .NumberBox()
+                                        .ReadOnly(true)
+                                        .ID("dxNumberBoxPresupuestoPorEjercer"));
+
+
+                                _itemGroup.AddSimple()
+                                  .DataField("FechaModificacion")
+                                  .Label(label => label.Text("Fecha de Modificación"))
+                                  .ColSpan(12)
+                                  .ValidationRules(validationRules =>
+                                  {
+                                      validationRules.AddRequired().Message("Fecha de Modificación Requierda");
+                                  })
+                                  .Editor(e => e
+                                      .DateBox()
+                                      .InputAttr("aria-label", "Disabled")
+                                      .Type(DateBoxType.Date)
+                                      .Value(DateTime.Now)
+                                      .ID("dtFecha")
+                                      .DisplayFormat("dd/MM/yyyy")
+                                      .UseMaskBehavior(true)
+                                      .OnFocusIn("function(e) { $(e.element).dxDateBox('instance').option('opened', true); }")
+
+                                  );
+                            });
+
+
+                        });
+                    });
+
+                    itemCaption.AddGroup()
+                    .ColSpan(12)
+                    .ColCount(12)
+                    .Caption("Matriz de Presupuesto Devengado")
+                    .Name("MatrizDePresupuestos")
+                    .Items(itemDatosControlCalculo =>
+                    {
+                        itemDatosControlCalculo.AddSimple()
+                        .ColSpan(12)
+                        .Template(new TemplateName("templateDataGridPorEjercer"));
+                    });
+                })
+                    )
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex flex-column flex-sm-column flex-md-row flex-lg-row flex-xl-row align-items-center align-items-sm-center justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                        @(Html.DevExtreme()
+                                                    .Button()
+                                                    .ID("dxButtonCerrar")
+                                                    .Text("Cerrar")
+                                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mb-2 mb-sm-2 mb-md-0 mb-lg-0 mb-xl-0 mr-md-3 mr-lg-3 mr-xl-3")
+                                                    .OnClick("validaHayCambios")
+                        )
+
+                        @(Html.DevExtreme()
+                                                    .Button()
+                                                    .Text("Guardar")
+                                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                                    .OnClick("guardaCambios")
+                        )
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* Template DataGrid Por Ejercer *@
+    using (Html.DevExtreme().NamedTemplate("templateDataGridPorEjercer"))
+    {
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme()
+                                .DataGrid<MIspConsultaMatrizPresupuestoDevengadoH_Result>()
+                                .ID("dxDataGridDevengado")
+                                .DataSource(data => data.Array().Data(Model.MatrizPresupuestoDevengadoH.Where(w => w.NivelIndicadorId != 42)).Key("MIRIndicadorId"))
+                                .ShowBorders(true)
+                                .ColumnAutoWidth(true)
+                                .AllowColumnResizing(true)
+                                .ColumnResizingMode(ColumnResizingMode.Widget)
+                                .RowAlternationEnabled(false)
+                                .ShowColumnHeaders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .NoDataText("Sin registros")
+                                .OnRowUpdated("onRowUpdated")
+                                .OnRowUpdating("onRowUpdating")
+                                .OnRowPrepared("onRowPrepared")
+                                .OnEditingStart("onEditingStart")
+                                .Editing(editing =>
+                                {
+                                    editing.SelectTextOnEditStart(true)
+                                            .Mode(GridEditMode.Cell)
+                                            .AllowUpdating(true);
+                                })
+                                .Columns(columnas =>
+                                {
+                                    columnas.Add()
+                                            .DataField("ConfiguracionPresupuestoDetalleId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("ConfiguracionPresupuestoId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("MIRIndicadorId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("MIRIndicadorComponenteId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("NombreComponente")
+                                            .GroupIndex(0)
+                                            .Caption("Componente")
+                                            .AllowEditing(false)
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .Caption("")
+                                            .DataField("NombreActividad")
+                                            .Width(250.00)
+                                            .AllowEditing(false)
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("TipoComponenteId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("NivelIndicadorId")
+                                            .AllowEditing(false)
+                                            .Visible(false);
+                                    columnas.Add()
+                                            .DataField("Enero")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Febrero")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Marzo")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Abril")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Mayo")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Junio")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Julio")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Agosto")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Septiembre")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Octubre")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Noviembre")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Diciembre")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Anual")
+                                            .Format("$ #,##0.00")
+                                            .DataType(GridColumnDataType.Number)
+                                            .EditorOptions(new { format = "$ #,##0.00" })
+                                            .AllowEditing(false)
+                                            .AllowSorting(false);
+                                    columnas.Add()
+                                            .DataField("Porcentaje")
+                                            .DataType(GridColumnDataType.Number)
+                                            .Format("#0.00 '%'")
+                                            .AllowEditing(false)
+                                            .AllowSorting(false);
+
+                                }
+                                )
+                                .Summary(summary => summary
+                                            .RecalculateWhileEditing(true)
+                                            .GroupItems(groupItems =>
+                                            {
+                                                groupItems.Add()
+                                                .ShowInColumn("NombreActividad")
+                                                .Name("Actividad")
+                                                .ShowInGroupFooter(true)
+                                                .ValueFormat("Diferencia");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("EneroCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Enero")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("EneroDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Enero")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Febrero")
+                                                .Name("FebreroCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Febrero")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("FebreroDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Febrero")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Marzo")
+                                                .Name("MarzoCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Marzo")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("MarzoDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Marzo")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Abril")
+                                                .Name("AbrilCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Abril")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("AbrilDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Abril")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Mayo")
+                                                .Name("MayoCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Mayo")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("MayoDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Mayo")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Junio")
+                                                .Name("JunioCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Junio")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("JunioDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Junio")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Julio")
+                                                .Name("JulioCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Julio")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("JulioDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Julio")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Agosto")
+                                                .Name("AgostoCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Agosto")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("AgostoDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Agosto")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Septiembre")
+                                                .Name("SeptiembreCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Septiembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("SeptiembreDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Septiembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Octubre")
+                                                .Name("OctubreCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Octubre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("OctubreDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Octubre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Noviembre")
+                                                .Name("NoviembreCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Noviembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("NoviembreDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Noviembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Diciembre")
+                                                .Name("DiciembreCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Diciembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("DiciembreDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Diciembre")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Anual")
+                                                .Name("AnualCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Anual")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Enero")
+                                                .Name("AnualDiferencia")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(true)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Anual")
+                                                .ValueFormat("$ #,##0.00");
+
+                                                groupItems.Add()
+                                                //.Column("Porcentaje")
+                                                .Name("PorcentajeCabecera")
+                                                .SummaryType(SummaryType.Custom)
+                                                .ShowInGroupFooter(false)
+                                                .AlignByColumn(true)
+                                                .DisplayFormat("{0}")
+                                                .ShowInColumn("Porcentaje")
+                                                .ValueFormat("#0.00 '%'");
+                                            }
+                                            )
+                                            .CalculateCustomSummary("calculateCustomSummary")
+                                            )
+                                            .OnCellPrepared("onCellPrepared")
+                )
+            </div>
+        </div>
+    }
+}
+    <script src="~/Scripts/funciones/funcion.js" type="text/javascript"></script>
+    
+<script src="~/Areas/MIR/MIR/Views/MatrizPresupuestoDevengado/MatrizPresupuestoDevengado.js" type="text/javascript"></script>

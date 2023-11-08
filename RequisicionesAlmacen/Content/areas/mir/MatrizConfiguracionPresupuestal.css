@@ -1,0 +1,33 @@
+﻿#dxTextBoxCodigo, #dxTextBoxProgramaPresupuestario, #dxNumberBoxPresupuestoPorEjercer, #dxNumberBoxPresupuestoDevengado {
+    border: none;
+}
+
+#dxTextBoxCodigo input[type=text], #dxTextBoxProgramaPresupuestario input[type=text], #dxNumberBoxPresupuestoPorEjercer input[type=text], #dxNumberBoxPresupuestoDevengado input[type=text] {
+    text-align: end;
+}
+
+.pixvs-datagrid-cell {
+    background: #f7f7f7 !important;
+    
+}
+
+.pixvs-datagrid-cell-border {
+    border-left: 1px solid #ddd !important;
+    border-right: 1px solid #ddd !important;
+}
+
+.pixvs-datagrid-cell-money {
+    background-color: yellow !important;
+}
+
+.pixvs-datagrid-cell-money-red {
+    background-color: red !important;
+}
+
+.pixvs-modal-confirma-guardar {
+    z-index: 9999;
+}
+
+.pixvs-datagrid-cell-save {
+    background-color: #C2F0FB !important;
+}

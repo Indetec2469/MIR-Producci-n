@@ -1,0 +1,260 @@
+﻿@model RequisicionesAlmacen.Areas.MIR.Catalogos.Models.ViewModel.ControlMaestroTipoIndicadorViewModel
+@{
+    ViewData["Title"] = "Catálogo de Tipos de indicador";
+}
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Catálogo de Tipos de Indicador" }, { "Accion", "" }, { "Icono", "fa fa-inbox" } })
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar la solicitud de tipo indicador?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaEliminar.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("eliminaRow")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("() => modalConfirmaDeshacer.modal('hide')")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .OnClick("recargarFicha")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-md-12 col-lg-12">
+                <h6 class="br-section-label">LISTADO GENERAL DE TIPOS DE INDICADOR</h6>
+            </div>
+            @*<div class="col-md-4 col-lg-4">
+                <div class="float-right">
+                    @(Html
+                        .DevExtreme()
+                        .Button()
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100")
+                        .Text("Nuevo")
+                        .OnClick("onClickAgregarNuevaFila")
+                    )
+                </div>
+            </div>*@
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid()
+                .ID("dxDataGridListado")
+                .ShowBorders(true)
+                //.Editing(editing =>
+                //{
+                //    editing.Mode(GridEditMode.Cell)
+                //    .AllowUpdating(true);
+                //})
+                .ColumnAutoWidth(false)
+                .AllowColumnResizing(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .RowAlternationEnabled(true)
+                .NoDataText("Sin registros")
+                .Paging(paging => paging.Enabled(true).PageSize(5))
+                .Pager(pager =>
+                {
+                    pager.ShowPageSizeSelector(true);
+                    pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                    pager.ShowInfo(true);
+                    pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                })
+                .SearchPanel(sp =>
+                    sp
+                    .Placeholder("Buscar...")
+                    .SearchVisibleColumnsOnly(true)
+                    .HighlightSearchText(false)
+                    .Visible(true)
+                    .Width(200)
+                )
+                .Columns(column =>
+                {
+
+                column
+                    .Add()
+                    .Caption("Código")
+                    .Width(200)
+                    .CalculateCellValue("calculateCellValueTipoIndicadorId")
+                    .DataField("TipoIndicadorId")
+                    .AllowEditing(false)
+                    .Alignment(HorizontalAlignment.Right);
+
+                column
+                    .Add()
+                    .Caption("Indicador")
+                    .DataField("Descripcion")
+                    .ValidationRules(validationRules => {
+                        validationRules.AddRequired().Message("Indicador requerido");
+                        validationRules.AddStringLength().Max(100).Min(2).Message("El mínimo es 1 carácter y el máximo es 100 carácteres.");
+                    });
+
+                column.Add()
+                    .AllowSorting(false)
+                    .Caption("Nivel")
+                    .DataField("Nivel")
+                    .ValidationRules(validationRules => {
+                        validationRules.AddRequired().Message("Nivel requerido");
+                    })
+                    .Lookup(lookup => lookup
+                        .DataSource(dataSource => dataSource.Array().Data(Model.ListControlMaestroNivel).Key("ControlId"))
+                        .ValueExpr("ControlId")
+                        .DisplayExpr("Valor")
+                    )
+                    .CellTemplate(new JS("cellTemplate"))
+                    .CalculateFilterExpression(@<text>
+                                function(filterValue, selectedFilterOperation, target) {
+                                    if(target === "search" && typeof(filterValue) === "string") {
+                                        return [this.dataField, "contains", filterValue]
+                                    }
+                                    return function(data) {
+                                        return (data.AssignedEmployee || []).indexOf(filterValue) !== -1
+                                    }
+                                }</text>);
+                    //.EditCellTemplate(new TemplateName("TagBoxTemplate"));
+
+                    //column
+                    //.Add()
+                    //.DataField("Borrado")
+                    //.DataType(GridColumnDataType.Boolean)
+                    //.Visible(false);
+
+                    //column
+                    //.Add()
+                    //.Width(100)
+                    //.Caption("Acciones")
+                    //.Fixed(true)
+                    //.FixedPosition(HorizontalEdge.Right)
+                    //.Type(GridCommandColumnType.Buttons)
+                    //.Buttons(button =>
+                    //{
+                    //    button
+                    //        .Add()
+                    //        .Hint("Eliminar")
+                    //        .Icon("trash")
+                    //        .OnClick("confirmaEliminarModal");
+                    //});
+
+                })
+                //.OnInitNewRow("onInitNewRowListado")
+                //.OnRowInserted("onRowInsertedListado")
+                //.OnRowUpdated("onRowUpdateListado")
+                //.OnEditorPreparing("onEditorPreparingListado")
+                //.OnFocusedCellChanged("onFocusedCellChangedListado")
+                )
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="col-md-12">
+                <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonDeshacer")
+                        .Text("Deshacer")
+                        .ElementAttr("class", "btn-default btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                        .OnClick("() => modalConfirmaDeshacer.modal('show')")
+                    )
+                    @(Html.DevExtreme()
+                        .Button()
+                        .ID("dxButtonGuardar")
+                        .Text("Guardar")
+                        .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                        .OnClick("guardaCambios")
+                    )
+                </div>
+            </div>
+        </div>*@
+    </div>
+</div>
+
+@*@using (Html.DevExtreme().NamedTemplate("TagBoxTemplate"))
+{
+    @(Html.DevExtreme().TagBox()
+        .DataSource(dataSource => dataSource.Array().Data(Model.ListControlMaestroNivel).Key("ControlId"))
+        .Value(new JS("value"))
+        .ValueExpr("ControlId")
+        .DisplayExpr("Valor")
+        .ShowSelectionControls(true)
+        .MaxDisplayedTags(3)
+        .ShowMultiTagOnly(false)
+        .ApplyValueMode(EditorApplyValueMode.UseButtons)
+        .SearchEnabled(true)
+        .OnValueChanged("function(e) { setValue(e.value); onValueChangedTagBoxListado(e); }")
+        .OnSelectionChanged("function(e) { component.updateDimensions(); }")
+        .Placeholder("Selecciona una opción")
+        .NoDataText("No hay información para mostrar")
+    )
+}*@
+
+<script>
+    // VARIABLES GLOBALES MODEL //
+    var _listControlMaestroTipoIndicador = @Html.Raw(Json.Encode(Model.ListControlMaestroTipoIndicador)),
+        _listControlMaestroTipoIndicadorNivel =  @Html.Raw(Json.Encode(Model.ListControlMaestroTipoIndicadorNivel)),
+        _controlMaestroTipoIndicador = @Html.Raw(Json.Encode(Model.ControlMaestroTipoIndicador)),
+        _controlMaestroTipoIndicadorNivel = @Html.Raw(Json.Encode(Model.ControlMaestroTipoIndicadorNivel));
+    //////////////////////////////
+</script>
+<script src="~/Areas/MIR/Catalogos/Views/TipoIndicador/ListadoTipoIndicador.js"></script>

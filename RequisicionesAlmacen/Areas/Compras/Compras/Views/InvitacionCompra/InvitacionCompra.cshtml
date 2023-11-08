@@ -1,0 +1,1418 @@
+﻿@using RequisicionesAlmacen.Areas.Compras.Compras.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model InvitacionCompraViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Invitación de Compra" }, { "Accion", Model.SoloLectura ? "Ver" : "Editar" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                    .ID("dxForm")
+                    .FormData(Model.InvitacionCompra)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Datos Generales").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(3)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup().ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Código").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.CodigoInvitacion).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(3)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup().ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Proveedores").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.Proveedores.ToString()).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(3)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup().ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Estatus").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.Estatus).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(3)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup().ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Fecha").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.FechaInvitacion).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(3)
+                                        .Visible(Model.InvitacionCompra.FechaDesiertaS != null)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup()
+                                                    .ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Fecha Desierta").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.FechaDesiertaS).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+
+                                    itemGroup0.AddGroup()
+                                        .ColSpan(Model.InvitacionCompra.FechaDesiertaS != null ? 9 : 12)
+                                        .Visible(Model.InvitacionCompra.Observacion != null)
+                                        .Items(
+                                            itemGroup1 =>
+                                            {
+                                                itemGroup1.AddGroup().ColCount(12).Items(
+                                                    itemGroup2 =>
+                                                    {
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .CssClass("tx-bold")
+                                                            .Label(label => label.Text("Motivo").ShowColon(true));
+
+                                                        itemGroup2.AddSimple()
+                                                            .ColSpan(12)
+                                                            .Label(label => label.Text(Model.InvitacionCompra.Observacion).ShowColon(false));
+                                                    }
+                                                );
+                                            }
+                                        );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+
+                            items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Artículos").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddGroup().ColSpan(12).Items(
+                                        itemGroup0 =>
+                                        {
+                                            itemGroup0.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimple().Template(new TemplateName("detallesTemplate"))
+                                                        .ColSpan(12);
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+                            items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddGroup().ColSpan(12).Items(
+                                        itemGroup0 =>
+                                        {
+                                            itemGroup0.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimple().Template(new TemplateName("drawerTemplate"))
+                                                        .ColSpan(12);
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonCancelar")
+                                    .Text("Cerrar")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(true); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonDeshacer")
+                                    .Text("Deshacer")
+                                    .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("function() { validaDeshacer(false); }")
+                                )
+                                @(Html.DevExtreme()
+                                    .DropDownButton()
+                                    .ID("dxButtonEliminar")
+                                    .Text("Acciones")
+                                    .DataSource(ds => ds.Array()
+                                        .Key("id")
+                                        .Data(new[] {
+                                            new { id = 1, value = "Desierta" },
+                                            new { id = 2, value = "Rechazar"},
+                                            new { id = 3, value = "Cancelar"}
+                                        })
+                                    )
+                                    .KeyExpr("id")
+                                    .DisplayExpr("value")
+                                    .ElementAttr("class", "dx-button dx-button-normal dx-button-mode-contained dx-widget btn-normal btn-oblong btn-width-100 mg-t-15 mg-l-5 dx-button-has-text")
+                                    .OnItemClick("validaEliminar")
+                                )
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Guardar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("drawerTemplate"))
+{
+    <div class="bd">
+        <div class="toolbar">
+            @(Html.DevExtreme()
+            .Toolbar()
+            .ID("dxToolbar")
+            .Items(items => {
+                items
+                .Add()
+                .Widget(w => w.Button()
+                    .Icon("menu")
+                    .OnClick("onClickToolbar")
+                ).Location(ToolbarItemLocation.Before);
+            })
+        )
+        </div>
+
+        <div class="drawer">
+            @(Html.DevExtreme()
+            .Drawer()
+            .ID("dxDrawer")
+            .OpenedStateMode(DrawerOpenedStateMode.Shrink)
+            .Opened(true)
+            .Position(DrawerPosition.Left)
+            .RevealMode(DrawerRevealMode.Slide)
+            .CloseOnOutsideClick(false)
+            .Template(@<text>
+                <div style="width: 200px; height: 100%">
+                    @(Html.DevExtreme().List()
+                        .ID("dxListDrawer")
+                        .Items(items => {
+                            items.Add().Text("Proveedores").Icon("user").Option("index", 1);
+                            items.Add().Text("Cotizaciones").Icon("money").Option("index", 2);
+                            items.Add().Text("Ganadores").Icon("info").Option("index", 3);
+                            items.Add().Text("Órdenes de Compra").Icon("product").Option("index", 4);
+                        })
+                        .KeyExpr("index")
+                        .HoverStateEnabled(false)
+                        .FocusStateEnabled(false)
+                        .ActiveStateEnabled(false)
+                        .SelectionMode(ListSelectionMode.Single)
+                        .OnItemClick("onItemClickDrawer")
+                        .ElementAttr("class", "panel-list dx-theme-accent-as-background-color")
+                        .SelectedItemKeys(new[] { 1 })
+                    )
+                </div>
+            </text>)
+            .Content(@<text>
+                <div id="templateContent" class="d-none dx-theme-background-color p-3">
+                    @* Proveedores *@
+                    <div id="tabProveedores">
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Html.BeginForm())
+                                {
+                                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup1"))
+                                    {
+                                        @Html.AntiForgeryToken();
+
+                                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                                            .ID("dxFormProveedores")
+                                            .FormData(Model.InvitacionCompra)
+                                            .LabelLocation(FormLabelLocation.Top)
+                                            .RequiredMark("(*)")
+                                            .ScreenByWidth("function(width) {}")
+                                            .Items(
+                                                items =>
+                                                {
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddGroup().ColSpan(6).Items(
+                                                                items1 =>
+                                                                {
+                                                                    items1.AddSimple()
+                                                                        .Label(label => label.Text("Listado de Proveedores Invitados").ShowColon(false))
+                                                                        .ColSpan(12)
+                                                                        .CssClass("h6 br-section-label");
+
+                                                                    items1.AddSimple().Template(new TemplateName("proveedoresTemplate"))
+                                                                        .ColSpan(12);
+                                                                }
+                                                            );
+
+                                                            itemGroup.AddGroup().ColSpan(6).Items(
+                                                                items1 =>
+                                                                {
+                                                                    items1.AddSimple()
+                                                                        .Label(label => label.Text("Listado de Proveedores General").ShowColon(false))
+                                                                        .ColSpan(12)
+                                                                        .CssClass("h6 br-section-label");
+
+                                                                    items1.AddSimple().Template(new TemplateName("listadoProveedoresTemplate"))
+                                                                        .ColSpan(12);
+                                                                }
+                                                            );
+                                                        }
+                                                    );
+                                                }
+                                            )
+                                        )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Cotizaciones *@
+                    <div id="tabCotizaciones">
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Html.BeginForm())
+                                {
+                                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup2"))
+                                    {
+                                        @Html.AntiForgeryToken();
+
+                                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                                            .ID("dxFormCotizaciones")
+                                            .FormData(Model.InvitacionCompra)
+                                            .LabelLocation(FormLabelLocation.Top)
+                                            .RequiredMark("(*)")
+                                            .ScreenByWidth("function(width) {}")
+                                            .Items(
+                                                items =>
+                                                {
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple()
+                                                                .Label(label => label.Text("Precios Proveedores").ShowColon(false))
+                                                                .ColSpan(6)
+                                                                .CssClass("h6 br-section-label");
+
+                                                            itemGroup.AddSimple().Template(new TemplateName("btnRptPreciosProveedoresTemplate"))
+                                                                .ColSpan(6);
+                                                        }
+                                                    );
+
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple().Template(new TemplateName("preciosProveedorTemplate"))
+                                                                .ColSpan(12);
+                                                        }
+                                                    );
+
+                                                    items.AddGroup().ColCount(12).Items(itemGroup => { itemGroup.AddSimple().HelpText("").ColSpan(12).CssClass("h6 br-section-label"); });
+
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple()
+                                                                .Label(label => label.Text("Cotizaciones").ShowColon(false))
+                                                                .ColSpan(6)
+                                                                .CssClass("h6 br-section-label");
+
+                                                            itemGroup.AddSimple().Template(new TemplateName("btnAgregarCotizacionTemplate"))
+                                                                .ColSpan(6)
+                                                                .Visible(!Model.SoloLectura);
+                                                        }
+                                                    );
+
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple().Template(new TemplateName("cotizacionesProveedorTemplate"))
+                                                                .ColSpan(12);
+                                                        }
+                                                    );
+                                                }
+                                            )
+                                        )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Ganadores *@
+                    <div id="tabGanadores">
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Html.BeginForm())
+                                {
+                                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup3"))
+                                    {
+                                        @Html.AntiForgeryToken();
+
+                                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                                            .ID("dxFormGanadores")
+                                            .FormData(Model.InvitacionCompra)
+                                            .LabelLocation(FormLabelLocation.Top)
+                                            .RequiredMark("(*)")
+                                            .ScreenByWidth("function(width) {}")
+                                            .Items(
+                                                items =>
+                                                {
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple()
+                                                                .Label(label => label.Text("Proveedores Ganadores").ShowColon(false))
+                                                                .ColSpan(12)
+                                                                .CssClass("h6 br-section-label");
+                                                        }
+                                                    );
+
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple().Template(new TemplateName("ganadoresProveedorTemplate"))
+                                                                .ColSpan(12);
+                                                        }
+                                                    );
+                                                }
+                                            )
+                                        )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Ordenes de Compra *@
+                    <div id="tabOrdenesCompra">
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Html.BeginForm())
+                                {
+                                    using (Html.DevExtreme().ValidationGroup("dxValidationGroup4"))
+                                    {
+                                        @Html.AntiForgeryToken();
+
+                                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                                            .ID("dxFormOrdenesCompra")
+                                            .FormData(Model.InvitacionCompra)
+                                            .LabelLocation(FormLabelLocation.Top)
+                                            .RequiredMark("(*)")
+                                            .ScreenByWidth("function(width) {}")
+                                            .Items(
+                                                items =>
+                                                {
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple()
+                                                                .Label(label => label.Text("Órdenes de Compra").ShowColon(false))
+                                                                .ColSpan(12)
+                                                                .CssClass("h6 br-section-label");
+                                                        }
+                                                    );
+
+                                                    items.AddGroup().ColCount(12).Items(
+                                                        itemGroup =>
+                                                        {
+                                                            itemGroup.AddSimple().Template(new TemplateName("ordenesCompraTemplate"))
+                                                                .ColSpan(12);
+                                                        }
+                                                    );
+                                                }
+                                            )
+                                        )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </text>)
+        )
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("detallesTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<InvitacionCompraDetalleItem>()
+                    .ID("dxGridDetalles")
+                    .DataSource(m => m.Array().Data(Model.ListInvitacionCompraDetalles).Key("InvitacionCompraDetalleId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.CodigoRequisicion);
+                        c.AddFor(m => m.FechaRequisicion);
+                        c.AddFor(m => m.Descripcion).CalculateCellValue("gridBox_displayExpr");
+                        c.AddFor(m => m.Cantidad).Format("#,##0.00##");
+                        c.AddFor(m => m.Costo).Format("$ #,##0.00##");
+                        c.AddFor(m => m.Importe).Format("$ #,##0.00##");
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Visible(!Model.SoloLectura)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEliminarArticulo")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("validaEliminarArticulo")
+                                    .Visible(new JS("function(event) { return event.row.data.PermiteEditar; }"));
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("proveedoresTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARspConsultaInvitacionCompraListadoProveedores_Result>()
+                    .ID("dxGridProveedoresInvitados")
+                    .DataSource(m => m.Array().Data(Model.ListProveedores).Key("InvitacionCompraProveedorId"))
+                    .DataSourceOptions(o => o.Filter("filtrarProveedores"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.RazonSocial);
+                        c.AddFor(m => m.RFC);
+                        c.AddFor(m => m.Invitaciones).Alignment(HorizontalAlignment.Center);
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Visible(!Model.SoloLectura && !Model.DeshabilitarProveedores)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnEliminarProveedor")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("eliminarProveedor")
+                                    .Visible(new JS("validaEliminarProveedor"));
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("listadoProveedoresTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<ARspConsultaInvitacionCompraListadoProveedores_Result>()
+                    .ID("dxGridListadoProveedores")
+                    .DataSource(m => m.Array().Data(Model.ListProveedores).Key("InvitacionCompraProveedorId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnEditingStart("onEditingStartProveedor")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .OnOptionChanged("onListadoProveedoresChange")
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.Seleccionado)
+                            .Width(50)
+                            .Caption("")
+                            .Alignment(HorizontalAlignment.Center)
+                            .DataType(GridColumnDataType.Boolean)
+                            .Visible(!Model.SoloLectura && !Model.DeshabilitarProveedores);
+                        c.AddFor(m => m.RazonSocial).AllowEditing(false);
+                        c.AddFor(m => m.RFC).AllowEditing(false);
+                        c.AddFor(m => m.Invitaciones).Alignment(HorizontalAlignment.Center).AllowEditing(false);
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("preciosProveedorTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid()
+                    .ID("dxGridPreciosProveedor")
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnEditorPrepared("ocultarColumnasProveedor")
+                    .OnOptionChanged("onListadoGanadoresProveedoresChange")
+                    .OnEditingStart("onEditingStartPrecios")
+                    .Scrolling(s => s.UseNative(true))
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .LoadPanel(p => p.Enabled(true))
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("ganadoresProveedorTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid()
+                    .ID("dxGridGanadoresProveedor")
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnEditorPrepared("ocultarColumnasProveedor")
+                    .OnEditingStart("onEditingStartGanadores")
+                    .Scrolling(s => s.UseNative(true))
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .LoadPanel(p => p.Enabled(true))
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("btnAgregarCotizacionTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .ID("dxButtonAgregarCotizacion")
+                        .Text("Agregar")
+                        .OnClick("nuevaCotizacion")
+                        .ElementAttr("class", "btn-primary btn-oblong btn-width-100 mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("btnRptPreciosProveedoresTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="float-right">
+                    @(Html.DevExtreme().Button()
+                        .ID("dxButtonRptPreciosProveedores")
+                        .Text("Comparativa")
+                        .OnClick("descargarRptPreciosProveedores")
+                        .ElementAttr("class", "btn-primary btn-oblong mg-t-10")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("cotizacionesProveedorTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<InvitacionCompraProveedorCotizacionItem>()
+                    .ID("dxGridCotizacionesProveedor")
+                    .DataSource(m => m.Array().Data(Model.ListProveedoresCotizaciones).Key("InvitacionCompraProveedorCotizacionId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.Proveedor);
+                        c.AddFor(m => m.NombreArchivo);
+                        c.AddFor(m => m.FechaCotizacion).Format("MMMM dd, yyyy hh:mm a");
+                        c.AddFor(m => m.Tipo);
+                        c.Add()
+                            .Width(100)
+                            .Caption("Acciones")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnDescargarCotizacion")
+                                    .Hint("Descargar")
+                                    .Icon("download")
+                                    .OnClick("descargarCotizacion");
+
+                                b.Add()
+                                    .Name("btnEliminarCotizacion")
+                                    .Hint("Eliminar")
+                                    .Icon("trash")
+                                    .OnClick("validaEliminarCotizacion")
+                                    .Visible(new JS("validaEliminarProveedor"));
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("ordenesCompraTemplate"))
+{
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                @(Html.DevExtreme().DataGrid<InvitacionOrdenCompraItem>()
+                    .ID("dxGridOrdenesCompra")
+                    .DataSource(m => m.Array().Data(Model.ListOrdenesCompra).Key("OrdenCompraId"))
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .AllowColumnResizing(true)
+                    .ColumnResizingMode(ColumnResizingMode.Widget)
+                    .RowAlternationEnabled(true)
+                    .NoDataText("Sin registros")
+                    .OnEditingStart("onEditingStartOC")
+                    .SearchPanel(
+                        sp => sp.Placeholder("Buscar...")
+                                .SearchVisibleColumnsOnly(true)
+                                .HighlightSearchText(false)
+                                .Visible(true)
+                                .Width(200)
+                    )
+                    .Editing(e =>
+                    {
+                        e.Mode(GridEditMode.Cell);
+                        e.AllowUpdating(true);
+                    })
+                    .OnCellPrepared("onCellPreparedFechas")
+                    .LoadPanel(p => p.Enabled(true))
+                    .Scrolling(s => s.UseNative(true))
+                    .Columns(c =>
+                    {
+                        c.AddFor(m => m.OrdenCompraId).Caption("Orden de Compra").Alignment(HorizontalAlignment.Center).CalculateCellValue("gridBox_displayExpr_OC").AllowEditing(false);
+                        c.AddFor(m => m.Proveedor).AllowEditing(false);
+                        c.AddFor(m => m.Monto).AllowEditing(false).Format("$ #,##0.00##");
+                        c.AddFor(m => m.Fecha).DataType(GridColumnDataType.Date).Alignment(HorizontalAlignment.Center).Format("dd/MM/yyyy");
+                        c.AddFor(m => m.FechaRecepcion).DataType(GridColumnDataType.Date).Alignment(HorizontalAlignment.Center).Format("dd/MM/yyyy");
+                        c.AddFor(m => m.Referencia);
+                        c.AddFor(m => m.Observacion);
+                        c.Add()
+                            .Width(50)
+                            .Caption("")
+                            .Fixed(false)
+                            .Type(GridCommandColumnType.Buttons)
+                            .Visible(!Model.SoloLectura)
+                            .Buttons(b =>
+                            {
+                                b.Add()
+                                    .Name("btnConvertirOC")
+                                    .Hint("Convertir a Orden de Compra")
+                                    .Icon("exportselected")
+                                    .OnClick("validaConvertirOC")
+                                    .Visible(new JS("function(event) { return !cambios && event.row.data.OrdenCompraId < 0; }"));
+                            });
+                    })
+                    .Paging(paging => paging.PageSize(10))
+                    .Pager(pager =>
+                    {
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new[] { 0, 10, 20, 30, 40, 50 });
+                        pager.ShowInfo(true);
+                        pager.InfoText("Página {0} de {1} ( {2} Registros )");
+                    })
+                )
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate("archivoTemplateForm"))
+{
+    <div class="widget-container flex-box">
+        <div id="dropzone-external" class="flex-box dx-theme-border-color">
+            <img id="dropzone-file" hidden alt="" onload="toggleVisible(true)" />
+
+            <div id="dropzone-text" class="flex-box">
+                <span>Arrastra y suelta el archivo</span>
+                <span>…o haga clic para buscar un archivo.</span>
+            </div>
+        </div>
+
+        <div class="float-right">
+            @(Html.DevExtreme()
+                .Button()
+                .ID("dxButtonEliminarDropZone")
+                .Text("Eliminar")
+                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-t-15")
+                .OnClick("eliminarDropZone")
+            )
+        </div>
+
+        @(Html.DevExtreme().FileUploader()
+            .DialogTrigger("#dropzone-external")
+            .DropZone("#dropzone-external")
+            .ID("dxFileUploader")
+            .Name("myFile")
+            .Multiple(false)
+            .Visible(false)
+            .OnDropZoneEnter("dropZoneEnter")
+            .OnDropZoneLeave("dropZoneLeave")
+            .OnValueChanged("cambiarDropZone")
+        )
+    </div>
+}
+
+<!-- MODAL COTIZACION -->
+<div class="modal fade effect-scale" id="modalCotizacion" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" estatus="">
+    <div class="modal-dialog modal-m modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Nueva Cotización</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroupMC"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<InvitacionCompraProveedorCotizacionItem>()
+                            .ID("dxFormModalCotizacion")
+                            .FormData(new InvitacionCompraProveedorCotizacionItem())
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.InvitacionCompraProveedorId)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Editor(e => e.SelectBox()
+                                                    .ID("dxCboProveedorCotizacion")
+                                                    .DataSource(Model.ListProveedores)
+                                                    .ValueExpr("InvitacionCompraProveedorId")
+                                                    .DisplayExpr(new JS("(params) => { return params ? params.ProveedorId + ' - ' + params.RazonSocial : null }"))
+                                                    .SearchEnabled(true)
+                                                    .SearchMode(DropDownSearchMode.Contains)
+                                                    .NoDataText("Sin registros que mostrar")
+                                                    .Placeholder("Selecciona una opción"));
+
+                                            itemGroup.AddSimple()
+                                                .ColSpan(12)
+                                                .Editor(e => e.TextBox()
+                                                    .ID("dxTxtFileName")
+                                                    .ReadOnly(true));
+
+                                            itemGroup.AddSimple().Template(new TemplateName("archivoTemplateForm"))
+                                                     .ColSpan(12);
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("function() { modalCotizacion.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Agregar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-l-5")
+                                .OnClick("agregarCotizacion")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAR OC -->
+<div class="modal fade effect-scale" id="modalConfirmaOC" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se generará una nueva Orden de Compra para los artículos seleccionados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaOC.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaOC.modal('hide'); convertirOC(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DESHACER -->
+<div class="modal fade effect-scale" id="modalConfirmaDeshacer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <div>
+                    <h5 class="dx-field-item-label-text modal-title">Se perderán los cambios realizados.</h5>
+                    ¿Desea continuar?
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaDeshacer.modal('hide'); cancelar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal fade effect-scale" id="modalConfirmaDesierta" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro enviar desierta la Invitación de Compra?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroupDesierta"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                            .ID("dxFormModalMotivoDesierta")
+                            .FormData(Model.InvitacionCompra)
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.FechaDesierta)
+                                                .ColSpan(6)
+                                                .CssClass("tx-bold")
+                                                .IsRequired(true)
+                                                .Label(l => l.Text("Fecha"))
+                                                .Editor(e => e.DateBox()
+                                                    .ID("dxTxtFechaDesierta")
+                                                    .DisplayFormat("dd/MM/yyyy"));
+                                        }
+                                    );
+
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Observacion)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Label(l => l.Text("Motivo"))
+                                                .IsRequired(true)
+                                                .Editor(e => e.TextArea().MaxLength(2000).Height(80));
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaDesierta.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { enviarDesierta(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade effect-scale" id="modalConfirmaRechazar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de rechazar la Invitación de Compra?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body pd-25">
+                @using (Html.BeginForm())
+                {
+                    using (Html.DevExtreme().ValidationGroup("dxValidationGroupRechazar"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @(Html.DevExtreme().Form<ARtblInvitacionCompra>()
+                            .ID("dxFormModalMotivoRechazar")
+                            .FormData(Model.InvitacionCompra)
+                            .LabelLocation(FormLabelLocation.Top)
+                            .RequiredMark("(*)")
+                            .ScreenByWidth(@<text> function(width) {} </text>)
+                            .Items(
+                                items =>
+                                {
+                                    items.AddGroup().ColCount(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddSimpleFor(m => m.Observacion)
+                                                .ColSpan(12)
+                                                .CssClass("tx-bold")
+                                                .Label(l => l.Text("Motivo"))
+                                                .IsRequired(true)
+                                                .Editor(e => e.TextArea().MaxLength(2000).Height(80));
+                                        }
+                                    );
+                                })
+                        )
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaRechazar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { rechazar(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade effect-scale" id="modalConfirmaCancelar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de cancelar la Invitación de Compra?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaCancelar.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaCancelar.modal('hide'); cancelarInvitacion(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR ARTICULO -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminarArticulo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar el artículo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaEliminarArticulo.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaEliminarArticulo.modal('hide'); eliminaArticulo(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR COTIZACIÓN -->
+<div class="modal fade effect-scale" id="modalConfirmaEliminarCotizacion" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bd-0">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h5 class="dx-field-item-label-text modal-title">¿Está seguro de eliminar la cotización?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-row flex-sm-row flex-md-row flex-lg-row flex-xl-row justify-content-end justify-content-sm-end justify-content-md-end justify-content-lg-end justify-content-xl-end">
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Cancelar")
+                                .ElementAttr("class", "btn-normal btn-oblong btn-width-100 mr-3 mr-sm-3 mr-md-3 mr-lg-3 mr-xl-3")
+                                .OnClick("function() { modalConfirmaEliminarCotizacion.modal('hide'); }")
+                            )
+                            @(Html.DevExtreme()
+                                .Button()
+                                .Text("Aceptar")
+                                .ElementAttr("class", "btn-success btn-oblong btn-width-100 mt-0 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0")
+                                .OnClick("function() { modalConfirmaEliminarCotizacion.modal('hide'); eliminaCotizacion(); }")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Compras/Compras/Views/InvitacionCompra/InvitacionCompra.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>
+
+<!-- VARIABLES GLOBALES MODEL -->
+<script>
+    var _soloLectura = @Html.Raw(Json.Encode(Model.SoloLectura));
+    var _listProveedores = @Html.Raw(Json.Encode(Model.ListProveedores));
+    var _listPreciosProveedores = @Html.Raw(Json.Encode(Model.ListPreciosProveedores));
+    var _listAlmacenes = @Html.Raw(Json.Encode(Model.ListAlmacenes));
+    var _listTarifasImpuesto = @Html.Raw(Json.Encode(Model.ListTarifasImpuesto));
+    var _listOrdenesCompra = @Html.Raw(Json.Encode(Model.ListOrdenesCompra));
+    var _listMontosCompra = @Html.Raw(Json.Encode(Model.ListMontosCompra));
+    var _tipoCompraId = @Html.Raw(Json.Encode(Model.TipoCompraId));
+    var _ejercicio = @Html.Raw(Json.Encode(Model.EjercicioUsuario));
+    var _fechaOperacion = @Html.Raw(Json.Encode(Model.FechaOperacion));
+    var _deshabilitarProveedores = @Html.Raw(Json.Encode(Model.DeshabilitarProveedores));
+</script>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<inherited BaseReport="..\..\Encabezados\EncabezadoVertical.frx" BaseReportAbsolutePath="C:\Users\elias\OneDrive\Documentos\indetec-almacenes-requisicion-asp-net-mvc\RequisicionesAlmacen\App_Data\Reportes\Encabezados\EncabezadoVertical.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/18/2021 11:33:22" ReportInfo.Modified="11/15/2022 11:47:38" ReportInfo.CreatorVersion="2022.1.14.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHmUxX4WG48H9HdUBoWojdIt0OXisRvf3hZwzoKcjGiJsSbLVrIJtt18pAQNfnCRM+EuIrnf5dkTbvjPB4S2Jg/e8jNiegkDvW3MhXGaemq4BlsgsB5RZIHD0sNpiB0cRnfbAZ9NYZXzfq+Mb8fuL7V5A==">
+      <TableDataSource Name="Table" Alias="ARfnRptExistenciasPartidas" DataType="System.Int32" Enabled="true" SelectCommand="SELECT *&#13;&#10;FROM ARfnRptExistenciasPartidas(@pObjetoGastoId)&#13;&#10;ORDER BY ObjetoGastoId, Codigo">
+        <Column Name="ObjetoGastoId" DataType="System.String"/>
+        <Column Name="Codigo" DataType="System.String"/>
+        <Column Name="Descripcion" DataType="System.String"/>
+        <Column Name="UM" DataType="System.String"/>
+        <Column Name="Existencia" DataType="System.Decimal"/>
+        <Column Name="Minimo" DataType="System.Double"/>
+        <Column Name="Maximo" DataType="System.Double"/>
+        <Column Name="Diferencia" DataType="System.Double"/>
+        <CommandParameter Name="@pObjetoGastoId" DataType="22" Expression="[@pObjetoGastoId]"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pObjetoGastoId" DataType="System.String"/>
+  </Dictionary>
+  <inherited Name="Page1">
+    <inherited Name="PageHeader1">
+      <inherited Name="Text3"/>
+      <inherited Name="Text2"/>
+      <inherited Name="Text1"/>
+      <inherited Name="Picture2"/>
+      <inherited Name="Text4"/>
+      <inherited Name="Text5"/>
+      <inherited Name="Text6"/>
+      <inherited Name="Text7"/>
+      <inherited Name="Text8"/>
+      <inherited Name="Line1"/>
+      <inherited Name="Text9"/>
+      <inherited Name="Text10"/>
+    </inherited>
+    <ColumnHeaderBand Name="ColumnHeader1" ZOrder="-1" Top="191.13" Width="740.5" Height="33.03">
+      <LineObject Name="Line3" Left="9.45" Width="718.2"/>
+      <TextObject Name="Text45" Left="9.45" Top="4.45" Width="66.15" Height="24.57" Text="CÓDIGO" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text91" Left="85.05" Top="4.54" Width="217.35" Height="24.57" Text="DESCRIPCIÓN" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text92" Left="311.85" Top="4.54" Width="75.6" Height="24.57" Text="UNIDAD&#13;&#10;DE MEDIDA" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text93" Left="396.9" Top="4.54" Width="75.6" Height="24.57" Text="EXISTENCIA" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text99" Left="481.95" Top="4.54" Width="75.6" Height="24.57" Text="MÍNIMO" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text100" Left="567" Top="4.54" Width="75.6" Height="24.57" Text="MÁXIMO" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text101" Left="652.05" Top="4.54" Width="75.6" Height="24.57" Text="DIFERENCIA" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <LineObject Name="Line2" Left="9.45" Top="33.03" Width="718.2"/>
+    </ColumnHeaderBand>
+    <GroupHeaderBand Name="GroupHeader1" ZOrder="0" Top="226.3" Width="740.5" Height="47.25" Condition="[ARfnRptExistenciasPartidas.ObjetoGastoId]">
+      <TextObject Name="Text107" Left="9.45" Top="18.9" Width="122.85" Height="15.12" Text="PARTIDA ESPECÍFICA:" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <TextObject Name="Text108" Left="132.3" Top="18.9" Width="75.6" Height="15.12" Text="[ARfnRptExistenciasPartidas.ObjetoGastoId]" VertAlign="Center" Font="Arial, 7.2pt, style=Bold"/>
+      <LineObject Name="Line5" Left="9.45" Top="45.36" Width="718.2" Border.Style="Dash"/>
+      <DataBand Name="Data1" Top="275.68" Width="740.5" Height="26.46" CanGrow="true" DataSource="Table">
+        <LineObject Name="Line4" Left="9.45" Top="22.68" Width="718.2" Border.Style="Dash"/>
+        <TextObject Name="Text37" Left="9.45" Width="66.15" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Codigo]" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text96" Left="85.05" Width="217.35" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Descripcion]" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text97" Left="311.85" Width="75.6" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.UM]" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text98" Left="396.9" Width="75.6" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Existencia]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text102" Left="481.95" Width="75.6" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Minimo]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text103" Left="567" Width="75.6" Height="17.01" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Maximo]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+        <TextObject Name="Text104" Left="652.05" Width="75.6" Height="17.01" VisibleExpression="[ARfnRptExistenciasPartidas.Diferencia] &lt; 0" IsIntersectedWithOtherObject="true" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Diferencia]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt">
+          <Formats>
+            <CustomFormat Format="#,##0.00##"/>
+            <GeneralFormat/>
+          </Formats>
+        </TextObject>
+        <TextObject Name="Text105" Left="652.05" Width="75.6" Height="17.01" VisibleExpression="[ARfnRptExistenciasPartidas.Diferencia] &gt; 0" IsIntersectedWithOtherObject="true" CanGrow="true" Text="[ARfnRptExistenciasPartidas.Diferencia]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt" TextFill.Color="Red">
+          <Formats>
+            <CustomFormat Format="#,##0.00##"/>
+            <GeneralFormat/>
+          </Formats>
+        </TextObject>
+        <TextObject Name="Text106" Left="652.05" Width="75.6" Height="17.01" VisibleExpression="[ARfnRptExistenciasPartidas.Diferencia] == 0" IsIntersectedWithOtherObject="true" CanGrow="true" Text="-" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      </DataBand>
+    </GroupHeaderBand>
+    <inherited Name="PageFooter1" Top="304.27" Height="28.35">
+      <inherited Name="Text12"/>
+    </inherited>
+  </inherited>
+</inherited>

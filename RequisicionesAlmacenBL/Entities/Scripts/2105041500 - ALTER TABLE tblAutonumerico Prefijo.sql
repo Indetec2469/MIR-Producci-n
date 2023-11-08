@@ -1,0 +1,3 @@
+ALTER TABLE tblAutonumerico
+ALTER COLUMN Prefijo NVARCHAR(5) NULL
+GO

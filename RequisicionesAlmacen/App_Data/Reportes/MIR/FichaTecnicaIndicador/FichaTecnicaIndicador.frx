@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<inherited BaseReport="..\..\Encabezados\EncabezadoVertical.frx" BaseReportAbsolutePath="D:\Documentos\Trabajo\Indetec\REQUISICIONES\RequisicionesAlmacen\RequisicionesAlmacen\App_Data\Reportes\Encabezados\EncabezadoVertical.frx" ScriptLanguage="CSharp" DoublePass="true" ReportInfo.Created="08/18/2021 11:33:22" ReportInfo.Modified="01/07/2022 09:24:32" ReportInfo.CreatorVersion="2022.1.3.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHmyi1Onxl29HhgjIJPdmDeEYZUGh8KYola0Gfd2uvC4NxktbXEqUg84BQc/xdvyLAWMFWgG7IKe+jkXVnAOhgGk16+x6iasP23L2TQbrFU8VmAx8q+U7z7b/gBhKjT0sDx">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="SELECT * FROM MIfnRptFichaTecnicaIndicador(@pMIRId)">
+        <Column Name="UnidadResponsable" DataType="System.String"/>
+        <Column Name="ProgramaPresupuestario" DataType="System.String"/>
+        <Column Name="NombreIndicador" DataType="System.String"/>
+        <Column Name="ResumenNarrativo" DataType="System.String"/>
+        <Column Name="DefinicionIndicador" DataType="System.String"/>
+        <Column Name="TipoIndicadorId" DataType="System.Int32"/>
+        <Column Name="DimensionId" DataType="System.Int32"/>
+        <Column Name="NivelIndicadorId" DataType="System.Int32"/>
+        <Column Name="MetodoCalculo" DataType="System.String"/>
+        <Column Name="UnidadMedida" DataType="System.String"/>
+        <Column Name="FrecuenciaMedicion" DataType="System.String"/>
+        <Column Name="LineaBase" DataType="System.Decimal"/>
+        <Column Name="Meta" DataType="System.Decimal"/>
+        <Column Name="MedioVerificacion" DataType="System.String"/>
+        <Column Name="DescripcionVariables" DataType="System.String"/>
+        <Column Name="SentidoId" DataType="System.Int32"/>
+        <CommandParameter Name="@pMirId" DataType="8" Expression="[@pMIRId]" DefaultValue="0"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pMIRId" DataType="System.Int32"/>
+  </Dictionary>
+  <inherited Name="Page1">
+    <inherited Name="PageHeader1">
+      <inherited Name="Text3"/>
+      <inherited Name="Text2"/>
+      <inherited Name="Text1"/>
+      <inherited Name="Picture2"/>
+      <inherited Name="Text4"/>
+      <inherited Name="Text5"/>
+      <inherited Name="Text6"/>
+      <inherited Name="Text7"/>
+      <inherited Name="Text8" CanGrow="true"/>
+      <inherited Name="Line1"/>
+      <inherited Name="Text9" Top="122.85" Height="47.25"/>
+      <inherited Name="Text10"/>
+    </inherited>
+    <DataBand Name="Data1" ZOrder="0" Top="191.67" Width="740.5" Height="670.95" CanGrow="true" StartNewPage="true" DataSource="Table">
+      <TextObject Name="Text75" Left="9.45" Top="75.6" Width="718.2" Height="37.8" Border.Lines="All" CanGrow="true" Text="[Table.ProgramaPresupuestario]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text74" Left="9.45" Top="56.7" Width="718.2" Height="18.9" Border.Lines="All" Text="Nombre del Programa Presupuestario" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text69" Left="9.45" Top="132.3" Width="718.2" Height="18.9" Border.Lines="All" Fill.Color="Black" Text="DATOS GENERALES DEL INDICADOR" HorzAlign="Center" VertAlign="Center" Font="Arial, 9pt, style=Bold" TextFill.Color="White"/>
+      <TextObject Name="Text68" Left="9.45" Top="151.2" Width="718.2" Height="18.9" Border.Lines="All" Text="Nombre del Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text66" Left="638.43" Top="633.15" Width="89.21" Height="18.9" Border.Lines="All" Text="(     )" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text65" Left="548.47" Top="633.15" Width="89.96" Height="18.9" Border.Lines="All" Text="(     )" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text64" Left="458.51" Top="633.15" Width="89.96" Height="18.9" Border.Lines="All" Text="(     )" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text63" Left="368.55" Top="633.15" Width="89.96" Height="18.9" Border.Lines="All" Text="(     )" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text62" Left="189" Top="633.15" Width="179.55" Height="18.9" Border.Lines="All" Text="[IIf([Table.SentidoId] == 53, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text61" Left="638.43" Top="614.25" Width="89.21" Height="18.9" Border.Lines="All" Text="Crítico" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text60" Left="548.47" Top="614.25" Width="89.96" Height="18.9" Border.Lines="All" Text="Con Riesgo" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text59" Left="458.51" Top="614.25" Width="89.96" Height="18.9" Border.Lines="All" Text="Aceptable" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text58" Left="368.55" Top="614.25" Width="89.96" Height="18.9" Border.Lines="All" Text="No Aplica" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text57" Left="368.55" Top="595.35" Width="359.1" Height="18.9" Border.Lines="All" Text="Parámetros de Semaforización" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text55" Left="9.45" Top="633.15" Width="179.55" Height="18.9" Border.Lines="All" Text="[IIf([Table.SentidoId] == 52, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text54" Left="189" Top="614.25" Width="179.55" Height="18.9" Border.Lines="All" Text="Descendente" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text53" Left="9.45" Top="614.25" Width="179.55" Height="18.9" Border.Lines="All" Text="Ascendente" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text52" Left="9.45" Top="595.35" Width="359.1" Height="18.9" Border.Lines="All" Text="Sentido del Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text51" Left="9.45" Top="557.55" Width="718.2" Height="37.8" Border.Lines="All" CanGrow="true" Text="[Table.DescripcionVariables]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt" TextRenderType="HtmlTags"/>
+      <TextObject Name="Text50" Left="9.45" Top="538.65" Width="718.2" Height="18.9" Border.Lines="All" Text="Caracteristicas de las Variables del Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text49" Left="9.45" Top="500.85" Width="718.2" Height="37.8" Border.Lines="All" CanGrow="true" Text="[Table.MedioVerificacion]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text48" Left="9.45" Top="481.95" Width="718.2" Height="18.9" Border.Lines="All" Text="Médio de Verificación" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text47" Left="368.55" Top="463.05" Width="359.1" Height="18.9" Border.Lines="All" Text="[Table.Meta]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text46" Left="9.45" Top="463.05" Width="359.1" Height="18.9" Border.Lines="All" Text="[Table.LineaBase]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text45" Left="368.55" Top="444.15" Width="359.1" Height="18.9" Border.Lines="All" Text="Meta" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text44" Left="9.45" Top="444.15" Width="359.1" Height="18.9" Border.Lines="All" Text="Línea Base" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text43" Left="368.55" Top="425.25" Width="359.1" Height="18.9" Border.Lines="All" Text="[Table.FrecuenciaMedicion]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text42" Left="9.45" Top="425.25" Width="359.1" Height="18.9" Border.Lines="All" Text="[Table.UnidadMedida]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text41" Left="368.55" Top="406.35" Width="359.1" Height="18.9" Border.Lines="All" Text="Frecuencia de Medición" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text40" Left="9.45" Top="406.35" Width="359.1" Height="18.9" Border.Lines="All" Text="Unidad de Medida" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text39" Left="9.45" Top="368.55" Width="718.2" Height="37.8" Border.Lines="All" CanGrow="true" Text="[Table.MetodoCalculo]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt" TextRenderType="HtmlTags"/>
+      <TextObject Name="Text38" Left="9.45" Top="349.65" Width="718.2" Height="18.9" Border.Lines="All" Text="Método de Cálculo del Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text37" Left="667.17" Top="330.75" Width="60.48" Height="18.9" Border.Lines="All" Text="[IIf([Table.NivelIndicadorId] == 43, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text36" Left="601.02" Top="330.75" Width="66.15" Height="18.9" Border.Lines="All" Text="[IIf([Table.NivelIndicadorId] == 42, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text35" Left="546.21" Top="330.75" Width="54.81" Height="18.9" Border.Lines="All" Text="[IIf([Table.NivelIndicadorId] == 41, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text34" Left="491.4" Top="330.75" Width="54.81" Height="18.9" Border.Lines="All" Text="[IIf([Table.NivelIndicadorId] == 40, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text33" Left="430.92" Top="330.75" Width="60.48" Height="18.9" Border.Lines="All" Text="[IIf([Table.DimensionId] == 3, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text32" Left="372.33" Top="330.75" Width="58.59" Height="18.9" Border.Lines="All" Text="[IIf([Table.DimensionId] == 4, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text31" Left="313.74" Top="330.75" Width="58.59" Height="18.9" Border.Lines="All" Text="[IIf([Table.DimensionId] == 2, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text30" Left="255.15" Top="330.75" Width="58.59" Height="18.9" Border.Lines="All" Text="[IIf([Table.DimensionId] == 1, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text29" Left="667.17" Top="311.85" Width="60.48" Height="18.9" Border.Lines="All" Text="Actividad" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text28" Left="601.02" Top="311.85" Width="66.15" Height="18.9" Border.Lines="All" Text="Componente" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text27" Left="546.21" Top="311.85" Width="54.81" Height="18.9" Border.Lines="All" Text="Propósito" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text26" Left="491.4" Top="311.85" Width="54.81" Height="18.9" Border.Lines="All" Text="Fín" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text25" Left="430.92" Top="311.85" Width="60.48" Height="18.9" Border.Lines="All" Text="Economia" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text24" Left="372.33" Top="311.85" Width="58.59" Height="18.9" Border.Lines="All" Text="Calidad" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text23" Left="313.74" Top="311.85" Width="58.59" Height="18.9" Border.Lines="All" Text="Eficacia" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text22" Left="255.15" Top="311.85" Width="58.59" Height="18.9" Border.Lines="All" Text="Eficiencia" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text21" Left="132.3" Top="330.75" Width="122.85" Height="18.9" Border.Lines="All" Text="[IIf([Table.TipoIndicadorId] == 2, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text20" Left="9.45" Top="330.75" Width="122.85" Height="18.9" Border.Lines="All" Text="[IIf([Table.TipoIndicadorId] == 1, &quot;(  X  )&quot;, &quot;(     )&quot;)]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text19" Left="132.3" Top="311.85" Width="122.85" Height="18.9" Border.Lines="All" Text="Gestión" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text18" Left="9.45" Top="311.85" Width="122.85" Height="18.9" Border.Lines="All" Text="Estratégico" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text17" Left="491.4" Top="292.95" Width="236.25" Height="18.9" Border.Lines="All" Text="Nivel de Objetivo" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text16" Left="255.15" Top="292.95" Width="236.25" Height="18.9" Border.Lines="All" Text="Dimensión a Medir" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text15" Left="9.45" Top="292.95" Width="245.7" Height="18.9" Border.Lines="All" Text="Tipo de Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text14" Left="9.45" Top="264.6" Width="718.2" Height="28.35" Border.Lines="All" CanGrow="true" Text="[Table.DefinicionIndicador]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text13" Left="9.45" Top="245.7" Width="718.2" Height="18.9" Border.Lines="All" Text="Definición del Indicador" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text12" Left="9.45" Top="207.9" Width="718.2" Height="37.8" Border.Lines="All" CanGrow="true" Text="[Table.ResumenNarrativo]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text11" Left="9.45" Top="189" Width="718.2" Height="18.9" Border.Lines="All" Text="Resumen Narrativo" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text77" Left="9.45" Top="18.9" Width="718.2" Height="18.9" Border.Lines="All" Text="Unidad Responsable" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text78" Left="9.45" Top="170.1" Width="718.2" Height="18.9" Border.Lines="All" CanGrow="true" Text="[Table.NombreIndicador]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text80" Left="9.45" Top="37.8" Width="718.2" Height="18.9" Border.Lines="All" CanGrow="true" Text="[@pNombreEnte]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" ZOrder="-1" Top="865.28" Width="740.5" Height="37.8">
+      <TextObject Name="Text67" Left="604.8" Top="9.45" Width="122.85" Height="17.01" CanGrow="true" Text="[PageNofM]" HorzAlign="Right" Font="Arial, 8pt"/>
+    </PageFooterBand>
+  </inherited>
+</inherited>

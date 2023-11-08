@@ -1,0 +1,179 @@
+﻿@using RequisicionesAlmacen.Areas.Almacenes.Reportes.Models.ViewModel
+@using RequisicionesAlmacenBL.Entities
+@using RequisicionesAlmacenBL.Models.Mapeos
+@model ReporteExistenciasViewModel
+@using Newtonsoft.Json;
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@Html.Partial("_HeaderLayout", new ViewDataDictionary { { "NombreFicha", "Existencias de Inventario" }, { "Accion", "Reporte" }, { "Icono", "icon ion-clipboard" } })
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @using (Html.BeginForm())
+        {
+            using (Html.DevExtreme().ValidationGroup("dxValidationGroup"))
+            {
+                @Html.AntiForgeryToken();
+
+                @(Html.DevExtreme().Form<ARrptExistencias>()
+                    .ID("dxForm")
+                    .FormData(Model.Reporte)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .RequiredMark("(*)")
+                    .ScreenByWidth(@<text> function(width) {} </text>)
+                    .Items(
+                        items =>
+                        {
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup =>
+                                {
+                                    itemGroup.AddSimple()
+                                        .Label(label => label.Text("Filtros").ShowColon(false))
+                                        .ColSpan(12)
+                                        .CssClass("h6 br-section-label");
+                                }
+                            );
+
+                            items.AddGroup().ColCount(12).Items(
+                                itemGroup0 =>
+                                {
+                                    itemGroup0.AddGroup().ColSpan(12).Items(
+                                        itemGroup =>
+                                        {
+                                            itemGroup.AddGroup().ColCount(12).Items(
+                                                itemGroup2 =>
+                                                {
+                                                    itemGroup2.AddSimpleFor(m => m.Id)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboTipoReporte")
+                                                            .DataSource(Model.ListTiposReporte)
+                                                            .ValueExpr("Id")
+                                                            .DisplayExpr("Value")
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.UnidadAdministrativaId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboUnidadAdministrativa")
+                                                            .DataSource(Model.ListUnidadesAdministrativas)
+                                                            .ValueExpr("DependenciaId")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.DependenciaId + ' - ' + e.Nombre : null; } "))
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.ProyectoId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboProyecto")
+                                                            .DataSource(Model.ListProyectos)
+                                                            .ValueExpr("ProyectoId")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.ProyectoId + ' - ' + e.Nombre : null; } "))
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.FuenteFinanciamientoId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboFuenteFinanciamiento")
+                                                            .DataSource(Model.ListFuentesFinanciamiento)
+                                                            .ValueExpr("RamoId")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.RamoId + ' - ' + e.Nombre : null; } "))
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.TipoGastoId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboTipoGasto")
+                                                            .DataSource(Model.ListTiposGasto)
+                                                            .ValueExpr("TipoGastoId")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.TipoGastoId + ' - ' + e.Nombre : null; } "))
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+
+                                                    itemGroup2.AddSimpleFor(m => m.ObjetoGastoId)
+                                                        .ColSpan(4)
+                                                        .CssClass("tx-bold")
+                                                        .Editor(e => e.SelectBox()
+                                                            .ID("dxCboObjetoGasto")
+                                                            .DataSource(Model.ListObjetosGasto)
+                                                            .ValueExpr("ObjetoGastoId")
+                                                            .DisplayExpr(new JS("(e) => { return e ? e.ObjetoGastoId + ' - ' + e.Nombre : null; } "))
+                                                            .SearchEnabled(true)
+                                                            .ShowClearButton(true)
+                                                            .SearchMode(DropDownSearchMode.Contains)
+                                                            .NoDataText("Sin registros que mostrar")
+                                                            .Placeholder("Selecciona una opción")
+                                                            .OnValueChanged("setCambios"));
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            ).CssClass("form-layout form-layout-1");
+                        }
+                    )
+                )
+
+                <div class="form-layout-footer pd-t-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                @(Html.DevExtreme()
+                                    .Button()
+                                    .ID("dxButtonGuardaCambios")
+                                    .Text("Aceptar")
+                                    .ElementAttr("class", "btn-success btn-oblong btn-width-100 mg-t-15 mg-l-5")
+                                    .OnClick("guardaCambios")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    
+    <div class="row pd-t-10">
+        <div class="col-12">
+            <div id="reporte">
+                @ViewBag.WebReport
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOADER -->
+@Html.Partial("~/Views/Shared/_LoadPanel.cshtml")
+
+<script src="~/Scripts/mapeos/control_maestro_mapeo.js"></script>
+<script src="~/Areas/Almacenes/Reportes/Views/ReporteExistencias/ReporteExistencias.js"></script>
+
+<script>DevExpress.localization.locale(navigator.language);</script>

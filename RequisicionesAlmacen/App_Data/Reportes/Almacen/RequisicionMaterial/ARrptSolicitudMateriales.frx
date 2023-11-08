@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<inherited BaseReport="..\..\Encabezados\EncabezadoHorizontal.frx" BaseReportAbsolutePath="C:\Users\elias\OneDrive\Documentos\indetec-almacenes-requisicion-asp-net-mvc\RequisicionesAlmacen\App_Data\Reportes\Encabezados\EncabezadoHorizontal.frx" ScriptLanguage="CSharp" ReportInfo.Created="08/18/2021 11:33:22" ReportInfo.Modified="11/15/2022 11:51:43" ReportInfo.CreatorVersion="2022.1.14.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHmUxX4WG48H9HdUBoWojdIt0OXisRvf3hZwzoKcjGiJsSbLVrIJtt18pAQNfnCRM+EuIrnf5dkTbvjPB4S2Jg/e8jNiegkDvW3MhXGaemq4BlsgsB5RZIHD0sNpiB0cRnfptrFrxln1Oq2bx5yNta+1A==">
+      <TableDataSource Name="Table" Alias="ARfnRptSolicitudMateriales" DataType="System.Int32" Enabled="true" SelectCommand="SELECT *&#13;&#10;FROM ARfnRptSolicitudMateriales (@pRequisicionId)&#13;&#10;ORDER BY ProductoId">
+        <Column Name="AreaSolicitante" DataType="System.String"/>
+        <Column Name="ProyectoPresupuestario" DataType="System.String"/>
+        <Column Name="ProductoId" DataType="System.String"/>
+        <Column Name="UnidadMedida" DataType="System.String"/>
+        <Column Name="Descripcion" DataType="System.String"/>
+        <Column Name="CantidadSolicitada" DataType="System.Decimal"/>
+        <Column Name="CantidadEntregada" DataType="System.Decimal"/>
+        <Column Name="Observaciones" DataType="System.String"/>
+        <Column Name="SolicitadoPor" DataType="System.String"/>
+        <Column Name="FechaSolicitada" DataType="System.String"/>
+        <Column Name="AutorizadoPor" DataType="System.String"/>
+        <Column Name="FechaAutorizada" DataType="System.String"/>
+        <Column Name="EntregadoPor" DataType="System.String"/>
+        <Column Name="FechaEntregada" DataType="System.String"/>
+        <Column Name="RecibidoPor" DataType="System.String"/>
+        <Column Name="FechaRecibida" DataType="System.String"/>
+        <CommandParameter Name="@pRequisicionId" DataType="8" Expression="[@pRequisicionId]" DefaultValue="0"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pRequisicionId" DataType="System.Int32" Expression="0"/>
+  </Dictionary>
+  <inherited Name="Page1">
+    <inherited Name="PageHeader1" Height="226.8">
+      <inherited Name="Text3"/>
+      <inherited Name="Text2"/>
+      <inherited Name="Text1"/>
+      <inherited Name="Picture2"/>
+      <inherited Name="Text10"/>
+      <inherited Name="Text8"/>
+      <inherited Name="Text4"/>
+      <inherited Name="Text5"/>
+      <inherited Name="Line1"/>
+      <inherited Name="Text9"/>
+      <inherited Name="Text6"/>
+      <inherited Name="Text7"/>
+      <TextObject Name="Text51" ZOrder="12" Left="9.45" Top="189" Width="147.42" Height="18.9" Text="Proyecto Presupuestario:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text25" ZOrder="13" Left="156.87" Top="189" Width="869.4" Height="18.9" Text="[ARfnRptSolicitudMateriales.ProyectoPresupuestario]" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text49" ZOrder="14" Left="9.45" Top="170.1" Width="147.42" Height="18.9" Text="Área Solicitante:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text50" ZOrder="15" Left="156.87" Top="170.1" Width="869.4" Height="18.9" Text="[ARfnRptSolicitudMateriales.AreaSolicitante]" VertAlign="Center" Font="Arial, 8pt"/>
+    </inherited>
+    <ColumnHeaderBand Name="ColumnHeader1" ZOrder="-1" Top="228.93" Width="1268.57" Height="34.02">
+      <TextObject Name="Text32" Left="642.6" Top="4.29" Width="113.4" Height="24.57" Text="CANTIDAD&#13;&#10;SOLICITADA" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text35" Left="765.45" Top="4.29" Width="113.4" Height="24.57" Text="CANTIDAD&#13;&#10;ENTREGADA" HorzAlign="Right" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text36" Left="888.3" Top="4.29" Width="368.55" Height="24.57" Text="OBSERVACIONES" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <LineObject Name="Line3" Left="9.45" Width="1247.4"/>
+      <TextObject Name="Text45" Left="9.45" Top="4.45" Width="94.5" Height="24.57" Text="CLAVE&#13;&#10;PRODUCTO" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text46" Left="113.4" Top="4.29" Width="122.85" Height="24.57" Text="UNIDAD&#13;&#10;DE MEDIDA" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text47" Left="245.7" Top="4.29" Width="387.45" Height="24.57" Text="DESCRIPCIÓN" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <LineObject Name="Line2" Left="9.45" Top="34.02" Width="1247.4"/>
+    </ColumnHeaderBand>
+    <DataBand Name="Data1" ZOrder="0" Top="265.09" Width="1268.57" Height="18.9" CanGrow="true" DataSource="Table">
+      <TextObject Name="Text39" Left="245.7" Width="387.45" Height="17.01" CanGrow="true" Text="[ARfnRptSolicitudMateriales.Descripcion]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text42" Left="765.45" Width="113.4" Height="17.01" Text="[ARfnRptSolicitudMateriales.CantidadEntregada]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Arial, 7pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text38" Left="113.4" Width="122.85" Height="17.01" CanGrow="true" Text="[ARfnRptSolicitudMateriales.UnidadMedida]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text40" Left="642.6" Width="113.4" Height="17.01" Text="[ARfnRptSolicitudMateriales.CantidadSolicitada]" Format="Custom" Format.Format="#,##0.00##" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <LineObject Name="Line4" Left="9.45" Top="18.9" Width="1247.4" Border.Style="Dash"/>
+      <TextObject Name="Text48" Left="888.3" Width="368.55" Height="17.01" CanGrow="true" Text="[ARfnRptSolicitudMateriales.Observaciones]" VertAlign="Center" Font="Arial, 7pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text37" Left="9.45" Width="94.5" Height="17.01" CanGrow="true" Text="[ARfnRptSolicitudMateriales.ProductoId]" VertAlign="Center" Font="Arial, 7pt"/>
+    </DataBand>
+    <ReportSummaryBand Name="ReportSummary1" ZOrder="-1" Top="286.12" Width="1268.57" Height="113.4">
+      <TextObject Name="Text68" Left="425.25" Top="85.05" Width="94.5" Height="15.12" Text="Recibido Por:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text69" Left="529.2" Top="85.05" Width="368.55" Height="15.12" Text="[ARfnRptSolicitudMateriales.RecibidoPor]" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text70" Left="907.2" Top="85.05" Width="207.9" Height="15.12" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text71" Left="1124.55" Top="85.05" Width="132.3" Height="15.12" Text="[ARfnRptSolicitudMateriales.FechaRecibida]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text64" Left="425.25" Top="66.15" Width="94.5" Height="15.12" Text="Entregado Por:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text65" Left="529.2" Top="66.15" Width="368.55" Height="15.12" Text="[ARfnRptSolicitudMateriales.EntregadoPor]" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text66" Left="907.2" Top="66.15" Width="207.9" Height="15.12" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text67" Left="1124.55" Top="66.15" Width="132.3" Height="15.12" Text="[ARfnRptSolicitudMateriales.FechaEntregada]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text60" Left="425.25" Top="47.25" Width="94.5" Height="15.12" Text="Autorizado Por:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text61" Left="529.2" Top="47.25" Width="368.55" Height="15.12" Text="[ARfnRptSolicitudMateriales.AutorizadoPor]" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text62" Left="907.2" Top="47.25" Width="207.9" Height="15.12" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text63" Left="1124.55" Top="47.25" Width="132.3" Height="15.12" Text="[ARfnRptSolicitudMateriales.FechaAutorizada]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text56" Left="425.25" Top="28.35" Width="94.5" Height="15.12" Text="Solicitado Por:" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text57" Left="529.2" Top="28.35" Width="368.55" Height="15.12" Text="[ARfnRptSolicitudMateriales.SolicitadoPor]" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text58" Left="907.2" Top="28.35" Width="207.9" Height="15.12" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text59" Left="1124.55" Top="28.35" Width="132.3" Height="15.12" Text="[ARfnRptSolicitudMateriales.FechaSolicitada]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt"/>
+      <TextObject Name="Text72" Left="907.2" Top="9.45" Width="207.9" Height="15.12" Text="Firma" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text52" Left="1124.55" Top="9.45" Width="132.3" Height="15.12" Text="Fecha dd/mm/aa" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text53" Left="529.2" Top="9.45" Width="368.55" Height="15.12" Text="Nombre, Apellido Paterno y Materno" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+    </ReportSummaryBand>
+    <inherited Name="PageFooter1" Top="401.65">
+      <inherited Name="Text12"/>
+    </inherited>
+  </inherited>
+</inherited>

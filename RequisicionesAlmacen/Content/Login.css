@@ -1,0 +1,150 @@
+﻿body {
+    background-image: url('assets/backgrounds/back.jpg');
+    background-size: cover;
+}
+
+.btn-login {
+    width: 100%;
+}
+
+section#formHolder {
+    max-width: 1100px;
+    width: 100%;
+    padding: 50px 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.brand {
+    padding: 20px;
+    color: #fff;
+    min-height: 540px;
+    position: relative;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.6s cubic-bezier(1, -0.375, 0.285, 0.995);
+    z-index: 9999;
+}
+
+    .brand::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(29, 41, 57, 0.85);
+        z-index: -1;
+    }
+
+    .brand .heading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        transition: all 0.6s;
+        width: 100%;
+        padding: 30px;
+    }
+
+        .brand .heading .logo {
+            margin-bottom: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .brand .heading p {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+.form {
+    position: relative;
+}
+
+    .form .form-peice {
+        background: #fff;
+        min-height: 480px;
+        margin-top: 30px;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        color: #1d2939;
+        padding: 30px 0 60px;
+        transition: all 0.9s cubic-bezier(1, -0.375, 0.285, 0.995);
+        position: absolute;
+        top: 0;
+        left: -30%;
+        width: 130%;
+        overflow: hidden;
+    }
+
+        .form .form-peice.switched {
+            transform: translateX(-100%);
+            width: 100%;
+            left: 0;
+        }
+
+    .form form {
+        padding: 0 40px;
+        margin: 0;
+        width: 70%;
+        position: absolute;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+    }
+
+@media (max-width:575px) {
+    .container {
+        overflow: hidden;
+    }
+
+    section#formHolder {
+        padding: 0;
+    }
+
+        section#formHolder div.brand {
+            min-height: 250px !important;
+        }
+
+        section#formHolder .form {
+            width: 80%;
+            min-height: 430px;
+            margin: auto;
+        }
+
+            section#formHolder .form .form-peice {
+                margin: 0;
+                top: -10%;
+                left: 0;
+                width: 100% !important;
+                transition: all 0.5s ease-in-out;
+            }
+
+                section#formHolder .form .form-peice.switched {
+                    transform: translateY(-100%);
+                    width: 100%;
+                    left: 0;
+                }
+
+                section#formHolder .form .form-peice > form {
+                    width: 100% !important;
+                    padding: 60px;
+                    left: 50%;
+                }
+
+                section#formHolder .form .form-peice.switched {
+                    height: 1000px !important;
+                }
+}
+
+@media (max-width: 480px) {
+    section#formHolder .form {
+        width: 100%;
+    }
+}

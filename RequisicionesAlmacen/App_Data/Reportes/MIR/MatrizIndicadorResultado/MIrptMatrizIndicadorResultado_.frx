@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="08/16/2021 15:48:57" ReportInfo.Modified="11/23/2021 17:11:59" ReportInfo.CreatorVersion="2021.2.13.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+    /*private void TablePlanDesarrolloEstructura_ManualBuild(object sender, EventArgs e)
+    {
+      // get the data source by((String)Report.GetColumnValue(&quot;MIspRptLibroConsultaMatrizIndicadorResultado.PoblacionObjetivo&quot;)) its name
+      DataSourceBase rowData = Report.GetDataSource(&quot;MIspRptLibroConsultaPlanDesarrolloEstructura&quot;);
+      // init the data source
+      rowData.Init();
+      
+      // print the table body  
+      TablePlanDesarrolloEstructura.PrintRow(0);
+      TablePlanDesarrolloEstructura.PrintColumns();
+                      
+      // now enumerate the data source and print the table body
+      while (rowData.HasMoreRows)
+      {
+        // print the table body  
+        TablePlanDesarrolloEstructura.PrintRow(1);
+        TablePlanDesarrolloEstructura.PrintColumns();
+        
+        // go next data source row
+        rowData.Next();
+      } 
+    }*/
+    
+    private void TableMatrizIndicadorResultadoIndicador_ManualBuild(object sender, EventArgs e)
+    {
+      // get the data source by its name
+      DataSourceBase rowData = Report.GetDataSource(&quot;MIspRptLibroConsultaMatrizIndicadorResultadoIndicador&quot;);
+      // init the data source
+      rowData.Init();
+      
+      // print the first table row - it is a header
+      TableMatrizIndicadorResultadoIndicador.PrintRow(0);
+      TableMatrizIndicadorResultadoIndicador.PrintColumns();
+      TableMatrizIndicadorResultadoIndicador.PrintRow(1);
+      TableMatrizIndicadorResultadoIndicador.PrintColumns();
+      
+      // now enumerate the data source and print the table body
+      while (rowData.HasMoreRows)
+      {
+        // print the table body  
+        TableMatrizIndicadorResultadoIndicador.PrintRow(2);
+        TableMatrizIndicadorResultadoIndicador.PrintColumns();
+        
+        // go next data source row
+        rowData.Next();
+      } 
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM7gJFg/iaLrqMhRfGy5lGihzfNiszwfocybKPhj2X2yhBvZVEIpLjlNWwCy+wcO6HQy7zJYeYIrOZaDjdl7qNRbZzHC/VyTZ4F4RCrsM9Br8NzhiSUN9A2p6APDh6HD/7IjHq3VlK3mb9qoQEfIxOmTZHV4L81oxc7PnXlC9QCPZVKlz6Lu+iyX6GMhJH9RGB3sUX6siP3qHFuCnlQNkrQ==">
+      <TableDataSource Name="Table" Alias="MIspRptLibroConsultaMatrizIndicadorResultadoIndicador" DataType="System.Int32" Enabled="true" SelectCommand="EXEC MIspRptLibroConsultaMatrizIndicadorResultadoIndicador @pMIRId">
+        <Column Name="Nombre" DataType="System.String"/>
+        <Column Name="ResumenNarrativo" DataType="System.String"/>
+        <Column Name="NombreIndicador" DataType="System.String"/>
+        <Column Name="Formula" DataType="System.String"/>
+        <Column Name="TipoIndicador" DataType="System.String"/>
+        <Column Name="Dimension" DataType="System.String"/>
+        <Column Name="UnidadMedida" DataType="System.String"/>
+        <Column Name="FrecuenciaMedicion" DataType="System.String"/>
+        <Column Name="ValorBase" DataType="System.Decimal"/>
+        <Column Name="Sentido" DataType="System.String"/>
+        <Column Name="Meta" DataType="System.Decimal"/>
+        <Column Name="MedioVerificacion" DataType="System.String"/>
+        <Column Name="FuenteInformacion" DataType="System.String"/>
+        <CommandParameter Name="@pMIRId" DataType="8" Expression="[@pMIRId]" DefaultValue="0"/>
+      </TableDataSource>
+      <TableDataSource Name="Table2" Alias="MIspRptLibroConsultaPlanDesarrolloEstructura" DataType="System.Int32" Enabled="true" SelectCommand="EXEC MIspRptLibroConsultaPlanDesarrolloEstructura @pPlanDesarrolloEstructuraId">
+        <Column Name="NombreNivel" DataType="System.String"/>
+        <Column Name="PlanDesarrolloEstructuraId" DataType="System.Int32"/>
+        <Column Name="PlanDesarrolloId" DataType="System.Int32"/>
+        <Column Name="EstructuraPadreId" DataType="System.Int32"/>
+        <Column Name="Nombre" DataType="System.String"/>
+        <Column Name="Etiqueta" DataType="System.String"/>
+        <Column Name="Orden" DataType="System.Int32"/>
+        <Column Name="EstatusId" DataType="System.Int32"/>
+        <Column Name="FechaCreacion" DataType="System.DateTime"/>
+        <Column Name="CreadoPorId" DataType="System.Int32"/>
+        <Column Name="FechaUltimaModificacion" DataType="System.DateTime"/>
+        <Column Name="ModificadoPorId" DataType="System.Int32"/>
+        <Column Name="Timestamp" DataType="System.Byte[]" BindableControl="Picture"/>
+        <CommandParameter Name="@pPlanDesarrolloEstructuraId" DataType="8" Expression="[@pPlanDesarrolloEstructuraId]" DefaultValue="0"/>
+      </TableDataSource>
+      <TableDataSource Name="Table3" Alias="MIspRptLibroConsultaMatrizIndicadorResultado" DataType="System.Int32" Enabled="true" SelectCommand="EXEC MIspRptLibroConsultaMatrizIndicadorResultado @pMIRId">
+        <Column Name="MIRId" DataType="System.Int32"/>
+        <Column Name="Codigo" DataType="System.String"/>
+        <Column Name="Ejercicio" DataType="System.String"/>
+        <Column Name="PlanDesarrolloId" DataType="System.Int32"/>
+        <Column Name="PoblacionObjetivo" DataType="System.String"/>
+        <Column Name="ProgramaPresupuestarioId" DataType="System.String"/>
+        <Column Name="FechaFinConfiguracion" DataType="System.DateTime"/>
+        <Column Name="PlanDesarrolloEstructuraId" DataType="System.Int32"/>
+        <Column Name="EstatusId" DataType="System.Int32"/>
+        <Column Name="FechaCreacion" DataType="System.DateTime"/>
+        <Column Name="CreadoPorId" DataType="System.Int32"/>
+        <Column Name="FechaUltimaModificacion" DataType="System.DateTime"/>
+        <Column Name="ModificadoPorId" DataType="System.Int32"/>
+        <Column Name="Timestamp" DataType="System.Byte[]" BindableControl="Picture"/>
+        <Column Name="ProgramaPresupuestario" DataType="System.String"/>
+        <CommandParameter Name="@pMIRId" DataType="8" Expression="[@pMIRId]" DefaultValue="0"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@pMIRId" DataType="System.Int32"/>
+    <Parameter Name="@pPlanDesarrolloEstructuraId" DataType="System.Int32"/>
+    <Parameter Name="@pNombreEnte" DataType="System.String"/>
+    <Parameter Name="@pEstado" DataType="System.String"/>
+    <Parameter Name="@pTituloReporte" DataType="System.String"/>
+    <Parameter Name="@pRutaImagen" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="355.6" PaperHeight="215.9" RawPaperSize="5" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1268.57" Height="94.5">
+      <TextObject Name="Text4" Left="9.45" Top="9.45" Width="1247.4" Height="18.9" Text="[@pNombreEnte]" HorzAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text5" Left="9.45" Top="37.8" Width="1247.4" Height="18.9" Text="[@pEstado]" HorzAlign="Center" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text3" Left="9.45" Top="66.15" Width="1247.4" Height="18.9" Text="[@pTituloReporte]" HorzAlign="Center" Font="Arial, 10pt"/>
+      <PictureObject Name="Picture2" Left="9.45" Top="9.45" Width="103.95" Height="75.6" ImageFormat="Png" Image="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"/>
+    </ReportTitleBand>
+    <DataBand Name="DataMatrizIndicadorResultado" Top="128.29" Width="1268.57" Height="56.7" Border.Lines="Left, Right">
+      <TableObject Name="TableMatrizIndicadorResultado" Width="1268.57" Height="56.7" Dock="Fill">
+        <TableColumn Name="Column22" Width="213.74"/>
+        <TableColumn Name="Column23" Width="1054.83"/>
+        <TableRow Name="Row12" AutoSize="true">
+          <TableCell Name="Cell78" Text="Programa: " AutoShrink="FontWidth" Font="Arial, 10pt"/>
+          <TableCell Name="Cell79" Text="[MIspRptLibroConsultaMatrizIndicadorResultado.ProgramaPresupuestario]" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row13">
+          <TableCell Name="Cell83" Text="Unidad Responsable del Gasto:" Font="Arial, 10pt"/>
+          <TableCell Name="Cell84" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row14">
+          <TableCell Name="Cell88" Text="Población Objetivo:" Font="Arial, 10pt"/>
+          <TableCell Name="Cell89" Text="[MIspRptLibroConsultaMatrizIndicadorResultado.PoblacionObjetivo]" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader2" Top="97.22" Width="1268.57" Height="28.35" Border.Lines="Left, Right, Top">
+        <TextObject Name="Text1" Width="1268.57" Height="28.35" Dock="Fill" Text="IDENTIFICACIÓN DEL PROGRAMA" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      </DataHeaderBand>
+      <DataFooterBand Name="DataFooter2" Top="187.71" Width="1268.57" Height="9.45" Border.Lines="Left, Right, Bottom"/>
+    </DataBand>
+    <DataBand Name="DataPlanDesarrollo" Top="230.96" Width="1268.57" Height="18.9" Border.Lines="Left, Right" DataSource="Table2">
+      <TextObject Name="Text7" Width="1268.57" Height="18.9" Dock="Fill" Text="[MIspRptLibroConsultaPlanDesarrolloEstructura.NombreNivel]" Font="Arial, 10pt"/>
+      <DataHeaderBand Name="DataHeader1" Top="199.88" Width="1268.57" Height="28.35" Border.Lines="Left, Right">
+        <TextObject Name="Text6" Width="1268.57" Height="28.35" Dock="Fill" Text="ALINEACIÓN GENERAL PLAN DE DESARROLLO" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      </DataHeaderBand>
+      <DataFooterBand Name="DataFooter1" Top="252.58" Width="1268.57" Height="9.45" Border.Lines="Left, Right, Bottom"/>
+    </DataBand>
+    <DataBand Name="DataMatrizIndicadorResultadoIndicador" Top="264.75" Width="1268.57" Height="85.05">
+      <TableObject Name="TableMatrizIndicadorResultadoIndicador" Width="1268.56" Height="85.05" Border.Lines="All" ManualBuildEvent="TableMatrizIndicadorResultadoIndicador_ManualBuild">
+        <TableColumn Name="Column6" Width="131.02"/>
+        <TableColumn Name="Column7" Width="93.22"/>
+        <TableColumn Name="Column8" Width="93.22"/>
+        <TableColumn Name="Column9" Width="93.22"/>
+        <TableColumn Name="Column10" Width="93.22"/>
+        <TableColumn Name="Column11" Width="93.22"/>
+        <TableColumn Name="Column12" Width="93.22"/>
+        <TableColumn Name="Column13" Width="93.22"/>
+        <TableColumn Name="Column14" Width="64.87"/>
+        <TableColumn Name="Column15" Width="83.77"/>
+        <TableColumn Name="Column16" Width="64.87"/>
+        <TableColumn Name="Column17" Width="131.02"/>
+        <TableColumn Name="Column18" Width="140.47"/>
+        <TableRow Name="Row6" Height="31.5">
+          <TableCell Name="Cell26" Border.Lines="All" Text="RESUMEN NARRATIVO" HorzAlign="Center" VertAlign="Center" Font="Arial, 9.75pt, style=Bold" ColSpan="2" RowSpan="2"/>
+          <TableCell Name="Cell27" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" Text="INDICADORES" HorzAlign="Center" VertAlign="Center" Font="Arial, 9.75pt, style=Bold" ColSpan="8"/>
+          <TableCell Name="Cell29" Font="Arial, 10pt"/>
+          <TableCell Name="Cell30" Font="Arial, 10pt"/>
+          <TableCell Name="Cell51" Font="Arial, 10pt"/>
+          <TableCell Name="Cell52" Font="Arial, 10pt"/>
+          <TableCell Name="Cell53" Font="Arial, 10pt"/>
+          <TableCell Name="Cell54" Font="Arial, 10pt"/>
+          <TableCell Name="Cell55" Font="Arial, 10pt"/>
+          <TableCell Name="Cell56" Border.Lines="All" Text="METAS" HorzAlign="Center" VertAlign="Center" Font="Arial, 9.75pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell57" Border.Lines="All" Text="MEDIOS DE VERIFICACIÓN" HorzAlign="Center" VertAlign="Center" Font="Arial, 9.75pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell58" Border.Lines="All" Text="FUENTES DE INFORMACIÓN" HorzAlign="Center" VertAlign="Center" Font="Arial, 9.75pt, style=Bold" RowSpan="2"/>
+        </TableRow>
+        <TableRow Name="Row7" Height="31.5">
+          <TableCell Name="Cell31" Font="Arial, 10pt"/>
+          <TableCell Name="Cell32" Font="Arial, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="All" Text="NOMBRE DEL INDICADOR" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell34" Border.Lines="All" Text="FORMULA" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell35" Border.Lines="All" Text="TIPO DE INDICADOR" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell59" Border.Lines="All" Text="DIMENSIÓN" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell60" Border.Lines="All" Text="UNIDAD DE MEDIDA" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell61" Border.Lines="All" Text="FRECUENCIA" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell62" Border.Lines="All" Text="LINEA BASE" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell63" Border.Lines="All" Text="SENTIDO" HorzAlign="Center" VertAlign="Center" Font="Arial, 6.75pt, style=Bold"/>
+          <TableCell Name="Cell64" Font="Arial, 10pt"/>
+          <TableCell Name="Cell65" Font="Arial, 10pt"/>
+          <TableCell Name="Cell66" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row8" Height="22.05" AutoSize="true">
+          <TableCell Name="Cell36" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.Nombre]" Font="Arial, 10pt" Clip="false"/>
+          <TableCell Name="Cell37" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.ResumenNarrativo]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell38" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.NombreIndicador]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell39" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.Formula]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell40" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.TipoIndicador]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell67" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.Dimension]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell68" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.UnidadMedida]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell69" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.FrecuenciaMedicion]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell70" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.ValorBase]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell71" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.Sentido]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell72" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.Meta]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell73" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.MedioVerificacion]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell74" Border.Lines="All" Text="[MIspRptLibroConsultaMatrizIndicadorResultadoIndicador.FuenteInformacion]" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>
