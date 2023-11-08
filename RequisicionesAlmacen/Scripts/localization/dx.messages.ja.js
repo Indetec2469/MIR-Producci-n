@@ -1,31 +1,30 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
-* Version: 20.2.4
-* Build date: Tue Dec 01 2020
+* Version: 23.1.3
+* Build date: Fri Jun 09 2023
 *
-* Copyright (c) 2012 - 2020 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
 ! function(root, factory) {
     if ("function" === typeof define && define.amd) {
-        define(function(require) {
+        define((function(require) {
             factory(require("devextreme/localization"))
-        })
+        }))
+    } else if ("object" === typeof module && module.exports) {
+        factory(require("devextreme/localization"))
     } else {
-        if ("object" === typeof module && module.exports) {
-            factory(require("devextreme/localization"))
-        } else {
-            factory(DevExpress.localization)
-        }
+        factory(DevExpress.localization)
     }
-}(this, function(localization) {
+}(0, (function(localization) {
     localization.loadMessages({
         ja: {
             Yes: "\u306f\u3044",
             No: "\u3044\u3044\u3048",
             Cancel: "\u30ad\u30e3\u30f3\u30bb\u30eb",
+            Close: "\u9589\u3058\u308b",
             Clear: "\u30af\u30ea\u30a2",
             Done: "\u5b8c\u4e86",
             Loading: "\u8aad\u307f\u8fbc\u307f\u4e2d\u2026",
@@ -71,6 +70,12 @@
             "dxDateBox-simulatedDataPickerTitleDate": "\u65e5\u4ed8\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "dxDateBox-simulatedDataPickerTitleDateTime": "\u65e5\u4ed8\u3068\u6642\u523b\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "dxDateBox-validation-datetime": "\u65e5\u4ed8\u307e\u305f\u306f\u6642\u523b\u3092\u6307\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+            "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+            "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+            "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+            "dxDateRangeBox-startDateLabel": "\u958b\u59cb\u6642\u523b",
+            "dxDateRangeBox-endDateLabel": "\u7d42\u4e86\u6642\u523b",
             "dxFileUploader-selectFile": "\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u629e",
             "dxFileUploader-dropFile": "\u307e\u305f\u306f\u30d5\u30a1\u30a4\u30eb\u3092\u3053\u3061\u3089\u306b\u30c9\u30ed\u30c3\u30d7\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "dxFileUploader-bytes": "\u30d0\u30a4\u30c8",
@@ -93,6 +98,10 @@
             "dxForm-requiredMessage": "{0} \u306f\u5fc5\u9808\u30d5\u30a3\u30fc\u30eb\u30c9\u3067\u3059",
             "dxNumberBox-invalidValueMessage": "\u6570\u5024\u3092\u6307\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "dxNumberBox-noDataText": "\u30c7\u30fc\u30bf\u304c\u3042\u308a\u307e\u305b\u3093",
+            "dxDataGrid-emptyHeaderWithColumnChooserText": "{0} \u3092\u4f7f\u7528\u3057\u3066\u5217\u3092\u8868\u793a\u3057\u3066\u304f\u3060\u3055\u3044",
+            "dxDataGrid-emptyHeaderWithGroupPanelText": "\u30b0\u30eb\u30fc\u30d7\u30d1\u30cd\u30eb\u304b\u3089\u3053\u3053\u306b\u5217\u3092\u30c9\u30e9\u30c3\u30b0\u3057\u3066\u304f\u3060\u3055\u3044",
+            "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "{0} \u3092\u4f7f\u7528\u3059\u308b\u304b\u3001\u30b0\u30eb\u30fc\u30d7 \u30d1\u30cd\u30eb\u304b\u3089\u5217\u3092\u30c9\u30e9\u30c3\u30b0\u3057\u3066\u304f\u3060\u3055\u3044",
+            "dxDataGrid-emptyHeaderColumnChooserText": "\u5217\u306e\u9078\u629e",
             "dxDataGrid-columnChooserTitle": "\u5217\u306e\u9078\u629e",
             "dxDataGrid-columnChooserEmptyText": "\u96a0\u3057\u305f\u3044\u5217\u306e\u30d8\u30c3\u30c0\u30fc\u3092\u3053\u3053\u306b\u30c9\u30e9\u30c3\u30b0\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "dxDataGrid-groupContinuesMessage": "\u6b21\u30da\u30fc\u30b8\u306b\u7d9a\u304f",
@@ -125,6 +134,7 @@
             "dxDataGrid-filterRowOperationBetween": "\uff5e\u304b\u3089\uff5e\u306e\u9593",
             "dxDataGrid-filterRowOperationBetweenStartText": "\u958b\u59cb\u5024",
             "dxDataGrid-filterRowOperationBetweenEndText": "\u7d42\u4e86\u5024",
+            "dxDataGrid-ariaSearchBox": "Search box",
             "dxDataGrid-applyFilterText": "\u30d5\u30a3\u30eb\u30bf\u30fc\u3092\u9069\u7528",
             "dxDataGrid-trueText": "true",
             "dxDataGrid-falseText": "false",
@@ -152,11 +162,15 @@
             "dxDataGrid-exporting": "\u30a8\u30af\u30b9\u30dd\u30fc\u30c8...",
             "dxDataGrid-excelFormat": "Excel \u30d5\u30a1\u30a4\u30eb",
             "dxDataGrid-selectedRows": "\u9078\u629e\u3055\u308c\u305f\u884c",
-            "dxDataGrid-exportAll": "\u3059\u3079\u3066\u306e\u30c7\u30fc\u30bf\u3092\u30a8\u30af\u30b9\u30dd\u30fc\u30c8",
-            "dxDataGrid-exportSelectedRows": "\u9078\u629e\u3055\u308c\u305f\u884c\u3092\u30a8\u30af\u30b9\u30dd\u30fc\u30c8",
+            "dxDataGrid-exportSelectedRows": "\u884c\u306e\u30a8\u30af\u30b9\u30dd\u30fc\u30c8\u5148\uff1a{0}",
+            "dxDataGrid-exportAll": "\u3059\u3079\u3066\u306e\u30c7\u30fc\u30bf\u306e\u30a8\u30af\u30b9\u30dd\u30fc\u30c8\u5148\uff1a{0}",
+            "dxDataGrid-headerFilterLabel": "\u30d5\u30a3\u30eb\u30bf\u30aa\u30d7\u30b7\u30e7\u30f3",
+            "dxDataGrid-headerFilterIndicatorLabel": "\u5217'{0}'\u306e\u30d5\u30a3\u30eb\u30bf\u30fc\u30aa\u30d7\u30b7\u30e7\u30f3\u3092\u8868\u793a\u3059\u308b",
             "dxDataGrid-headerFilterEmptyValue": "(\u7a7a\u767d)",
             "dxDataGrid-headerFilterOK": "OK",
             "dxDataGrid-headerFilterCancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+            "dxDataGrid-ariaAdaptiveCollapse": "\u8ffd\u52a0\u30c7\u30fc\u30bf\u3092\u975e\u8868\u793a\u306b\u3059\u308b",
+            "dxDataGrid-ariaAdaptiveExpand": "\u8ffd\u52a0\u30c7\u30fc\u30bf\u3092\u8868\u793a\u3059\u308b",
             "dxDataGrid-ariaColumn": "\u5217",
             "dxDataGrid-ariaValue": "\u5024",
             "dxDataGrid-ariaFilterCell": "\u30d5\u30a3\u30eb\u30bf\u30fc \u30bb\u30eb",
@@ -166,15 +180,25 @@
             "dxDataGrid-ariaSearchInGrid": "\u30c7\u30fc\u30bf \u30b0\u30ea\u30c3\u30c9\u5185\u3067\u691c\u7d22",
             "dxDataGrid-ariaSelectAll": "\u3059\u3079\u3066\u3092\u9078\u629e",
             "dxDataGrid-ariaSelectRow": "\u884c\u306e\u9078\u629e",
+            "dxDataGrid-ariaToolbar": "\u30c7\u30fc\u30bf \u30b0\u30ea\u30c3\u30c9\u306e\u30c4\u30fc\u30eb \u30d0\u30fc",
             "dxDataGrid-filterBuilderPopupTitle": "\u30d5\u30a3\u30eb\u30bf\u30fc \u30d3\u30eb\u30c0\u30fc",
             "dxDataGrid-filterPanelCreateFilter": "\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u4f5c\u6210",
             "dxDataGrid-filterPanelClearFilter": "\u30af\u30ea\u30a2",
             "dxDataGrid-filterPanelFilterEnabledHint": "\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u6709\u52b9\u5316",
             "dxTreeList-ariaTreeList": "\u30c4\u30ea\u30fc \u30ea\u30b9\u30c8",
+            "dxTreeList-ariaSearchInGrid": "\u30c4\u30ea\u30fc \u30ea\u30b9\u30c8\u5185\u3092\u691c\u7d22\u3059\u308b",
+            "dxTreeList-ariaToolbar": "\u30c4\u30ea\u30fc \u30ea\u30b9\u30c8\u306e\u30c4\u30fc\u30eb \u30d0\u30fc",
             "dxTreeList-editingAddRowToNode": "\u8ffd\u52a0",
             "dxPager-infoText": "\u30da\u30fc\u30b8 {0} / {1} ({2} \u30a2\u30a4\u30c6\u30e0)",
             "dxPager-pagesCountText": "/",
+            "dxPager-pageSize": "\u30da\u30fc\u30b8\u3042\u305f\u308a\u306e\u30a2\u30a4\u30c6\u30e0\u6570: {0}",
             "dxPager-pageSizesAllText": "\u3059\u3079\u3066",
+            "dxPager-page": "\u30da\u30fc\u30b8 {0}",
+            "dxPager-prevPage": "\u524d\u306e\u30da\u30fc\u30b8",
+            "dxPager-nextPage": "\u6b21\u306e\u30da\u30fc\u30b8",
+            "dxPager-ariaLabel": "\u30da\u30fc\u30b8 \u30ca\u30d3\u30b2\u30fc\u30b7\u30e7\u30f3",
+            "dxPager-ariaPageSize": "\u30da\u30fc\u30b8 \u30b5\u30a4\u30ba",
+            "dxPager-ariaPageNumber": "\u30da\u30fc\u30b8\u756a\u53f7",
             "dxPivotGrid-grandTotal": "\u7dcf\u8a08",
             "dxPivotGrid-total": "{0} \u5408\u8a08",
             "dxPivotGrid-fieldChooserTitle": "\u30d5\u30a3\u30fc\u30eb\u30c9\u306e\u9078\u629e",
@@ -222,11 +246,11 @@
             "dxScheduler-switcherWeek": "\u9031\u30d3\u30e5\u30fc",
             "dxScheduler-switcherWorkWeek": "\u7a3c\u50cd\u9031\u30d3\u30e5\u30fc",
             "dxScheduler-switcherMonth": "\u6708\u30d3\u30e5\u30fc",
+            "dxScheduler-switcherAgenda": "\u4e88\u5b9a\u4e00\u89a7",
             "dxScheduler-switcherTimelineDay": "\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3 \u65e5\u30d3\u30e5\u30fc",
             "dxScheduler-switcherTimelineWeek": "\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3 \u9031\u30d3\u30e5\u30fc",
             "dxScheduler-switcherTimelineWorkWeek": "\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3 \u7a3c\u50cd\u9031\u30d3\u30e5\u30fc",
             "dxScheduler-switcherTimelineMonth": "\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3 \u6708\u30d3\u30e5\u30fc",
-            "dxScheduler-switcherAgenda": "\u4e88\u5b9a\u4e00\u89a7",
             "dxScheduler-recurrenceRepeatOnDate": "\u6b21\u306e\u65e5\u4ed8\u306b\u7d42\u4e86",
             "dxScheduler-recurrenceRepeatCount": "\u51fa\u73fe",
             "dxScheduler-allDay": "\u7d42\u65e5\u30a4\u30d9\u30f3\u30c8",
@@ -240,6 +264,7 @@
             "dxScheduler-moreAppointments": "\u305d\u306e\u4ed6 {0} \u3064\u9078\u629e",
             "dxCalendar-todayButtonText": "\u4eca\u65e5",
             "dxCalendar-ariaWidgetName": "\u30ab\u30ec\u30f3\u30c0\u30fc",
+            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
             "dxColorView-ariaRed": "\u8d64",
             "dxColorView-ariaGreen": "\u7dd1",
             "dxColorView-ariaBlue": "\u9752",
@@ -275,7 +300,7 @@
             "dxFilterBuilder-filterOperationNoneOf": "\u3059\u3079\u3066\u542b\u307e\u306a\u3044",
             "dxHtmlEditor-dialogColorCaption": "\u30d5\u30a9\u30f3\u30c8\u306e\u8272\u3092\u5909\u66f4",
             "dxHtmlEditor-dialogBackgroundCaption": "\u80cc\u666f\u8272\u3092\u5909\u66f4",
-            "dxHtmlEditor-dialogLinkCaption": "\u30ea\u30f3\u30af\u3092\u8ffd\u52a0",
+            "dxHtmlEditor-dialogLinkCaption": "\u30ea\u30f3\u30af\u306e\u8ffd\u52a0",
             "dxHtmlEditor-dialogLinkUrlField": "URL",
             "dxHtmlEditor-dialogLinkTextField": "\u30c6\u30ad\u30b9\u30c8",
             "dxHtmlEditor-dialogLinkTargetField": "\u30ea\u30f3\u30af\u3092\u65b0\u3057\u3044\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u958b\u304f",
@@ -287,8 +312,77 @@
             "dxHtmlEditor-dialogInsertTableRowsField": "\u884c",
             "dxHtmlEditor-dialogInsertTableColumnsField": "\u5217",
             "dxHtmlEditor-dialogInsertTableCaption": "\u30c6\u30fc\u30d6\u30eb\u306e\u633f\u5165",
+            "dxHtmlEditor-dialogUpdateImageCaption": "\u30a4\u30e1\u30fc\u30b8\u306e\u66f4\u65b0",
+            "dxHtmlEditor-dialogImageUpdateButton": "\u66f4\u65b0",
+            "dxHtmlEditor-dialogImageAddButton": "\u8ffd\u52a0",
+            "dxHtmlEditor-dialogImageSpecifyUrl": "Web \u304b\u3089\u8ffd\u52a0",
+            "dxHtmlEditor-dialogImageSelectFile": "\u3053\u306e\u30c7\u30d0\u30a4\u30b9\u304b\u3089\u8ffd\u52a0",
+            "dxHtmlEditor-dialogImageKeepAspectRatio": "\u7e26\u6a2a\u6bd4\u3092\u7dad\u6301\u3059\u308b",
+            "dxHtmlEditor-dialogImageEncodeToBase64": "Base64 \u306b\u30a8\u30f3\u30b3\u30fc\u30c9\u3059\u308b",
             "dxHtmlEditor-heading": "\u898b\u51fa\u3057",
             "dxHtmlEditor-normalText": "\u6a19\u6e96\u30c6\u30ad\u30b9\u30c8",
+            "dxHtmlEditor-background": "\u80cc\u666f\u8272",
+            "dxHtmlEditor-bold": "\u592a\u5b57",
+            "dxHtmlEditor-color": "\u30d5\u30a9\u30f3\u30c8\u306e\u8272",
+            "dxHtmlEditor-font": "\u30d5\u30a9\u30f3\u30c8",
+            "dxHtmlEditor-italic": "\u659c\u4f53",
+            "dxHtmlEditor-link": "\u30ea\u30f3\u30af\u306e\u8ffd\u52a0",
+            "dxHtmlEditor-image": "\u753b\u50cf\u306e\u8ffd\u52a0",
+            "dxHtmlEditor-size": "\u30d5\u30a9\u30f3\u30c8 \u30b5\u30a4\u30ba",
+            "dxHtmlEditor-strike": "\u53d6\u308a\u6d88\u3057\u7dda",
+            "dxHtmlEditor-subscript": "\u4e0b\u4ed8\u304d\u6587\u5b57",
+            "dxHtmlEditor-superscript": "\u4e0a\u4ed8\u304d\u6587\u5b57",
+            "dxHtmlEditor-underline": "\u4e0b\u7dda",
+            "dxHtmlEditor-blockquote": "\u30d6\u30ed\u30c3\u30af\u5f15\u7528",
+            "dxHtmlEditor-header": "\u30d8\u30c3\u30c0\u30fc",
+            "dxHtmlEditor-increaseIndent": "\u30a4\u30f3\u30c7\u30f3\u30c8\u3092\u5897\u3084\u3059",
+            "dxHtmlEditor-decreaseIndent": "\u30a4\u30f3\u30c7\u30f3\u30c8\u3092\u6e1b\u3089\u3059",
+            "dxHtmlEditor-orderedList": "\u756a\u53f7\u4ed8\u304d\u30ea\u30b9\u30c8",
+            "dxHtmlEditor-bulletList": "\u7b87\u6761\u66f8\u304d\u30ea\u30b9\u30c8",
+            "dxHtmlEditor-alignLeft": "\u5de6\u63c3\u3048",
+            "dxHtmlEditor-alignCenter": "\u4e2d\u592e\u63c3\u3048",
+            "dxHtmlEditor-alignRight": "\u53f3\u63c3\u3048",
+            "dxHtmlEditor-alignJustify": "\u4e21\u7aef\u63c3\u3048",
+            "dxHtmlEditor-codeBlock": "\u30b3\u30fc\u30c9 \u30d6\u30ed\u30c3\u30af",
+            "dxHtmlEditor-variable": "\u5909\u6570\u306e\u8ffd\u52a0",
+            "dxHtmlEditor-undo": "\u5143\u306b\u623b\u3059",
+            "dxHtmlEditor-redo": "\u3084\u308a\u76f4\u3059",
+            "dxHtmlEditor-clear": "\u66f8\u5f0f\u306e\u30af\u30ea\u30a2",
+            "dxHtmlEditor-insertTable": "\u30c6\u30fc\u30d6\u30eb\u306e\u633f\u5165",
+            "dxHtmlEditor-insertHeaderRow": "\u898b\u51fa\u3057\u884c\u306e\u633f\u5165",
+            "dxHtmlEditor-insertRowAbove": "\u4e0a\u306b\u884c\u3092\u633f\u5165",
+            "dxHtmlEditor-insertRowBelow": "\u4e0b\u306b\u884c\u3092\u633f\u5165",
+            "dxHtmlEditor-insertColumnLeft": "\u5de6\u306b\u5217\u3092\u633f\u5165",
+            "dxHtmlEditor-insertColumnRight": "\u53f3\u306b\u5217\u3092\u633f\u5165",
+            "dxHtmlEditor-deleteColumn": "\u5217\u306e\u524a\u9664",
+            "dxHtmlEditor-deleteRow": "\u884c\u306e\u524a\u9664",
+            "dxHtmlEditor-deleteTable": "\u30c6\u30fc\u30d6\u30eb\u306e\u524a\u9664",
+            "dxHtmlEditor-cellProperties": "\u30bb\u30eb\u306e\u30d7\u30ed\u30d1\u30c6\u30a3",
+            "dxHtmlEditor-tableProperties": "\u8868\u306e\u30d7\u30ed\u30d1\u30c6\u30a3",
+            "dxHtmlEditor-insert": "\u633f\u5165",
+            "dxHtmlEditor-delete": "\u524a\u9664",
+            "dxHtmlEditor-border": "\u7f6b\u7dda",
+            "dxHtmlEditor-style": "\u30b9\u30bf\u30a4\u30eb",
+            "dxHtmlEditor-width": "\u5e45",
+            "dxHtmlEditor-height": "\u9ad8\u3055",
+            "dxHtmlEditor-borderColor": "\u8272",
+            "dxHtmlEditor-tableBackground": "\u80cc\u666f",
+            "dxHtmlEditor-dimensions": "\u5bf8\u6cd5",
+            "dxHtmlEditor-alignment": "\u914d\u7f6e",
+            "dxHtmlEditor-horizontal": "\u6c34\u5e73\u65b9\u5411",
+            "dxHtmlEditor-vertical": "\u5782\u76f4\u65b9\u5411",
+            "dxHtmlEditor-paddingVertical": "\u5782\u76f4\u65b9\u5411\u306e\u30b9\u30da\u30fc\u30b9",
+            "dxHtmlEditor-paddingHorizontal": "\u6c34\u5e73\u65b9\u5411\u306e\u30b9\u30da\u30fc\u30b9",
+            "dxHtmlEditor-pixels": "\u30d4\u30af\u30bb\u30eb",
+            "dxHtmlEditor-list": "\u30ea\u30b9\u30c8",
+            "dxHtmlEditor-ordered": "\u756a\u53f7\u4ed8\u304d",
+            "dxHtmlEditor-bullet": "\u7b87\u6761\u66f8\u304d",
+            "dxHtmlEditor-align": "\u914d\u7f6e",
+            "dxHtmlEditor-center": "\u4e2d\u592e",
+            "dxHtmlEditor-left": "\u5de6",
+            "dxHtmlEditor-right": "\u53f3",
+            "dxHtmlEditor-indent": "\u30a4\u30f3\u30c7\u30f3\u30c8",
+            "dxHtmlEditor-justify": "\u4e21\u7aef\u63c3\u3048",
             "dxFileManager-newDirectoryName": "\u7121\u984c\u306e\u30d5\u30a9\u30eb\u30c0",
             "dxFileManager-rootDirectoryName": "\u30d5\u30a1\u30a4\u30eb",
             "dxFileManager-errorNoAccess": "\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u64cd\u4f5c\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3002",
@@ -362,6 +456,8 @@
             "dxFileManager-editingUploadSingleItemErrorMessage": "\u9805\u76ee\u304c\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
             "dxFileManager-editingUploadMultipleItemsErrorMessage": "{0} \u9805\u76ee\u304c\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
             "dxFileManager-editingUploadCanceledMessage": "\u30ad\u30e3\u30f3\u30bb\u30eb\u3057\u307e\u3057\u305f",
+            "dxFileManager-editingDownloadSingleItemErrorMessage": "\u30a2\u30a4\u30c6\u30e0\u306f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
+            "dxFileManager-editingDownloadMultipleItemsErrorMessage": "{0} \u500b\u306e\u30a2\u30a4\u30c6\u30e0\u306f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
             "dxFileManager-listDetailsColumnCaptionName": "\u30d5\u30a1\u30a4\u30eb\u540d",
             "dxFileManager-listDetailsColumnCaptionDateModified": "\u66f4\u65b0\u65e5",
             "dxFileManager-listDetailsColumnCaptionFileSize": "\u30d5\u30a1\u30a4\u30eb \u30b5\u30a4\u30ba",
@@ -526,6 +622,10 @@
             "dxGantt-dialogCancelOperationMessage": "\u64cd\u4f5c\u3092\u30ad\u30e3\u30f3\u30bb\u30eb\u3059\u308b",
             "dxGantt-dialogDeleteDependencyMessage": "\u4f9d\u5b58\u95a2\u4fc2\u3092\u524a\u9664\u3059\u308b",
             "dxGantt-dialogMoveTaskAndKeepDependencyMessage": "\u30bf\u30b9\u30af\u3092\u79fb\u52d5\u3057\u3066\u3001\u4f9d\u5b58\u95a2\u4fc2\u3092\u4fdd\u6301\u3059\u308b",
+            "dxGantt-dialogConstraintCriticalViolationSeveralTasksMessage": "\u79fb\u52d5\u3057\u3088\u3046\u3068\u3057\u3066\u3044\u308b\u30bf\u30b9\u30af\u306f\u3001\u4f9d\u5b58\u95a2\u4fc2\u306b\u3088\u308a\u4ed6\u306e\u30bf\u30b9\u30af\u306b\u30ea\u30f3\u30af\u3055\u308c\u3066\u3044\u307e\u3059\u3002\u3053\u306e\u5909\u66f4\u306f\u4f9d\u5b58\u95a2\u4fc2\u30eb\u30fc\u30eb\u3068\u7af6\u5408\u3057\u307e\u3059\u3002\u3069\u306e\u3088\u3046\u306b\u7d9a\u884c\u3057\u307e\u3059\u304b?",
+            "dxGantt-dialogConstraintViolationSeveralTasksMessage": "\u79fb\u52d5\u3057\u3088\u3046\u3068\u3057\u3066\u3044\u308b\u30bf\u30b9\u30af\u306f\u3001\u4f9d\u5b58\u95a2\u4fc2\u306b\u3088\u308a\u4ed6\u306e\u30bf\u30b9\u30af\u306b\u30ea\u30f3\u30af\u3055\u308c\u3066\u3044\u307e\u3059\u3002\u3069\u306e\u3088\u3046\u306b\u7d9a\u884c\u3057\u307e\u3059\u304b?",
+            "dxGantt-dialogDeleteDependenciesMessage": "\u4f9d\u5b58\u95a2\u4fc2\u3092\u524a\u9664\u3059\u308b",
+            "dxGantt-dialogMoveTaskAndKeepDependenciesMessage": "\u30bf\u30b9\u30af\u3092\u79fb\u52d5\u3057\u3066\u3001\u4f9d\u5b58\u95a2\u4fc2\u3092\u7dad\u6301\u3059\u308b",
             "dxGantt-undo": "\u5143\u306b\u623b\u3059",
             "dxGantt-redo": "\u3084\u308a\u76f4\u3057",
             "dxGantt-expandAll": "\u3059\u3079\u3066\u5c55\u958b",
@@ -534,7 +634,15 @@
             "dxGantt-deleteSelectedTask": "\u9078\u629e\u3057\u305f\u30bf\u30b9\u30af\u3092\u524a\u9664",
             "dxGantt-zoomIn": "\u62e1\u5927",
             "dxGantt-zoomOut": "\u7e2e\u5c0f",
-            "dxGantt-fullScreen": "\u5168\u753b\u9762\u8868\u793a"
+            "dxGantt-fullScreen": "\u5168\u753b\u9762\u8868\u793a",
+            "dxGantt-quarter": "Q{0}",
+            "dxGantt-sortingAscendingText": "\u6607\u9806\u306b\u4e26\u3079\u66ff\u3048",
+            "dxGantt-sortingDescendingText": "\u964d\u9806\u306b\u4e26\u3079\u66ff\u3048",
+            "dxGantt-sortingClearText": "\u4e26\u3079\u66ff\u3048\u3092\u30af\u30ea\u30a2",
+            "dxGantt-showResources": "\u30ea\u30bd\u30fc\u30b9\u3092\u8868\u793a",
+            "dxGantt-showDependencies": "\u4f9d\u5b58\u95a2\u4fc2\u3092\u8868\u793a",
+            "dxGantt-dialogStartDateValidation": "\u958b\u59cb\u65e5\u3092 {0} \u4ee5\u964d\u306b\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059",
+            "dxGantt-dialogEndDateValidation": "\u7d42\u4e86\u65e5\u306f {0} \u3088\u308a\u5f8c\u306b\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059"
         }
     })
-});
+}));
