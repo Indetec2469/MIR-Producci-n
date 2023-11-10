@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using static RequisicionesAlmacenBL.Models.Mapeos.ControlMaestroMapeo;
+using System.Linq;
 
 namespace RequisicionesAlmacen.Areas.Compras.Requisiciones.Controllers
 {
@@ -198,5 +199,36 @@ namespace RequisicionesAlmacen.Areas.Compras.Requisiciones.Controllers
             //Ejercicio para los campos de Fecha
             viewModel.EjercicioUsuario = SessionHelper.GetUsuario().Ejercicio;
         }
+
+        [JsonException]
+        public JsonResult ObtenerPreComprometido(string CuentaPresupuestalEgrId)
+        {
+            //   CuentaPresupuestalEgrId = "267398";
+            RequisicionPorComprarViewModel viewModel = new RequisicionPorComprarViewModel();
+            viewModel.ListRequisicionMaterialDetallesPreComprometido = new RequisicionPorComprarService().ListRequisicionMaterialDetallesPreComprometido(CuentaPresupuestalEgrId);
+
+            if (viewModel.ListRequisicionMaterialDetallesPreComprometido.Count() > 0)
+            {
+                var precomprometido = viewModel.ListRequisicionMaterialDetallesPreComprometido.ToList()[0].PreComprometido.ToString();
+                var disponibleComprometer = viewModel.ListRequisicionMaterialDetallesPreComprometido.ToList()[0].DisponibleComprometer.ToString();
+                Dictionary<string, object> data = new Dictionary<string, object>()
+                    {
+                        { "PreComprometido",  precomprometido },
+                        { "DisponibleComprometer", disponibleComprometer }
+                    };
+                return Json(data);
+            }
+            else
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>()
+                    {
+                        { "PreComprometido",  "0" },
+                        { "DisponibleComprometer", "0" }
+                    };
+                return Json(data);
+            }
+
+        }
+
     }
 }

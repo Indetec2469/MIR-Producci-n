@@ -22,6 +22,12 @@ namespace RequisicionesAlmacen.Areas.Compras.Requisiciones.Models.ViewModel
 
         public string EjercicioUsuario { get; set; }
 
+        public string DisponibleComprometer { get; set; }
+         
+        public string PreComprometido { get; set; }
+
         public Nullable<DateTime> FechaOperacion { get; set; }
+
+        public IEnumerable<spRepPrecomprometido_Result> ListRequisicionMaterialDetallesPreComprometido { get; set; }
     }
 }
