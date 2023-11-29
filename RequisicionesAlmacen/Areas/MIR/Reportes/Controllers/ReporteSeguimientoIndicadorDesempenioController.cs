@@ -1601,12 +1601,19 @@ namespace RequisicionesAlmacen.Areas.MIR.Reportes.Controllers
 
         private int ObtenerTrimestre(DateTime fechaReporte) {
             int tipoFecha = 0;
+            DateTime fechaLimite = DateTime.Now;
             // Obtener el año actual y el trimestre actual
             int añoActual = DateTime.Now.Year;
-            int trimestreActual = (fechaReporte.Month - 1) / 3 + 1;
-
-            // Obtener la fecha límite para el trimestre actual
-            DateTime fechaLimite = new DateTime(añoActual, 3 * trimestreActual+1, 1).AddDays(-1);
+           int trimestreActual = (fechaReporte.Month - 1) / 3 + 1;             
+           // Obtener la fecha límite para el trimestre actual     
+            if (trimestreActual == 4)
+            {
+                 fechaLimite = new DateTime(añoActual, 3 * trimestreActual, 31);
+            }
+            else
+            {
+                 fechaLimite = new DateTime(añoActual, 3 * trimestreActual + 1, 1).AddDays(-1);
+            }
 
             if (trimestreActual == 1) { tipoFecha= 1; }
             if (trimestreActual == 2 && fechaReporte<fechaLimite) { tipoFecha = 2; }

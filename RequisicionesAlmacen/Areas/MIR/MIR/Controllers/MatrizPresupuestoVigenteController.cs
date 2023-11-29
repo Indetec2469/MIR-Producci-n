@@ -171,7 +171,8 @@ namespace RequisicionesAlmacen.Areas.MIR.MIR.Controllers
                 MItblMatrizConfiguracionPresupuestalDetalle matrizConfiguracionPresupuestalDetalle;
                 foreach (MIspConsultaMatrizPresupuestoVigenteH_Result matrizConfiguracionPresupuestalDetalleResult in matrizPresupuestoVigenteViewModel.MatrizPresupuestoVigenteH)
                 {
-                    matrizConfiguracionPresupuestalDetalleTemp = matrizConfiguracionPresupuestalDetalleTempList.Find(f => f.ConfiguracionPresupuestoDetalleId == matrizConfiguracionPresupuestalDetalleResult.ConfiguracionPresupuestoDetalleId);
+                    //Se cambia el campo para la igualdad en la expresión lambda: ConfiguracionPresupuestoDetalleId  por MIRIndicadorId
+                    matrizConfiguracionPresupuestalDetalleTemp = matrizConfiguracionPresupuestalDetalleTempList.Find(f => f.MIRIndicadorId == matrizConfiguracionPresupuestalDetalleResult.MIRIndicadorId);
                     matrizConfiguracionPresupuestalDetalle = new MItblMatrizConfiguracionPresupuestalDetalle();
                     matrizConfiguracionPresupuestalDetalle.ConfiguracionPresupuestoId = matrizConfiguracionPresupuestalDetalleTemp.ConfiguracionPresupuestoId;
                     matrizConfiguracionPresupuestalDetalle.ConfiguracionPresupuestoDetalleId = matrizConfiguracionPresupuestalDetalleTemp.ConfiguracionPresupuestoDetalleId;

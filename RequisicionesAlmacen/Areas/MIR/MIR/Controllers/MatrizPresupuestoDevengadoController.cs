@@ -162,7 +162,7 @@ namespace RequisicionesAlmacen.Areas.MIR.MIR.Controllers
                 MItblMatrizConfiguracionPresupuestalDetalle matrizConfiguracionPresupuestalDetalle;
                 foreach (MIspConsultaMatrizPresupuestoDevengadoH_Result matrizConfiguracionPresupuestalDetalleResult in matrizPresupuestoDevengadoViewModel.MatrizPresupuestoDevengadoH)
                 {
-                    matrizConfiguracionPresupuestalDetalleTemp = matrizConfiguracionPresupuestalDetalleTempList.Find(f => f.ConfiguracionPresupuestoDetalleId == matrizConfiguracionPresupuestalDetalleResult.ConfiguracionPresupuestoDetalleId);
+                    matrizConfiguracionPresupuestalDetalleTemp = matrizConfiguracionPresupuestalDetalleTempList.Find(f => f.MIRIndicadorId == matrizConfiguracionPresupuestalDetalleResult.MIRIndicadorId);
                     matrizConfiguracionPresupuestalDetalle = new MItblMatrizConfiguracionPresupuestalDetalle();
                     matrizConfiguracionPresupuestalDetalle.ConfiguracionPresupuestoId = matrizConfiguracionPresupuestalDetalleTemp.ConfiguracionPresupuestoId;
                     matrizConfiguracionPresupuestalDetalle.ConfiguracionPresupuestoDetalleId = matrizConfiguracionPresupuestalDetalleTemp.ConfiguracionPresupuestoDetalleId;

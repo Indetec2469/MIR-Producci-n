@@ -80,7 +80,7 @@ namespace RequisicionesAlmacen.Areas.MIR.MIR.Controllers
                 IEnumerable<MItblMatrizIndicadorResultadoIndicadorMeta> _listMatrizIndicadorResultadoIndicadorMeta = new MatrizIndicadorResultadoIndicadorMetaService().BuscaPorMIRIndicadorId(matrizIndicadorResultadoIndicador.MIRIndicadorId);
                 _listMatrizIndicadorResultadoIndicadorMeta.ToList().ForEach(mirim =>
                 {
-                    listMatrizIndicadorResultadoIndicadorMeta.Add(mirim);
+                    listMatrizIndicadorResultadoIndicadorMeta.Add(mirim); 
                 });
                 // Matriz Indicador Resultado Indicador Formula Variable
                 IEnumerable<MItblMatrizIndicadorResultadoIndicadorFormulaVariable> _listMatrizIndicadorResultadoIndicadorFormulaVariable = new MatrizIndicadorResultadoIndicadorFormulaVariableService().BuscaPorMIRIndicadorId(matrizIndicadorResultadoIndicador.MIRIndicadorId);
@@ -133,14 +133,14 @@ namespace RequisicionesAlmacen.Areas.MIR.MIR.Controllers
 
                         if (!permiteEliminar)
                         {
-                            if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.FIN)
-                                throw new Exception("El FIN con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que está siendo utilizado para otros procesos.");
-                            else if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.PROPOSITO)
-                                throw new Exception("El PROPOSITO con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que está siendo utilizada para otros procesos.");
-                            else if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.COMPONENTE)
-                                throw new Exception("El COMPONENTE con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que está siendo utilizado para otros procesos.");
+                            if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.FIN)                              
+                                throw new Exception("El FIN con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que tiene un indicador de propósito relacionados.");
+                            else if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.PROPOSITO)                                
+                                throw new Exception("El PROPOSITO con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que tiene un indicador de componente relacionado.");
+                            else if (_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.COMPONENTE) 
+                                throw new Exception("El COMPONENTE con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminado ya que tiene un indicador de actividad relacionado.");
                             else if(_tmpIndicador.NivelIndicadorId == ControlMaestroMapeo.Nivel.ACTIVIDAD)
-                                throw new Exception("La ACTIVIDAD con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminada ya que está siendo utilizada para otros procesos.");
+                                throw new Exception("La ACTIVIDAD con el código [" + _tmpIndicador.Codigo + "] no puede ser eliminada ya que tiene una relación presupuestal");
                         }
                     }
                 }

@@ -241,7 +241,7 @@ cargaContenidoDatosGenerales = () => {
                                 }]
                             }, {
                                 dataField: 'PlanDesarrolloId',
-                                label: {
+                                label: {  
                                     text: 'Plan de Desarrollo'
                                 },
                                 colSpan: 8,
@@ -541,7 +541,7 @@ cargaContenidoDataGrid = (nivel) => {
                                                     onClick: (event) => onClickEditarNivel(event, nivel),
                                                     visible: !esModoLectura
                                                 }, {
-                                                    hint: 'Eliminar',
+                                                    hint: 'Eliminar',                                                    
                                                     icon: 'trash',
                                                     onClick: (event) => onClickEliminarNivel(event, nivel),
                                                     visible: !esModoLectura
@@ -854,6 +854,7 @@ cargaContenidoDataGridActividad = () => {
                                             }, {
                                                 hint: 'Eliminar',
                                                 icon: 'trash',
+                                               // icon: 'edit',
                                                 onClick: (event) => onClickEliminarNivel(event, 'actividad'),
                                                 visible: !esModoLectura
                                             }
