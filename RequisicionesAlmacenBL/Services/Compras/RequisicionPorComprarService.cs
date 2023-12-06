@@ -66,6 +66,18 @@ namespace RequisicionesAlmacenBL.Services.Compras
             }
         }
 
+        public List<spRepPrecomprometido_Result> ListRequisicionMaterialDetallesPreComprometido(string CuentaPresupuestalEgrId)
+        {
+
+            using (var Context = SAACGContextHelper.GetContext())
+            {
+                var fechaFin = DateTime.Today;
+                return Context.spRepPrecomprometido(fechaFin, CuentaPresupuestalEgrId).ToList();
+            }
+
+        }
+
+
         public void GuardaCambios(List<tblOrdenCompra> ordenesCompra,
                                   List<ARtblInvitacionArticulo> invitacionesArticulo,
                                   List<int> requisicionesIds, 

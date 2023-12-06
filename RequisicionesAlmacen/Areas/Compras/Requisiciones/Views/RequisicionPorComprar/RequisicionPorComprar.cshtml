@@ -187,6 +187,9 @@
                             .Lookup(e => e.DataSource(Model.ListProveedores)
                                           .ValueExpr("ProveedorId")
                                           .DisplayExpr("RazonSocial"));
+                        c.AddFor(m => m.DisponibleComprometer).Format("$ #,##0.00##").Caption("DisponibleComprometer").DataType(GridColumnDataType.Number).AllowEditing(false);
+                        c.AddFor(m => m.PreComprometido).Format("$ #,##0.00##").Caption("Precomprometido").DataType(GridColumnDataType.Number).AllowEditing(false);
+                        c.AddFor(m => m.Descripcion).AllowEditing(false).Caption("Producto").CalculateCellValue("gridBox_displayExpr");
                         c.Add()
                             .Width(100)
                             .Caption("Comentarios")

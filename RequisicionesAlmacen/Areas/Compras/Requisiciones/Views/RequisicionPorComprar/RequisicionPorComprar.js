@@ -273,6 +273,33 @@ var guardaCambios = function () {
     });
 }
 
+
+//MAG/*
+var solicitaPreComprometido = function (CtaPresupuestal) {
+    $.ajax({
+        type: "POST",
+        url: API_FICHA + "ObtenerPreComprometido",
+        data: { CuentaPresupuestalEgrId: CtaPresupuestal },
+        success: function (response) {
+            PreComprometido = response.PreComprometido;
+            disponibleComprometer = response.DisponibleComprometer;
+
+            rowEditar.DisponibleComprometer = response.DisponibleComprometer;
+            rowEditar.PreComprometido = response.PreComprometido;
+            dxGridDetallesPorComprar.DisponibleComprometer = rowEditar.DisponibleComprometer;
+            dxGridDetallesPorComprar.PreComprometido = rowEditar.PreComprometido;
+        },
+        error: function (response, status, error) {
+            // Ocultamos Loader
+            dxLoaderPanel.hide();
+
+            //Mostramos mensaje de error
+            toast("Error al guadar:\n" + response.responseText, 'error');
+        }
+    });
+}
+
+
 var cancelarCambiosMotivo = function () {
     if (rowEditar) {
         if (accionRevision) {
@@ -420,7 +447,13 @@ var onDetallesChange = function (e) {
 
                 rowEditar.CuentaPresupuestalEgrId = cuentaPresupuestal ? cuentaPresupuestal.CuentaPresupuestalEgrId : null;
 
+                solicitaPreComprometido(rowEditar.CuentaPresupuestalEgrId);
                 calculaTotalDetalle();
+
+            } else if (propiedad == "DisponibleComprometer") {
+                rowEditar.DisponibleComprometer = disponibleComprometer;
+                rowEditar.PreComprometido = PreComprometido;
+
             } else if (propiedad == "ProveedorId") {
                 rowEditar.ProveedorId = cambios.ProveedorId;
 
