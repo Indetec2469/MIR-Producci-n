@@ -65,10 +65,6 @@ public partial class ARspConsultaRequisicionPorComprarDetalles_Result
 
     public string FuenteFinanciamientoId { get; set; }
 
-    public Nullable<int> DisponibleComprometer { get; set; }
-
-    public Nullable<int> PreComprometido { get; set; }
-
     public Nullable<int> ProveedorId { get; set; }
 
     public int EstatusId { get; set; }

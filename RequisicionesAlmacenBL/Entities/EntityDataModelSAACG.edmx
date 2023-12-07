@@ -6281,6 +6281,10 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <Parameter Name="Inicial" Type="varchar" Mode="In" />
         </Function>
         <Function Name="spObtenerFechaDelServidor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spRepPrecomprometido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fechaFin" Type="datetime" Mode="In" />
+          <Parameter Name="Cuenta" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="SAACGModelStoreContainer">
           <EntitySet Name="ARtblAlmacenProducto" EntityType="Self.ARtblAlmacenProducto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ARtblCompraCancelInfo" EntityType="Self.ARtblCompraCancelInfo" Schema="dbo" store:Type="Tables" />
@@ -9618,6 +9622,10 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <FunctionImport Name="MIfnObtenerSeguimientoIndicadorDesempenio" IsComposable="true" ReturnType="Collection(SAACGModel.MIfnObtenerSeguimientoIndicadorDesempenio_Result)">
             <Parameter Name="MIRIndicadorId" Mode="In" Type="Int32" />
             <Parameter Name="FechaReporte" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spRepPrecomprometido" ReturnType="Collection(SAACGModel.spRepPrecomprometido_Result)">
+            <Parameter Name="fechaFin" Mode="In" Type="DateTime" />
+            <Parameter Name="Cuenta" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spObjetoGasto_Result">
@@ -17087,6 +17095,20 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <Property Type="Int32" Name="TipoComponenteId" Nullable="true" />
           <Property Type="Decimal" Name="Mayo" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
+        <ComplexType Name="spRepPrecomprometido_Result">
+          <Property Type="String" Name="RamoId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Ramo" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="ProyectoId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Proyecto" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="DependenciaId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Dependencia" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="ObjetoGastoId" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="1000" />
+          <Property Type="Decimal" Name="PresupuestoVigente" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="Comprometido" Nullable="true" Precision="19" />
+          <Property Type="Double" Name="PreComprometido" Nullable="true" />
+          <Property Type="Double" Name="DisponibleComprometer" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -20332,6 +20354,24 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
                 <ScalarProperty Name="Octubre" ColumnName="Octubre" />
                 <ScalarProperty Name="Noviembre" ColumnName="Noviembre" />
                 <ScalarProperty Name="Diciembre" ColumnName="Diciembre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spRepPrecomprometido" FunctionName="SAACGModel.Store.spRepPrecomprometido">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SAACGModel.spRepPrecomprometido_Result">
+                <ScalarProperty Name="RamoId" ColumnName="RamoId" />
+                <ScalarProperty Name="Ramo" ColumnName="Ramo" />
+                <ScalarProperty Name="ProyectoId" ColumnName="ProyectoId" />
+                <ScalarProperty Name="Proyecto" ColumnName="Proyecto" />
+                <ScalarProperty Name="DependenciaId" ColumnName="DependenciaId" />
+                <ScalarProperty Name="Dependencia" ColumnName="Dependencia" />
+                <ScalarProperty Name="ObjetoGastoId" ColumnName="ObjetoGastoId" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="PresupuestoVigente" ColumnName="PresupuestoVigente" />
+                <ScalarProperty Name="Comprometido" ColumnName="Comprometido" />
+                <ScalarProperty Name="PreComprometido" ColumnName="PreComprometido" />
+                <ScalarProperty Name="DisponibleComprometer" ColumnName="DisponibleComprometer" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

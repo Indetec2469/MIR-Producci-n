@@ -1,4 +1,4 @@
-﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\vanes\Music\Indetec\MIR Git\MIR\RequisicionesAlmacenBL\Entities\EntityDataModelSAACG.edmx'. 
+﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\vperezg\Desktop\GitHub\MIR-Producci-n\RequisicionesAlmacenBL\Entities\EntityDataModelSAACG.edmx'. 
 // Para habilitar la generación de código heredada, cambie el valor de la propiedad del diseñador 'Estrategia de generación de código'
 // por 'ObjectContext heredado'. Esta propiedad está disponible en la ventana Propiedades cuando se abre
 // el modelo en el diseñador.
