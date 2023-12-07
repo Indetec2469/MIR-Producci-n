@@ -505,13 +505,6 @@ public partial class SAACGContext : DbContext
     }
 
 
-    public virtual ObjectResult<ARspConsultaRequisicionPorComprarDetalles_Result> ARspConsultaRequisicionPorComprarDetalles()
-    {
-
-        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ARspConsultaRequisicionPorComprarDetalles_Result>("ARspConsultaRequisicionPorComprarDetalles");
-    }
-
-
     public virtual ObjectResult<ARspConsultaRequisicionPorSurtirDetalles_Result> ARspConsultaRequisicionPorSurtirDetalles(Nullable<int> requisicionId)
     {
 
@@ -1795,6 +1788,13 @@ public partial class SAACGContext : DbContext
 
 
         return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spRepPrecomprometido_Result>("spRepPrecomprometido", fechaFinParameter, cuentaParameter);
+    }
+
+
+    public virtual ObjectResult<ARspConsultaRequisicionPorComprarDetalles_Result> ARspConsultaRequisicionPorComprarDetalles()
+    {
+
+        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ARspConsultaRequisicionPorComprarDetalles_Result>("ARspConsultaRequisicionPorComprarDetalles");
     }
 
 }

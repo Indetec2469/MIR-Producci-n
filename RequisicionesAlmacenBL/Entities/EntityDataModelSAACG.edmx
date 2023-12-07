@@ -8167,7 +8167,6 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <Parameter Name="configuracionAreaId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="MIspConsultaUnidadMedidaConDimension" ReturnType="Collection(SAACGModel.MIspConsultaUnidadMedidaConDimension_Result)" />
-          <FunctionImport Name="ARspConsultaRequisicionPorComprarDetalles" ReturnType="Collection(SAACGModel.ARspConsultaRequisicionPorComprarDetalles_Result)" />
           <EntitySet Name="MItblMatrizIndicadorResultadoIndicador" EntityType="SAACGModel.MItblMatrizIndicadorResultadoIndicador" />
           <AssociationSet Name="FK_MItblMatrizIndicadorResultadoIndicador_GRtblControlMaestro" Association="SAACGModel.FK_MItblMatrizIndicadorResultadoIndicador_GRtblControlMaestro">
             <End Role="GRtblControlMaestro" EntitySet="GRtblControlMaestro" />
@@ -9627,6 +9626,7 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
             <Parameter Name="fechaFin" Mode="In" Type="DateTime" />
             <Parameter Name="Cuenta" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="ARspConsultaRequisicionPorComprarDetalles" ReturnType="Collection(SAACGModel.ARspConsultaRequisicionPorComprarDetalles_Result)" />
           </EntityContainer>
         <ComplexType Name="spObjetoGasto_Result">
           <Property Type="String" Name="ObjetoGastoId" Nullable="false" MaxLength="8" />
@@ -11273,60 +11273,6 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <Property Type="String" Name="AlmacenId" Nullable="false" MaxLength="4" />
           <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
           <Property Type="Boolean" Name="Seleccionado" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="ARspConsultaRequisicionPorComprarDetalles_Result">
-          <Property Type="Int32" Name="RequisicionMaterialDetalleId" Nullable="false" />
-          <Property Type="String" Name="Solicitud" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="Fecha" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="Usuario" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="Area" Nullable="false" MaxLength="259" />
-          <Property Type="String" Name="AlmacenId" Nullable="true" MaxLength="4" />
-          <Property Type="String" Name="Almacen" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="UnidadAdministrativaId" Nullable="false" MaxLength="6" />
-          <Property Type="String" Name="UnidadAdministrativa" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="ProyectoId" Nullable="false" MaxLength="6" />
-          <Property Type="String" Name="Proyecto" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="TipoGastoId" Nullable="false" MaxLength="1" />
-          <Property Type="String" Name="TipoGasto" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="ProductoId" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="UM" Nullable="false" MaxLength="100" />
-          <Property Type="Decimal" Name="CostoUnitario" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="CantidadSolicitada" Nullable="false" Precision="28" Scale="10" />
-          <Property Type="Decimal" Name="CantidadSurtida" Nullable="true" Precision="38" Scale="8" />
-          <Property Type="Decimal" Name="Existencia" Nullable="true" Precision="38" Scale="10" />
-          <Property Type="Decimal" Name="ExistenciaMinima" Nullable="true" Precision="28" Scale="10" />
-          <Property Type="Double" Name="CantidadComprar" Nullable="true" />
-          <Property Type="Double" Name="Total" Nullable="true" />
-          <Property Type="String" Name="Comentarios" Nullable="true" />
-          <Property Type="String" Name="FuenteFinanciamientoId" Nullable="true" MaxLength="6" />
-          <Property Type="Int32" Name="ProveedorId" Nullable="true" />
-          <Property Type="Int32" Name="EstatusId" Nullable="false" />
-          <Property Type="String" Name="Estatus" Nullable="false" />
-          <Property Type="Boolean" Name="Revision" Nullable="true" />
-          <Property Type="Boolean" Name="Comprar" Nullable="true" />
-          <Property Type="Boolean" Name="Rechazar" Nullable="true" />
-          <Property Type="String" Name="Motivo" Nullable="true" MaxLength="2000" />
-          <Property Type="Int32" Name="RequisicionMaterialId" Nullable="false" />
-          <Property Type="String" Name="Descripcion" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="TarifaImpuestoId" Nullable="true" MaxLength="10" />
-          <Property Type="Double" Name="Ajuste" Nullable="true" />
-          <Property Type="Int32" Name="OrdenCompraDetId" Nullable="true" />
-          <Property Type="Int32" Name="OrdenCompraId" Nullable="true" />
-          <Property Type="Int32" Name="CuentaPresupuestalEgrId" Nullable="true" />
-          <Property Type="Decimal" Name="Importe" Nullable="true" Precision="28" Scale="10" />
-          <Property Type="Double" Name="IEPS" Nullable="true" />
-          <Property Type="Double" Name="IVA" Nullable="true" />
-          <Property Type="Double" Name="ISH" Nullable="true" />
-          <Property Type="Double" Name="RetencionISR" Nullable="true" />
-          <Property Type="Double" Name="RetencionCedular" Nullable="true" />
-          <Property Type="Double" Name="RetencionIVA" Nullable="true" />
-          <Property Type="Double" Name="TotalPresupuesto" Nullable="true" />
-          <Property Type="Binary" Name="RequisicionTimestamp" Nullable="false" MaxLength="8" />
-          <Property Type="Binary" Name="DetalleTimestamp" Nullable="false" MaxLength="8" />
-          <Property Type="Int32" Name="InvitacionCompraDetalleId" Nullable="true" />
-          <Property Type="Int32" Name="InvitacionCompraId" Nullable="true" />
-          <Property Type="DateTime" Name="FechaRequisicion" Nullable="false" Precision="23" />
-          <Property Type="String" Name="AreaId" Nullable="false" MaxLength="6" />
         </ComplexType>
         <EntityType Name="MItblMatrizIndicadorResultadoIndicador">
           <Key>
@@ -17109,6 +17055,62 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
           <Property Type="Double" Name="PreComprometido" Nullable="true" />
           <Property Type="Double" Name="DisponibleComprometer" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="ARspConsultaRequisicionPorComprarDetalles_Result">
+          <Property Type="Int32" Name="RequisicionMaterialDetalleId" Nullable="false" />
+          <Property Type="Int32" Name="RequisicionMaterialId" Nullable="false" />
+          <Property Type="String" Name="Solicitud" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Fecha" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="FechaRequisicion" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Usuario" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="AreaId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Area" Nullable="false" MaxLength="259" />
+          <Property Type="String" Name="AlmacenId" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="Almacen" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UnidadAdministrativaId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="UnidadAdministrativa" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="ProyectoId" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Proyecto" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="TipoGastoId" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="TipoGasto" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="ProductoId" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Descripcion" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="UM" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="CostoUnitario" Nullable="false" Precision="19" />
+          <Property Type="String" Name="TarifaImpuestoId" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="CantidadSolicitada" Nullable="false" Precision="28" Scale="10" />
+          <Property Type="Decimal" Name="CantidadSurtida" Nullable="true" Precision="38" Scale="8" />
+          <Property Type="Decimal" Name="Existencia" Nullable="false" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="ExistenciaMinima" Nullable="true" Precision="28" Scale="10" />
+          <Property Type="Double" Name="CantidadComprar" Nullable="true" />
+          <Property Type="Double" Name="Total" Nullable="true" />
+          <Property Type="Double" Name="Ajuste" Nullable="true" />
+          <Property Type="String" Name="Comentarios" Nullable="true" />
+          <Property Type="String" Name="FuenteFinanciamientoId" Nullable="true" MaxLength="6" />
+          <Property Type="Int32" Name="DisponibleComprometer" Nullable="true" />
+          <Property Type="Int32" Name="PreComprometido" Nullable="true" />
+          <Property Type="Int32" Name="ProveedorId" Nullable="true" />
+          <Property Type="Int32" Name="EstatusId" Nullable="false" />
+          <Property Type="String" Name="Estatus" Nullable="false" />
+          <Property Type="Boolean" Name="Revision" Nullable="true" />
+          <Property Type="Boolean" Name="Comprar" Nullable="true" />
+          <Property Type="Boolean" Name="Rechazar" Nullable="true" />
+          <Property Type="String" Name="Motivo" Nullable="true" MaxLength="2000" />
+          <Property Type="Int32" Name="OrdenCompraDetId" Nullable="true" />
+          <Property Type="Int32" Name="OrdenCompraId" Nullable="true" />
+          <Property Type="Int32" Name="CuentaPresupuestalEgrId" Nullable="true" />
+          <Property Type="Decimal" Name="Importe" Nullable="true" Precision="28" Scale="10" />
+          <Property Type="Double" Name="IEPS" Nullable="true" />
+          <Property Type="Double" Name="IVA" Nullable="true" />
+          <Property Type="Double" Name="ISH" Nullable="true" />
+          <Property Type="Double" Name="RetencionISR" Nullable="true" />
+          <Property Type="Double" Name="RetencionCedular" Nullable="true" />
+          <Property Type="Double" Name="RetencionIVA" Nullable="true" />
+          <Property Type="Double" Name="TotalPresupuesto" Nullable="true" />
+          <Property Type="Int32" Name="InvitacionCompraDetalleId" Nullable="true" />
+          <Property Type="Int32" Name="InvitacionCompraId" Nullable="true" />
+          <Property Type="Binary" Name="RequisicionTimestamp" Nullable="false" MaxLength="8" />
+          <Property Type="Binary" Name="DetalleTimestamp" Nullable="false" MaxLength="8" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -18023,64 +18025,6 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
                 <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
                 <ScalarProperty Name="Formula" ColumnName="Formula" />
                 <ScalarProperty Name="DimensionId" ColumnName="DimensionId" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="ARspConsultaRequisicionPorComprarDetalles" FunctionName="SAACGModel.Store.ARspConsultaRequisicionPorComprarDetalles">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SAACGModel.ARspConsultaRequisicionPorComprarDetalles_Result">
-                <ScalarProperty Name="RequisicionMaterialDetalleId" ColumnName="RequisicionMaterialDetalleId" />
-                <ScalarProperty Name="Solicitud" ColumnName="Solicitud" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
-                <ScalarProperty Name="Area" ColumnName="Area" />
-                <ScalarProperty Name="AlmacenId" ColumnName="AlmacenId" />
-                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="UnidadAdministrativaId" ColumnName="UnidadAdministrativaId" />
-                <ScalarProperty Name="UnidadAdministrativa" ColumnName="UnidadAdministrativa" />
-                <ScalarProperty Name="ProyectoId" ColumnName="ProyectoId" />
-                <ScalarProperty Name="Proyecto" ColumnName="Proyecto" />
-                <ScalarProperty Name="TipoGastoId" ColumnName="TipoGastoId" />
-                <ScalarProperty Name="TipoGasto" ColumnName="TipoGasto" />
-                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
-                <ScalarProperty Name="UM" ColumnName="UM" />
-                <ScalarProperty Name="CostoUnitario" ColumnName="CostoUnitario" />
-                <ScalarProperty Name="CantidadSolicitada" ColumnName="CantidadSolicitada" />
-                <ScalarProperty Name="CantidadSurtida" ColumnName="CantidadSurtida" />
-                <ScalarProperty Name="Existencia" ColumnName="Existencia" />
-                <ScalarProperty Name="ExistenciaMinima" ColumnName="ExistenciaMinima" />
-                <ScalarProperty Name="CantidadComprar" ColumnName="CantidadComprar" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
-                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
-                <ScalarProperty Name="FuenteFinanciamientoId" ColumnName="FuenteFinanciamientoId" />
-                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
-                <ScalarProperty Name="EstatusId" ColumnName="EstatusId" />
-                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
-                <ScalarProperty Name="Revision" ColumnName="Revision" />
-                <ScalarProperty Name="Comprar" ColumnName="Comprar" />
-                <ScalarProperty Name="Rechazar" ColumnName="Rechazar" />
-                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
-                <ScalarProperty Name="RequisicionMaterialId" ColumnName="RequisicionMaterialId" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="TarifaImpuestoId" ColumnName="TarifaImpuestoId" />
-                <ScalarProperty Name="Ajuste" ColumnName="Ajuste" />
-                <ScalarProperty Name="OrdenCompraDetId" ColumnName="OrdenCompraDetId" />
-                <ScalarProperty Name="OrdenCompraId" ColumnName="OrdenCompraId" />
-                <ScalarProperty Name="CuentaPresupuestalEgrId" ColumnName="CuentaPresupuestalEgrId" />
-                <ScalarProperty Name="Importe" ColumnName="Importe" />
-                <ScalarProperty Name="IEPS" ColumnName="IEPS" />
-                <ScalarProperty Name="IVA" ColumnName="IVA" />
-                <ScalarProperty Name="ISH" ColumnName="ISH" />
-                <ScalarProperty Name="RetencionISR" ColumnName="RetencionISR" />
-                <ScalarProperty Name="RetencionCedular" ColumnName="RetencionCedular" />
-                <ScalarProperty Name="RetencionIVA" ColumnName="RetencionIVA" />
-                <ScalarProperty Name="TotalPresupuesto" ColumnName="TotalPresupuesto" />
-                <ScalarProperty Name="RequisicionTimestamp" ColumnName="RequisicionTimestamp" />
-                <ScalarProperty Name="DetalleTimestamp" ColumnName="DetalleTimestamp" />
-                <ScalarProperty Name="InvitacionCompraDetalleId" ColumnName="InvitacionCompraDetalleId" />
-                <ScalarProperty Name="InvitacionCompraId" ColumnName="InvitacionCompraId" />
-                <ScalarProperty Name="FechaRequisicion" ColumnName="FechaRequisicion" />
-                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -20372,6 +20316,66 @@ advertencia 6002: La tabla o vista 'SACG0000001.dbo.MIvwListadoPlanNacionalDesar
                 <ScalarProperty Name="Comprometido" ColumnName="Comprometido" />
                 <ScalarProperty Name="PreComprometido" ColumnName="PreComprometido" />
                 <ScalarProperty Name="DisponibleComprometer" ColumnName="DisponibleComprometer" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ARspConsultaRequisicionPorComprarDetalles" FunctionName="SAACGModel.Store.ARspConsultaRequisicionPorComprarDetalles">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SAACGModel.ARspConsultaRequisicionPorComprarDetalles_Result">
+                <ScalarProperty Name="RequisicionMaterialDetalleId" ColumnName="RequisicionMaterialDetalleId" />
+                <ScalarProperty Name="RequisicionMaterialId" ColumnName="RequisicionMaterialId" />
+                <ScalarProperty Name="Solicitud" ColumnName="Solicitud" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="FechaRequisicion" ColumnName="FechaRequisicion" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="AlmacenId" ColumnName="AlmacenId" />
+                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
+                <ScalarProperty Name="UnidadAdministrativaId" ColumnName="UnidadAdministrativaId" />
+                <ScalarProperty Name="UnidadAdministrativa" ColumnName="UnidadAdministrativa" />
+                <ScalarProperty Name="ProyectoId" ColumnName="ProyectoId" />
+                <ScalarProperty Name="Proyecto" ColumnName="Proyecto" />
+                <ScalarProperty Name="TipoGastoId" ColumnName="TipoGastoId" />
+                <ScalarProperty Name="TipoGasto" ColumnName="TipoGasto" />
+                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="UM" ColumnName="UM" />
+                <ScalarProperty Name="CostoUnitario" ColumnName="CostoUnitario" />
+                <ScalarProperty Name="TarifaImpuestoId" ColumnName="TarifaImpuestoId" />
+                <ScalarProperty Name="CantidadSolicitada" ColumnName="CantidadSolicitada" />
+                <ScalarProperty Name="CantidadSurtida" ColumnName="CantidadSurtida" />
+                <ScalarProperty Name="Existencia" ColumnName="Existencia" />
+                <ScalarProperty Name="ExistenciaMinima" ColumnName="ExistenciaMinima" />
+                <ScalarProperty Name="CantidadComprar" ColumnName="CantidadComprar" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Ajuste" ColumnName="Ajuste" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="FuenteFinanciamientoId" ColumnName="FuenteFinanciamientoId" />
+                <ScalarProperty Name="DisponibleComprometer" ColumnName="DisponibleComprometer" />
+                <ScalarProperty Name="PreComprometido" ColumnName="PreComprometido" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
+                <ScalarProperty Name="EstatusId" ColumnName="EstatusId" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="Comprar" ColumnName="Comprar" />
+                <ScalarProperty Name="Rechazar" ColumnName="Rechazar" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="OrdenCompraDetId" ColumnName="OrdenCompraDetId" />
+                <ScalarProperty Name="OrdenCompraId" ColumnName="OrdenCompraId" />
+                <ScalarProperty Name="CuentaPresupuestalEgrId" ColumnName="CuentaPresupuestalEgrId" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+                <ScalarProperty Name="IEPS" ColumnName="IEPS" />
+                <ScalarProperty Name="IVA" ColumnName="IVA" />
+                <ScalarProperty Name="ISH" ColumnName="ISH" />
+                <ScalarProperty Name="RetencionISR" ColumnName="RetencionISR" />
+                <ScalarProperty Name="RetencionCedular" ColumnName="RetencionCedular" />
+                <ScalarProperty Name="RetencionIVA" ColumnName="RetencionIVA" />
+                <ScalarProperty Name="TotalPresupuesto" ColumnName="TotalPresupuesto" />
+                <ScalarProperty Name="InvitacionCompraDetalleId" ColumnName="InvitacionCompraDetalleId" />
+                <ScalarProperty Name="InvitacionCompraId" ColumnName="InvitacionCompraId" />
+                <ScalarProperty Name="RequisicionTimestamp" ColumnName="RequisicionTimestamp" />
+                <ScalarProperty Name="DetalleTimestamp" ColumnName="DetalleTimestamp" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
