@@ -442,11 +442,15 @@
     <Compile Include="Entities\MIspConsultaMatrizIndicadorResultado_Result.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\MIspConsultaMatrizPresupuestoDevengadoH_Result.cs" />
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoDevengadoH_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MIspConsultaMatrizPresupuestoDevengado_Result.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\MIspConsultaMatrizPresupuestoVigenteH_Result.cs" />
+    <Compile Include="Entities\MIspConsultaMatrizPresupuestoVigenteH_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MIspConsultaMatrizPresupuestoVigente_Result.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
@@ -513,11 +517,15 @@
     <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalDetalle.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalDetalleH.cs" />
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalDetalleH.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalSeguimientoVariable.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalSeguimientoVariableH.cs" />
+    <Compile Include="Entities\MItblMatrizConfiguracionPresupuestalSeguimientoVariableH.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MItblMatrizIndicadorResultado.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
@@ -571,6 +579,9 @@
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\spObtenerFechaDelServidor_Result.cs">
+      <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\spRepPrecomprometido_Result.cs">
       <DependentUpon>EntityDataModelSAACG.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\tblAdministracionPeriodo.cs">

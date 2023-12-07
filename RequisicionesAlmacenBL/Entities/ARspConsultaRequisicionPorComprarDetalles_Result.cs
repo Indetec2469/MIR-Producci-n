@@ -19,11 +19,17 @@ public partial class ARspConsultaRequisicionPorComprarDetalles_Result
 
     public int RequisicionMaterialDetalleId { get; set; }
 
+    public int RequisicionMaterialId { get; set; }
+
     public string Solicitud { get; set; }
 
     public string Fecha { get; set; }
 
+    public System.DateTime FechaRequisicion { get; set; }
+
     public string Usuario { get; set; }
+
+    public string AreaId { get; set; }
 
     public string Area { get; set; }
 
@@ -45,21 +51,27 @@ public partial class ARspConsultaRequisicionPorComprarDetalles_Result
 
     public string ProductoId { get; set; }
 
+    public string Descripcion { get; set; }
+
     public string UM { get; set; }
 
     public decimal CostoUnitario { get; set; }
+
+    public string TarifaImpuestoId { get; set; }
 
     public decimal CantidadSolicitada { get; set; }
 
     public Nullable<decimal> CantidadSurtida { get; set; }
 
-    public Nullable<decimal> Existencia { get; set; }
+    public decimal Existencia { get; set; }
 
     public Nullable<decimal> ExistenciaMinima { get; set; }
 
     public Nullable<double> CantidadComprar { get; set; }
 
     public Nullable<double> Total { get; set; }
+
+    public Nullable<double> Ajuste { get; set; }
 
     public string Comentarios { get; set; }
 
@@ -83,14 +95,6 @@ public partial class ARspConsultaRequisicionPorComprarDetalles_Result
 
     public string Motivo { get; set; }
 
-    public int RequisicionMaterialId { get; set; }
-
-    public string Descripcion { get; set; }
-
-    public string TarifaImpuestoId { get; set; }
-
-    public Nullable<double> Ajuste { get; set; }
-
     public Nullable<int> OrdenCompraDetId { get; set; }
 
     public Nullable<int> OrdenCompraId { get; set; }
@@ -113,17 +117,13 @@ public partial class ARspConsultaRequisicionPorComprarDetalles_Result
 
     public Nullable<double> TotalPresupuesto { get; set; }
 
-    public byte[] RequisicionTimestamp { get; set; }
-
-    public byte[] DetalleTimestamp { get; set; }
-
     public Nullable<int> InvitacionCompraDetalleId { get; set; }
 
     public Nullable<int> InvitacionCompraId { get; set; }
 
-    public System.DateTime FechaRequisicion { get; set; }
+    public byte[] RequisicionTimestamp { get; set; }
 
-    public string AreaId { get; set; }
+    public byte[] DetalleTimestamp { get; set; }
 
 }
 
